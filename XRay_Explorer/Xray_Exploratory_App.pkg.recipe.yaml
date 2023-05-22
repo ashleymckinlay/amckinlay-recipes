@@ -1,0 +1,24 @@
+Description: Downloads the latest version of Xray Exploratory App and creates a package.
+Identifier: com.github.ashleymckinlay.pkg.Xray_Exploratory_App
+ParentRecipe: com.github.ashleymckinlay.download.Xray_Exploratory_App
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Xray Exploratory App
+  SOFTWARE_TITLE: Xray_Exploratory_App
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgdirs: {}
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+
+  - Processor: AppPkgCreator
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: True
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'
