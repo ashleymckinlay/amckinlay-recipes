@@ -5,7 +5,7 @@ MinimumVersion: '2.3'
 
 Input:
   NAME: Xray Exploratory App
-  version: 2.0.3
+  version: 2.0.4
 
 Process:
   # - Processor: URLTextSearcher
