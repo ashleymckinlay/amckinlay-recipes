@@ -1,0 +1,28 @@
+Description: Downloads the latest version, makes a pkg, uploads to the Jamf Pro Server, and creates a Self Service Policy.
+Identifier: com.github.amckinlay.jamf.arm64.ideace
+ParentRecipe: com.github.amckinlay.pkg.arm64.ideace
+MinimumVersion: '2.3'
+
+Input:
+  NAME: IDEACE
+  SOFTWARE_TITLE: '%NAME%'
+  ALL_COMPUTERS: 'false'
+  ARCHITECTURE: arm64
+  CATEGORY: Applications
+  GROUP_CRITERIA: '%ARCHITECTURE%'
+  GROUP_NAME: Architecture - Apple Silicon
+  GROUP_TEMPLATE: Live-Architecture-Group-Template.xml
+  INSTALL_BUTTON_TEXT: Install
+  POLICY_CATEGORY: '%CATEGORY%'
+  POLICY_NAME: '%NAME% (Apple Silicon)'
+  POLICY_RUN_COMMAND: ' '
+  POLICY_TEMPLATE: Live-Policy-Template.xml
+  REINSTALL_BUTTON_TEXT: Reinstall
+  SELF_SERVICE_AVAILABLE: 'true'
+  SELF_SERVICE_CATEGORY: Collaboration
+  SELF_SERVICE_DESCRIPTION: Make teamwork your best work.
+  SELF_SERVICE_DISPLAY_NAME: '%NAME%'
+  SELF_SERVICE_ICON: '%NAME%.png'
+  SOFTWARE_TITLE_TRIGGER: '%SOFTWARE_TITLE%'
+  UPDATE_PREDICATE: pkg_uploaded == False
+
