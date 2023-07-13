@@ -22,6 +22,6 @@
     <key>MinimumVersion</key>
     <string>0.2.0</string>
     <key>ParentRecipe</key>
-    <string>com.github.bnpl.autopkg.download.intellijideace</string>
+    <string>com.github.bnpl.autopkg.download.jetbrains</string>
 </dict>
 </plist>
