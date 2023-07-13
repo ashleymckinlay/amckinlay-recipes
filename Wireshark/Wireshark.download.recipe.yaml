@@ -24,7 +24,7 @@ Process:
   - Processor: URLDownloader
     Arguments:
       filename: '%NAME%-%ARCHITECTURE%.dmg'
-      url: https://www.wireshark.org/download/osx/%match%
+      url: https://2.na.dl.wireshark.org/osx/%match%
 
   - Processor: EndOfCheckPhase
 
