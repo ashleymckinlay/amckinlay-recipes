@@ -2,8 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Description</key>
-	<string>Downloads the latest stable version of Wireshark.
+  <key>Description</key>
+  <string>Downloads the latest stable version of Wireshark.
 
 Acceptable values for the ARCH input variable include:
 - Intel (default): Downloads Wireshark for Macs with Intel processors.
