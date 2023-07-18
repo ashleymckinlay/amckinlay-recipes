@@ -1,6 +1,6 @@
 Description: Downloads latest version of the Wireshark DMG and creates a Package.
-Identifier: com.github.smithjw.pkg.wireshark
-ParentRecipe: com.github.smithjw.download.wireshark
+Identifier: com.github.amckinlay.pkg.wireshark
+ParentRecipe: com.github.amckinlay.download.wireshark
 MinimumVersion: '2.3'
 
 Input:

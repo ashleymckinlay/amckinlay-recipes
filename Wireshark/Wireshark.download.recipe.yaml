@@ -4,7 +4,7 @@ Comment: |
   Wireshark uses Arm & Intel to distinguish downloads
   eg "--key ARCHITECTURE=arm64 --key DOWNLOAD_TYPE=Arm"
 Description: Downloads the latest version of Wireshark.
-Identifier: com.github.smithjw.download.wireshark
+Identifier: com.github.amckinlay.download.wireshark
 MinimumVersion: '2.3'
 
 Input:
