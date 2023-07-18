@@ -10,7 +10,7 @@
   Arm = Downloads Wireshark for Macs with Apple Silicon processors.
   </string>
   <key>Identifier</key>
-  <string>com.github.amckinlay.download.wireshark</string>
+  <string>com.github.amckinlay.x86_64.download.wireshark</string>
   <key>Input</key>
   <dict>
     <key>ARCH</key>
