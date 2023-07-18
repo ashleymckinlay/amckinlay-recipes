@@ -6,7 +6,7 @@
     <string>Downloads the latest stable version of Wireshark.
     Acceptable values for the ARCH input variable include
     - Intel (default) Downloads Wireshark for Macs with Intel processors.
-    - Arm: Downloads Wireshark for Macs with Apple Silicon processors.
+    - Arm Downloads Wireshark for Macs with Apple Silicon processors.
     </string>
     <key>Identifier</key>
     <string>com.github.amckinlay.arm64.download.wireshark</string>
