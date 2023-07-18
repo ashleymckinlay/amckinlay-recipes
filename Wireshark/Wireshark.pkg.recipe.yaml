@@ -1,0 +1,38 @@
+Description: Downloads latest version of the Wireshark DMG and creates a Package.
+Identifier: com.github.smithjw.pkg.wireshark
+ParentRecipe: com.github.smithjw.download.wireshark
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Wireshark
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgdirs:
+        Applications: '0775'
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%pathname%/Wireshark.app'
+      destination_path: '%pkgroot%/Applications/Wireshark.app'
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        chown:
+          - group: admin
+            path: Applications
+            user: root
+        id: '%bundleid%'
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%NAME%-%ARCHITECTURE%-%version%'
+        scripts: scripts
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: True
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'
