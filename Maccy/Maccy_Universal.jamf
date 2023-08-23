@@ -4,8 +4,8 @@ ParentRecipe: com.skoobasteeve.pkg.Maccy
 MinimumVersion: '1.2'
 
 Input:
-  NAME: Keka
-  SOFTWARE_TITLE: Keka
+  NAME: Maccy
+  SOFTWARE_TITLE: Maccy
   CATEGORY: Applications
   GROUP_NAME: '%NAME%-update-smart'
   GROUP_TEMPLATE: SmartGroup-update-smart.xml
