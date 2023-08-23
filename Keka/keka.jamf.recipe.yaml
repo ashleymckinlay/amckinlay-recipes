@@ -9,7 +9,7 @@ Input:
   CATEGORY: Applications
   GROUP_NAME: '%NAME%-update-smart'
   GROUP_TEMPLATE: SmartGroup-update-smart.xml
-  POLICY_CATEGORY: Testing
+  POLICY_CATEGORY: Applications
   POLICY_TEMPLATE: PolicyTemplate.xml
   POLICY_NAME: 'Install Latest %NAME%'
   POLICY_RUN_COMMAND: ' '
