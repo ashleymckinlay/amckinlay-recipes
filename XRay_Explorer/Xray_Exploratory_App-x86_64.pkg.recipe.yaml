@@ -1,6 +1,6 @@
 Description: Downloads the latest version of Xray Exploratory App and creates a package.
-Identifier: com.github.ashleymckinlay.pkg.Xray_Exploratory_App
-ParentRecipe: com.github.ashleymckinlay.download.Xray_Exploratory_App
+Identifier: com.github.ashleymckinlay.pkg.Xray_Exploratory_App.x86_64
+ParentRecipe: com.github.ashleymckinlay.download.Xray_Exploratory_App.x86_64
 MinimumVersion: '2.3'
 
 Input:

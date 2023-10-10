@@ -1,6 +1,6 @@
 Description: Downloads the latest version and makes a pkg. Then, uploads the package to the Jamf Pro Server and creates a Self Service Policy and Smart Group.
-Identifier: com.github.ashleymckinlay.jamf.Xray_Exploratory_App
-ParentRecipe: com.github.ashleymckinlay.sign.Xray_Exploratory_App
+Identifier: com.github.ashleymckinlay.jamf.Xray_Exploratory_App.x86_64
+ParentRecipe: com.github.ashleymckinlay.sign.Xray_Exploratory_App.x86_64
 MinimumVersion: '2.3'
 
 Input:
@@ -9,7 +9,7 @@ Input:
   GROUP_NAME: '%NAME%-update-smart'
   GROUP_TEMPLATE: SmartGroup-update-smart.xml
   TESTING_GROUP_NAME: Testing
-  POLICY_CATEGORY: Testing
+  POLICY_CATEGORY: Applications
   POLICY_TEMPLATE: Policy-install-latest.xml
   POLICY_NAME: 'Install Latest %NAME%'
   POLICY_RUN_COMMAND: 'chown -R "$(stat -f%Su /dev/console):staff" "/Applications/%NAME%.app" && echo "Corrected permissions for %NAME%."'
