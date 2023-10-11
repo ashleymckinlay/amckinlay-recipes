@@ -1,6 +1,6 @@
 Description: Downloads the latest version and makes a pkg. Then, uploads the package to the Jamf Pro Server and creates a Self Service Policy and Smart Group.
 Identifier: com.github.ashleymckinlay.jamf.Xray_Exploratory_App.x86_64
-ParentRecipe: com.github.ashleymckinlay.sign.Xray_Exploratory_App.x86_64
+ParentRecipe: com.github.ashleymckinlay.pkg.Xray_Exploratory_App.x86_64
 MinimumVersion: '2.3'
 
 Input:
