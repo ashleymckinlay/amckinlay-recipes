@@ -5,7 +5,7 @@ Description: |
   Architectures: x86, arm
   Extensions: zip, tar.gz, dmg
   Bundle Types: jre, jdk, jre_fx, jdk_fx
-Identifier: com.github.ashleymckinlay.download.AzulZuluJava17
+Identifier: com.github.ashleymckinlay.x86_64.download.AzulZuluJava17
 MinimumVersion: 2.3.0
 
 Input:

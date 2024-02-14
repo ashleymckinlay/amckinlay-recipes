@@ -4,8 +4,8 @@ Description: |
   and copies the package.
   Architectures: x86, arm
   Bundle Types: jre, jdk, jre_fx, jdk_fx
-Identifier: com.github.ashleymckinlay.pkg.AzulZuluJava20
-ParentRecipe: com.github.ashleymckinlay.download.AzulZuluJava20
+Identifier: com.github.ashleymckinlay.x86_64.pkg.AzulZuluJava20
+ParentRecipe: com.github.ashleymckinlay.x86_64.download.AzulZuluJava20
 MinimumVersion: 2.3.0
 
 Input:

@@ -4,8 +4,8 @@ Description: |
   and copies the package.
   Architectures: x86, arm
   Bundle Types: jre, jdk, jre_fx, jdk_fx
-Identifier: com.github.ashleymckinlay.pkg.AzulZuluJava21
-ParentRecipe: com.github.ashleymckinlay.download.AzulZuluJava21
+Identifier: com.github.ashleymckinlay.arm64.pkg.AzulZuluJava21
+ParentRecipe: com.github.ashleymckinlay.arm64.download.AzulZuluJava21
 MinimumVersion: 2.3.0
 
 Input:
