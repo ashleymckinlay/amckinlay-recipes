@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Downloads the latest version of WalkMe.</string>
     <key>Identifier</key>
-    <string>com.github.amckinlay-recipes.download.WalkMe</string>
+    <string>com.github.ashleymckinlay.download.walkme</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>

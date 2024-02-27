@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
     <key>ParentRecipe</key>
-    <string>com.github.ashleymckinlay.pkg.walkme</string>
+    <string>com.github.ashleymckinlay.download.walkme</string>
     <key>Description</key>
     <string>Downloads the latest version of WalkMe and builds a pkg.</string>
     <key>Identifier</key>
-    <string>ccom.github.ashleymckinlay.pkg.walkme</string>
+    <string>com.github.ashleymckinlay.pkg.walkme</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
