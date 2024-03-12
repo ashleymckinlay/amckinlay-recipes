@@ -6,6 +6,7 @@ ParentRecipe: com.github.ashleymckinlay.download.LogiOptionsPlus
 
 Input:
   NAME: Logi OptionsPlus
+  SOFTWARE_TITLE: Logi_Options_Plus
   URL: https://download01.logi.com/web/ftp/pub/techsupport/optionsplus/logioptionsplus_installer_offline.zip
 
 Process:
@@ -52,7 +53,7 @@ Process:
       pkg_request:
         id: "%BUNDLE_ID%"
         options: purge_ds_store
-        pkgname: "%NAME%-%version%"
+        pkgname: "%SOFTWARE_TITLE%-%version%"
         pkgroot: "%RECIPE_CACHE_DIR%/pkg/root"
         scripts: "%RECIPE_CACHE_DIR%/pkg/scripts"
         version: "%version%"

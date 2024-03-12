@@ -29,6 +29,7 @@ Process:
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
       category_name: '%CATEGORY%'
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
