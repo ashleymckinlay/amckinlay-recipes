@@ -16,7 +16,7 @@ Input:
   POLICY_RUN_COMMAND: 'chown -R "$(stat -f%Su /dev/console):staff" "/Applications/%NAME%.app" && echo "Corrected permissions for %NAME%."'
   SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
   SELF_SERVICE_DESCRIPTION:
-    Microsoft OneNote.
+    "Capture your thoughts, discoveries, and ideas and simplify overwhelming planning moments in your life with your very own digital notepad. With OneNote, you can plan that big event, seize that moment of inspiration to create something new, and track that list of errands that are too important to forget. Write memos, make a digital sketchbook and save your notes via OneDrive to access them anytime, anywhere. Whether you're at home, in the office, or on the go, your notes are available to you across all of your devices."
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
   INSTALL_BUTTON_TEXT: 'Install'
   REINSTALL_BUTTON_TEXT: 'Install'
