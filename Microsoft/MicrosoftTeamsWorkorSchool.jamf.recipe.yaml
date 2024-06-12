@@ -5,7 +5,7 @@ MinimumVersion: '2.3'
 
 Input:
   NAME: Microsoft Teams New
-  SOFTWARE_TITLE: Microsoft_Teams
+  SOFTWARE_TITLE: 'Microsoft Teams'
   CATEGORY: Collaboration
   GROUP_NAME: '%NAME%-update-smart'
   GROUP_TEMPLATE: SmartGroup-update-smart.xml
