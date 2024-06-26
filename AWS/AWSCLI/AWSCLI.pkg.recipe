@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Creates a pkg to deploy http://aws.amazon.com/cli/
+
+Tags are used since contents of pkg don't have easily parse-able version, probably brittle.
+</string>
+	<key>Identifier</key>
+	<string>com.github.amckinlay.pkg.awscli</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>AWSCLI</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>0.4.0</string>
+	<key>ParentRecipe</key>
+	<string>com.github.amckinlay.download.awscli</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+			<key>Arguments</key>
+			<dict>
+				<key>Comment</key>
+				<string>Regex allows for double-digits in any position but assumes 1.2.3 format</string>
+				<key>re_pattern</key>
+				<string>\d*\.\d*\.\d*</string>
+				<key>result_output_var_name</key>
+				<string>version</string>
+				<key>url</key>
+				<string>https://api.github.com/repos/aws/aws-cli/tags</string>
+			 </dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>PkgCopier</string>
+			<key>Arguments</key>
+			<dict>
+				<key>source_pkg</key>
+				<string>%pathname%</string>
+				<key>pkg_path</key>
+				<string>%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg</string>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>
