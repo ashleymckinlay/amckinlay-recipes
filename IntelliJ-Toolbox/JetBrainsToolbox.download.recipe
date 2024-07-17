@@ -1,59 +1,57 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>Description</key>
-	<string>Download the latest release of JetBrains Toolbox</string>
-	<key>Identifier</key>
-	<string>com.github.amckinlay.download.JetBrainsToolbox</string>
-	<key>Input</key>
-	<dict>
-		<key>NAME</key>
-		<string>JetBrains Toolbox</string>
-		<key>PLATFORM</key>
-		<string>mac</string>
-	</dict>
-	<key>MinimumVersion</key>
-	<string>0.2.0</string>
-	<key>Process</key>
-	<array>
-		<dict>
-			<key>Processor</key>
-			<string>com.github.mosen.download.PyCharmPro/JetbrainsURLProvider</string>
-			<key>Arguments</key>
-			<dict>
-				<key>product_code</key>
-				<string>TBA</string>
-			</dict>
-		</dict>
-		<dict>
-			<key>Processor</key>
-			<string>URLDownloader</string>
-		</dict>
-		<dict>
-			<key>Arguments</key>
-			<dict>
-				<key>dmg_path</key>
-				<string>%pathname%</string>
-			</dict>
-			<key>Processor</key>
-			<string>AppDmgVersioner</string>
-		</dict>
-		<dict>
-			<key>Processor</key>
-			<string>CodeSignatureVerifier</string>
-			<key>Arguments</key>
-			<dict>
-				<key>input_path</key>
-				<string>%pathname%/%app_name%</string>
-				<key>requirement</key>
-				<string>identifier "com.jetbrains.toolbox" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "2ZEFAR8TH3"</string>
-			</dict>
-		</dict>
-		<dict>
-			<key>Processor</key>
-			<string>EndOfCheckPhase</string>
-		</dict>
-	</array>
-</dict>
-</plist>
+
+
+Description: Downloads the latest versions (ARM and INTEL) of GitHub Desktop.
+Identifier: com.github.amckinlay.download.jetbrainstoolbox
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Jetbrains Toolbox
+  SOFTWARE_TITLE: jetbrains-toolbox
+  URL_ARM64: https://download-cdn.jetbrains.com/toolbox
+  URL_X86_64: https://central.github.com/deployments/desktop/desktop/latest/darwin
+jetbrains-toolbox-2.4.0.32175-arm64.dmg
+Process:
+  - Processor: URLDownloader
+    Arguments:
+      filename: '%SOFTWARE_TITLE%-arm64.dmg'
+      download_dir: '%RECIPE_CACHE_DIR%/downloads'
+      url: '%URL_ARM64%'
+
+  - Processor: URLDownloader
+    Arguments:
+      filename: '%SOFTWARE_TITLE%.dmg'
+      download_dir: '%RECIPE_CACHE_DIR%/downloads'
+      url: '%URL_X86_64%'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg'
+      destination_path: '%RECIPE_CACHE_DIR%/unpack/arm64'
+      purge_destination: true
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg'
+      destination_path: '%RECIPE_CACHE_DIR%/unpack/x86_64'
+      purge_destination: true
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%RECIPE_CACHE_DIR%/unpack/arm64/JetBrains Toolbox.app'
+      requirement: '(identifier "com.jetbrains.toolbox") and anchor apple generic and certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = 2ZEFAR8TH3'
+      deep_verification: true
+      strict_verification: true
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%RECIPE_CACHE_DIR%/unpack/x86_64/JetBrains Toolbox'
+      requirement: '(identifier "com.jetbrains.toolbox") and anchor apple generic and certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = 2ZEFAR8TH3'
+      deep_verification: true
+      strict_verification: true
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: '%RECIPE_CACHE_DIR%/unpack/arm64/JetBrains Tooblox.app/Contents/Info.plist'
+      plist_version_key: CFBundleShortVersionString
