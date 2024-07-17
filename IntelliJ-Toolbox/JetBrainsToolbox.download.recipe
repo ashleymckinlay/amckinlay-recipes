@@ -1,27 +1,35 @@
-
-
 Description: Downloads the latest versions (ARM and INTEL) of GitHub Desktop.
 Identifier: com.github.amckinlay.download.jetbrainstoolbox
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Jetbrains Toolbox
+  NAME: 'Jetbrains Toolbox'
   SOFTWARE_TITLE: jetbrains-toolbox
-  URL_ARM64: https://download-cdn.jetbrains.com/toolbox
-  URL_X86_64: https://download-cdn.jetbrains.com/toolbox
 
 Process:
-  - Processor: URLDownloader
+  - Processor: URLTextSearcher
     Arguments:
-      filename: '%SOFTWARE_TITLE%-arm64.dmg'
-      download_dir: '%RECIPE_CACHE_DIR%/downloads'
-      url: '%URL_ARM64%'
+      re_pattern: '((\w+):\/\/(\S*)(arm64)(\S*)(dmg)(?=\?))'
+      result_output_var_name: match
+      url: 'https://download-cdn.jetbrains.com/toolbox'
 
-  - Processor: URLDownloader
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
-      filename: '%SOFTWARE_TITLE%.dmg'
+      filename: 'jetbrains-toolbox-arm64.dmg'
       download_dir: '%RECIPE_CACHE_DIR%/downloads'
-      url: '%URL_X86_64%'
+      url: '%match%'
+
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: '((\w+):\/\/(\S*)(\S*)(dmg)(?=\?))'
+      result_output_var_name: match
+      url: 'https://download-cdn.jetbrains.com/toolbox'
+
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+    Arguments:
+      filename: 'jetbrains-toolbox.dmg'
+      download_dir: '%RECIPE_CACHE_DIR%/downloads'
+      url: '%match%'Process:
 
   - Processor: EndOfCheckPhase
 
