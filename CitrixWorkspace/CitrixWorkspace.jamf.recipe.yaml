@@ -1,5 +1,5 @@
 Identifier: com.github.ashleymckinlay.jamf.CitrixWorkspace
-ParentRecipe: com.github.rtrouton.pkg.citrixworkspaceuniversal
+ParentRecipe: com.github.ashleymckinlay.pkg.CitrixWorkspace
 MinimumVersion: '2.3'
 
 Input:
