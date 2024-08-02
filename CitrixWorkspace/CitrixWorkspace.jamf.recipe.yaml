@@ -3,7 +3,7 @@ ParentRecipe: com.github.ashleymckinlay.pkg.CitrixWorkspace
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Citrix Workspace
+  NAME: 'Citrix Workspace'
   SOFTWARE_TITLE: Citrix_Workspace
   ALL_COMPUTERS: 'true'
   CATEGORY: Applications
@@ -17,9 +17,8 @@ Input:
   REINSTALL_BUTTON_TEXT: Reinstall
   SELF_SERVICE_AVAILABLE: 'true'
   SELF_SERVICE_CATEGORY: Utilities
-  SELF_SERVICE_DESCRIPTION: Citrix Workspace is the easy-to-install client software that provides access to your Citrix XenDesktop and XenApp installations.
+  SELF_SERVICE_DESCRIPTION: 'Citrix Workspace is the easy-to-install client software that provides access to your Citrix XenDesktop and XenApp installations.'
   SELF_SERVICE_DISPLAY_NAME: '%NAME%'
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
-  SIGNING_CERTIFICATE: 'Developer ID Installer: ANZ Banking Group Limited (JC79QBZPRF)'
   SOFTWARE_TITLE_TRIGGER: '%SOFTWARE_TITLE%'
   UPDATE_PREDICATE: pkg_uploaded == False
