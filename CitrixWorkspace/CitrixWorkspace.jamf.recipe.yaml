@@ -1,5 +1,5 @@
-Identifier: com.github.ashleymckinlay.jamf.CitrixWorkspace
-ParentRecipe: com.github.ashleymckinlay.pkg.CitrixWorkspace
+Identifier: com.github.ashleymckinlay.jamf.citrixWorkspace
+ParentRecipe: com.github.rtrouton.pkg.citrixworkspace
 MinimumVersion: '2.3'
 
 Input:
