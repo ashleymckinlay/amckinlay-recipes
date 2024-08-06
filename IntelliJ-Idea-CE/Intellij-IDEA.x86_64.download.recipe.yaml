@@ -1,10 +1,10 @@
 Description: Downloads latest Intellij disk image (Intel version). Override ARCH to "arm64" if you want the Apple Silicon version.
-Identifier: com.github.grahampugh.recipes.download.IntelliJ-IDEA-CE
+Identifier: com.github.amckinlay.download.x86_64.ideace
 MinimumVersion: "2.3"
 
 Input:
   NAME: Intellij IDEA CE
-  ARCH: intel
+  ARCH: arm64
 
 Process:
   - Processor: IntellijURLProvider
