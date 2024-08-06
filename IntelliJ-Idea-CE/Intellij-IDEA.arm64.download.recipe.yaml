@@ -4,7 +4,7 @@ MinimumVersion: "2.3"
 
 Input:
   NAME: Intellij IDEA CE
-  ARCH: intel
+  ARCH: arm64
 
 Process:
   - Processor: IntellijURLProvider
