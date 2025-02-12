@@ -9,7 +9,7 @@
 			<key>CATEGORY</key>
 			<string>Applications</string>
 			<key>GROUP_NAME</key>
-			<string>Hoppscotch-update-smart</string>
+			<string>Live-update-smart</string>
 			<key>GROUP_TEMPLATE</key>
 			<string>JamfSmartGroupTemplate.xml</string>
 			<key>NAME</key>
