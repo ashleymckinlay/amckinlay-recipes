@@ -9,19 +9,19 @@
 			<key>CATEGORY</key>
 			<string>Applications</string>
 			<key>GROUP_NAME</key>
-			<string>Live-update-smart</string>
+			<string>Hoppscotch-update-smart</string>
 			<key>GROUP_TEMPLATE</key>
 			<string>JamfSmartGroupTemplate.xml</string>
 			<key>NAME</key>
-			<string>HoppScotch</string>
+			<string>Hoppscotch</string>
 			<key>POLICY_CATEGORY</key>
-			<string>Applications</string>
+			<string>Testing</string>
 			<key>POLICY_NAME</key>
 			<string>Install Latest %NAME%</string>
 			<key>POLICY_TEMPLATE</key>
 			<string>JamfPolicyTemplate.xml</string>
 			<key>SELF_SERVICE_DESCRIPTION</key>
-			<string>Open source API development ecosystem - https://hoppscotch.io (open-source alternative to Postman, Insomnia)</string>
+			<string>Open source API development ecosystem - An open-source alternative to Postman.</string>
 			<key>SELF_SERVICE_DISPLAY_NAME</key>
 			<string>Install Latest %NAME%</string>
 			<key>SELF_SERVICE_ICON</key>
@@ -34,7 +34,7 @@
 		<key>MinimumVersion</key>
 		<string>2.3</string>
 		<key>ParentRecipe</key>
-		<string>com.github.gilburns..pkg.Hoppscotch</string>
+		<string>com.github.gilburns.pkg.Hoppscotch</string>
 		<key>Process</key>
 		<array>
 			<dict>
