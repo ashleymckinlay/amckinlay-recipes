@@ -34,7 +34,7 @@
 		<key>MinimumVersion</key>
 		<string>2.3</string>
 		<key>ParentRecipe</key>
-		<string>com.github.gilburns.pkg.Hoppscotch</string>
+		<string>com.github.ashleymckinlay.arm64.pkg.Hoppscotch</string>
 		<key>Process</key>
 		<array>
 			<dict>
