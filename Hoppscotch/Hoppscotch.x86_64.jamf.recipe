@@ -11,7 +11,7 @@
 			<key>ARCHITECTURE</key>
 			<string>x86</string>
 			<key>DOWNLOAD_ARCH</key>
-			<string>x64</string>
+			<string>x86</string>
 			<key>GROUP_NAME</key>
 			<string>Live-update-smart</string>
 			<key>GROUP_TEMPLATE</key>
