@@ -13,7 +13,7 @@
 			<key>GROUP_TEMPLATE</key>
 			<string>JamfSmartGroupTemplate.xml</string>
 			<key>NAME</key>
-			<string>JetBrainsToolBox</string>
+			<string>DockerDesktop</string>
 			<key>POLICY_CATEGORY</key>
 			<string>Testing</string>
 			<key>POLICY_NAME</key>
@@ -21,7 +21,7 @@
 			<key>POLICY_TEMPLATE</key>
 			<string>JamfPolicyTemplate.xml</string>
 			<key>SELF_SERVICE_DESCRIPTION</key>
-			<string>Application Manager for JetBrains.</string>
+			<string>Docker Desktop reduces the time spent on complex setups so you can focus on writing code. It takes care of port mappings, file system concerns, and other default settings, and is regularly updated with bug fixes and security updates.</string>
 			<key>SELF_SERVICE_DISPLAY_NAME</key>
 			<string>Install Latest %NAME%</string>
 			<key>SELF_SERVICE_ICON</key>
@@ -34,7 +34,7 @@
 		<key>MinimumVersion</key>
 		<string>2.3</string>
 		<key>ParentRecipe</key>
-		<string>com.github.crystalllized.pkg.JetBrainsToolbox</string>
+		<string>com.github.ashleymckinlay.arm64.pkg.DockerDesktop</string>
 		<key>Process</key>
 		<array>
 			<dict>
