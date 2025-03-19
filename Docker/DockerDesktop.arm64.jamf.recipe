@@ -3,7 +3,7 @@
 <plist version="1.0">
 	<dict>
 		<key>Identifier</key>
-		<string>com.github.ashleymckinlay.jamf.JetBrainsToolBox</string>
+		<string>com.github.ashleymckinlay.arm64.jamf.DockerDesktop</string>
 		<key>Input</key>
 		<dict>
 			<key>CATEGORY</key>
