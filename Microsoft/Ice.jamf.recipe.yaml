@@ -1,11 +1,11 @@
-Description: Downloads the latest version and makes a pkg. Then, uploads the package to the Jamf Pro Server and creates a Self Service Policy and Smart Group.
-Identifier: com.github.amckinlay.jamf.microsoftwindowsapp
-ParentRecipe: com.github.rtrouton.pkg.microsoftwindowsapp
+Description: Downloads the latest version of the Ice App, then uploads to your Jamf Pro instance.
+Identifier: com.github.ashleymckinlay.jamf.Ice
+ParentRecipe: com.ashleymckinlay.pkg.Ice
 MinimumVersion: '1.2'
 
 Input:
-  NAME: 'Microsoft Windows App'
-  SOFTWARE_TITLE: 'Microsoft Windows App'
+  NAME: Ice
+  SOFTWARE_TITLE: Ice
   CATEGORY: Applications
   GROUP_NAME: '%NAME%-update-smart'
   GROUP_TEMPLATE: SmartGroup-update-smart.xml
@@ -14,7 +14,7 @@ Input:
   POLICY_NAME: 'Install Latest %NAME%'
   POLICY_RUN_COMMAND: ' '
   SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
-  SELF_SERVICE_DESCRIPTION: 'Windows App is your gateway to Azure Virtual Desktop, Windows 365, Microsoft Dev Box, Remote Desktop Services, and remote PCs, securely connecting you to Windows devices and apps.'
+  SELF_SERVICE_DESCRIPTION: 'Ice is a powerful menu bar management tool. While its primary function is hiding and showing menu bar items, it aims to cover a wide variety of additional features to make it one of the most versatile menu bar tools available.'
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
   INSTALL_BUTTON_TEXT: 'Install'
   REINSTALL_BUTTON_TEXT: 'Install'
