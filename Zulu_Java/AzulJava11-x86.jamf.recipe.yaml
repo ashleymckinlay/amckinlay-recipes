@@ -1,60 +1,49 @@
-Description: |
-  Downloads the latest release dmg version of Azul Zulu Java for
-  given Java version, architecture, and bundle type (JDK/JRE),
-  then uploads the package to Jamf Pro, creating the Category if required.
-
-  Architectures: x86, arm
-  Bundle Types: jre, jdk, jre_fx, jdk_fx
-
-  JSS_URL, API_USERNAME, and API_PASSWORD, and for non-cloud instances
-  SMB_URL, SMB_USERNAME and SMB_PASSWORD, are expected to be populated
-  in your AutoPkg preferences, override Input variables, or by
-  command-line keys.
+Description: Downloads the latest version of the Rectangle App, then uploads to your Jamf Pro instance.
 Identifier: com.github.ashleymckinlay.x86_64.jamf.AzulZuluJava11
-MinimumVersion: 2.3.0
 ParentRecipe: com.github.ashleymckinlay.x86_64.pkg.AzulZuluJava11
+MinimumVersion: 2.3.0
 
 Input:
-  NAME: AzulZuluJava
-  JAVA_MAJOR_VERSION: "11"
-  ARCHITECTURE: x86
-  BUNDLE_TYPE: jdk
-  JAMF_CATEGORY: Developer Tools
-  JAMF_CATEGORY_PRIORITY: '10'
-  JAMF_CATEGORY_REPLACE: 'False'
-  JAMF_PKG_NAME: '%NAME%'
-  JAMF_PKG_INFO: 'Azul Zulu builds of OpenJDK are open source, TCK-tested and certified builds of OpenJDK. Azul Zulu is available for a wide range of hardware platforms and operating systems.'
-  JAMF_PKG_NOTES: 'Generated and uploaded by AutoPkg'
-  JAMF_PKG_PRIORITY: '10'
-  JAMF_PKG_REBOOT_REQUIRED: 'False'
-  JAMF_PKG_OS_REQUIREMENTS: ''
-  JAMF_PKG_REQUIRED_PROCESSOR: None
-  JAMF_PKG_SEND_NOTIFICATION: 'False'
-  JAMF_PKG_REPLACE: 'False'
-  JAMF_PKG_REPLACE_METADATA: 'False'
+  NAME: Azul JDK 11 (x86)
+  SOFTWARE_TITLE: Azul JDK 11
+  CATEGORY: Utilities
+  GROUP_NAME: '%NAME%-update-smart'
+  GROUP_TEMPLATE: SmartGroup-update-smart.xml
+  POLICY_CATEGORY: Applications
+  POLICY_TEMPLATE: PolicyTemplate.xml
+  POLICY_NAME: 'Install Latest %NAME%'
+  POLICY_RUN_COMMAND: ' '
+  SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
+  SELF_SERVICE_DESCRIPTION: 'Azul Zulu builds of OpenJDK are open source, TCK-tested and certified builds of OpenJDK. Azul Zulu is available for a wide range of hardware platforms and operating systems.'
+  SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
+  INSTALL_BUTTON_TEXT: 'Install'
+  REINSTALL_BUTTON_TEXT: 'Install'
+  UPDATE_PREDICATE: 'pkg_uploaded == False'
 
 Process:
-- Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
-  Arguments:
-    category_name: '%JAMF_CATEGORY%'
-    category_priority: '%JAMF_CATEGORY_PRIORITY%'
-    replace_category: '%JAMF_CATEGORY_REPLACE%'
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%UPDATE_PREDICATE%'
 
-- Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
-  Arguments:
-    pkg_name: '%JAMF_PKG_NAME%_%java_version%.%openjdk_build_number%_%BUNDLE_TYPE%_%ARCHITECTURE%-%version%.pkg'
-    pkg_category: '%JAMF_CATEGORY%'
-    pkg_info: '%JAMF_PKG_INFO%'
-    pkg_notes: '%JAMF_PKG_NOTES%'
-    pkg_priority: '%JAMF_PKG_PRIORITY%'
-    reboot_required: '%JAMF_PKG_REBOOT_REQUIRED%'
-    os_requirements: '%JAMF_PKG_OS_REQUIREMENTS%'
-    required_processor: '%JAMF_PKG_REQUIRED_PROCESSOR%'
-    send_notification: '%JAMF_PKG_SEND_NOTIFICATION%'
-    replace_pkg: '%JAMF_PKG_REPLACE%'
-    replace_pkg_metadata: '%JAMF_PKG_REPLACE_METADATA%'
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
+    Arguments:
+      category_name: '%CATEGORY%'
 
-- Processor: PathDeleter
-  Arguments:
-    path_list:
-    - '%pkg_path%'
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: '%CATEGORY%'
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%UPDATE_PREDICATE%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
+    Arguments:
+      computergroup_template: '%GROUP_TEMPLATE%'
+      computergroup_name: '%GROUP_NAME%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
+    Arguments:
+      policy_template: '%POLICY_TEMPLATE%'
+      policy_name: '%POLICY_NAME%'
+      icon: '%SELF_SERVICE_ICON%'
