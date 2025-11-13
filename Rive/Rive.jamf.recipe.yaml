@@ -1,0 +1,30 @@
+---
+Description: Downloads the latest version, makes a pkg, uploads to the Jamf Pro
+  Server, and creates a Self Service Policy.
+Identifier: com.ashleymckinlay.jamf.Rive
+Input:
+  ALL_COMPUTERS: "true"
+  CATEGORY: Applications
+  GROUP_NAME: Apps
+  GROUP_TEMPLATE: Live-Group-Template.xml
+  INSTALL_BUTTON_TEXT: Install
+  NAME: Rive
+  POLICY_CATEGORY: "%CATEGORY%"
+  POLICY_NAME: "%NAME%"
+  POLICY_TEMPLATE: Live-Policy-Template.xml
+  REINSTALL_BUTTON_TEXT: Reinstall
+  SELF_SERVICE_AVAILABLE: "true"
+  SELF_SERVICE_CATEGORY: Collaboration
+  SELF_SERVICE_DESCRIPTION: Rive combines an interactive design tool, a new
+    stateful graphics format, a lightweight multi-platform runtime, and a
+    blazing-fast vector renderer. This end-to-end pipeline brings interfaces to
+    life with motion. It gives designers and devs the tools to build
+    award-winning interactive experiences across apps, games, websites,
+    products, and vehicles.
+  SELF_SERVICE_DISPLAY_NAME: "%NAME%"
+  SELF_SERVICE_ICON: "%NAME%.png"
+  SOFTWARE_TITLE: "%NAME%"
+  SOFTWARE_TITLE_TRIGGER: "%SOFTWARE_TITLE%"
+  UPDATE_PREDICATE: pkg_uploaded == False
+MinimumVersion: "2.3"
+ParentRecipe: com.ashleymckinlay.pkg.Rive
