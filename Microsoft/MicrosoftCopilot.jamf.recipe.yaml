@@ -1,20 +1,18 @@
 Description: Downloads the latest version, makes a pkg, uploads to the Jamf Pro Server, and creates a Self Service Policy.
-Identifier: com.github.amckinlay.jamf.microsoftcopliot
+Identifier: com.github.ashleymckinlay.jamf.microsoftcopliot
 ParentRecipe: com.github.rtrouton.pkg.microsoftcopliot
 MinimumVersion: '2.3'
 
 Input:
   NAME: 'Microsoft Copilot'
-  SOFTWARE_TITLE: 'Microsoft Copilot'
   CATEGORY: Applications
-  GROUP_NAME: Applications
+  GROUP_NAME: '%NAME%-update-smart'
   GROUP_TEMPLATE: SmartGroup-update-smart.xml
   POLICY_CATEGORY: '%CATEGORY%'
-  POLICY_TEMPLATE: PolicyTemplate.xml
+  POLICY_TEMPLATE: Policy-install-latest.xml
   POLICY_NAME: 'Install Latest %NAME%'
   POLICY_RUN_COMMAND: ' '
   SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
-  REINSTALL_BUTTON_TEXT: Reinstall
   SELF_SERVICE_DESCRIPTION: 'Your AI companion on macOS — chat in GPT-5 Smart Mode, enjoy smooth native experience, have voice chats, spark ideas with Think Deeper, and create AI images.'
   SELF_SERVICE_ICON: '%NAME%.png'
   INSTALL_BUTTON_TEXT: 'Install'
@@ -22,10 +20,6 @@ Input:
   UPDATE_PREDICATE: 'pkg_uploaded == False'
 
 Process:
-  - Processor: StopProcessingIf
-    Arguments:
-      predicate: '%UPDATE_PREDICATE%'
-
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
       category_name: '%CATEGORY%'
