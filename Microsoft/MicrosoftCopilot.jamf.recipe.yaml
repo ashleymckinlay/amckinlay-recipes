@@ -2,27 +2,24 @@ Description: Downloads the latest version, makes a pkg, uploads to the Jamf Pro 
 Identifier: com.github.amckinlay.jamf.microsoftcopliot
 ParentRecipe: com.github.rtrouton.pkg.microsoftcopliot
 MinimumVersion: '2.3'
+
 Input:
-  NAME: Copilot
-  ALL_COMPUTERS: 'true'
+  NAME: 'Microsoft Copilot'
+  SOFTWARE_TITLE: 'Microsoft Copilot'
   CATEGORY: Applications
-  GROUP_NAME: Apps
-  GROUP_TEMPLATE: Live-Group-Template.xml
-  INSTALL_BUTTON_TEXT: Install
+  GROUP_NAME: Applications
+  GROUP_TEMPLATE: SmartGroup-update-smart.xml
   POLICY_CATEGORY: '%CATEGORY%'
-  POLICY_NAME: '%NAME%'
+  POLICY_TEMPLATE: PolicyTemplate.xml
+  POLICY_NAME: 'Install Latest %NAME%'
   POLICY_RUN_COMMAND: ' '
-  POLICY_TEMPLATE: Live-Policy-Template.xml
+  SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
   REINSTALL_BUTTON_TEXT: Reinstall
-  SELF_SERVICE_AVAILABLE: 'true'
-  SELF_SERVICE_CATEGORY: '%CATEGORY%'
   SELF_SERVICE_DESCRIPTION: 'Your AI companion on macOS — chat in GPT-5 Smart Mode, enjoy smooth native experience, have voice chats, spark ideas with Think Deeper, and create AI images.'
-  SELF_SERVICE_DISPLAY_NAME: '%NAME%'
   SELF_SERVICE_ICON: '%NAME%.png'
-  SIGNING_CERTIFICATE: 'Developer ID Installer: ANZ Banking Group Limited (JC79QBZPRF)'
-  SOFTWARE_TITLE: '%NAME%'
-  SOFTWARE_TITLE_TRIGGER: '%SOFTWARE_TITLE%'
-  UPDATE_PREDICATE: pkg_uploaded == False
+  INSTALL_BUTTON_TEXT: 'Install'
+  REINSTALL_BUTTON_TEXT: 'Install'
+  UPDATE_PREDICATE: 'pkg_uploaded == False'
 
 Process:
   - Processor: StopProcessingIf

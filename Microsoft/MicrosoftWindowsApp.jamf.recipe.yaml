@@ -7,7 +7,7 @@ Input:
   NAME: 'Microsoft Windows App'
   SOFTWARE_TITLE: 'Microsoft Windows App'
   CATEGORY: Applications
-  GROUP_NAME: '%NAME%-update-smart'
+  GROUP_NAME: Applications
   GROUP_TEMPLATE: SmartGroup-update-smart.xml
   POLICY_CATEGORY: Applications
   POLICY_TEMPLATE: PolicyTemplate.xml
