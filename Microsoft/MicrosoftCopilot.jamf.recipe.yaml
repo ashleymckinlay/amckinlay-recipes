@@ -1,6 +1,6 @@
 Description: Downloads the latest version, makes a pkg, uploads to the Jamf Pro Server, and creates a Self Service Policy.
-Identifier: com.github.ashleymckinlay.jamf.microsoftcopliot
-ParentRecipe: com.github.rtrouton.pkg.microsoftcopliot
+Identifier: com.github.ashleymckinlay.jamf.microsoftcopilot
+ParentRecipe: com.github.rtrouton.pkg.microsoftcopilot
 MinimumVersion: '2.3'
 
 Input:
