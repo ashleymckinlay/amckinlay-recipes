@@ -6,7 +6,7 @@ Input:
   SOFTWARE_TITLE: Android_Studio
   ARCHITECTURE: 'arm64'
   ARCH_SEARCH: 'mac_arm'
-  SEARCH_PATTERN: '(https\://edgedl.me.gvt1.com/android/studio/install/.+/android-studio-panda1-patch1-.+%ARCH_SEARCH%\.dmg)'
+  SEARCH_PATTERN: '(https\://edgedl\.me\.gvt1\.com/android/studio/install/.+/android-studio-panda1-patch1-.+%ARCH_SEARCH%\.dmg)'
   SEARCH_URL: 'https://developer.android.com/studio'
 
 Process:
