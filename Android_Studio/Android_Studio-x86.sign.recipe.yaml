@@ -1,5 +1,5 @@
-Identifier: com.github.amckinlay.sign.Android_Studio
-ParentRecipe: com.github.amckinlay.pkg.Android_Studio
+Identifier: com.github.amckinlay.sign.x86_64.Android_Studio
+ParentRecipe: com.github.amckinlay.pkg.x86_64.Android_Studio
 MinimumVersion: '2.3'
 
 Input:

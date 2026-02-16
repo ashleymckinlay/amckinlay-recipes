@@ -1,5 +1,5 @@
 Comment: Set ARCHITECTURE to x86_64 or arm64
-Identifier: com.github.amckinlay.jamf.Android_Studio
+Identifier: com.github.amckinlay.jamf.x86_64.Android_Studio
 ParentRecipe: com.github.amckinlay.sign.Android_Studio
 MinimumVersion: '2.3'
 
