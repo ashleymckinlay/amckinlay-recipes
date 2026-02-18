@@ -6,16 +6,10 @@ Input:
   NAME: VisualStudioCode
 
 Process:
-  - Processor: FindAndReplace
-    Arguments:
-      find: x86_64
-      input_string: "%ARCH%"
-      replace: x64
-      result_output_var_name: DOWNLOAD_ARCH
 
   - Processor: URLDownloader
     Arguments:
-      url: "https://code.visualstudio.com/sha/download?build=stable&os=darwin-%DOWNLOAD_ARCH%-dmg"
+      url: "https://code.visualstudio.com/sha/download?build=stable&os=darwin-universal-dmg"
       filename: "%NAME%-%ARCH%.dmg"
 
   - Processor: EndOfCheckPhase
