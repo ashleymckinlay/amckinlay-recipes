@@ -1,34 +1,34 @@
-Comment: Set ARCHITECTURE to x86_64 or arm64
-Identifier: com.github.amckinlay.jamf.x86_64.Android_Studio
-ParentRecipe: com.github.amckinlay.sign.x86_64.Android_Studio
+Identifier: com.github.amckinlay.jamf.Visual_Studio_Code
+ParentRecipe: com.github.amckinlay.pkg.Visual_Studio_Code
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Android Studio
-  SOFTWARE_TITLE: Android_Studio
-  CATEGORY: Development
-  ARCHITECTURE: 'x86_64'
-  GROUP_CRITERIA: '%ARCHITECTURE%'
-  GROUP_NAME: 'Architecture - %ARCHITECTURE%'
-  GROUP_TEMPLATE: 'SmartGroup-architecture-smart.xml'
+  NAME: Visual Studio Code
+  SOFTWARE_TITLE: Visual Studio Code
+  CATEGORY: Productivity
+  GROUP_NAME: '%NAME%-update-smart'
+  GROUP_TEMPLATE: SmartGroup-update-smart.xml
+  TESTING_GROUP_NAME: Testing
   POLICY_CATEGORY: Testing
-  POLICY_TEMPLATE: PolicyTemplate.xml
-  POLICY_NAME: 'Install Latest %NAME% (%ARCHITECTURE%)'
+  POLICY_TEMPLATE: Policy-install-latest.xml
+  POLICY_NAME: 'Install Latest %NAME%'
   POLICY_RUN_COMMAND: ' '
   SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
-  SELF_SERVICE_DESCRIPTION: Install the latest version of Android Studio.
+  SELF_SERVICE_DESCRIPTION: Visual Studio Code is a source code editor which includes support for debugging, embedded Git control, syntax highlighting, intelligent code completion, snippets, and code refactoring.
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
   INSTALL_BUTTON_TEXT: 'Install'
   REINSTALL_BUTTON_TEXT: 'Install'
   UPDATE_PREDICATE: 'pkg_uploaded == False'
 
 Process:
-  - Processor: StopProcessingIf
+  - Processor: FileMover
     Arguments:
-      predicate: '%UPDATE_PREDICATE%'
+      source: '%pkg_path%'
+      target: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
       category_name: '%CATEGORY%'
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
