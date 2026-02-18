@@ -4,8 +4,8 @@ ParentRecipe: com.github.amckinlay.x86_64.pkg.AndroidStudio
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Android Studio
-  SOFTWARE_TITLE: Android_Studio
+  NAME: 'Android Studio'
+  SOFTWARE_TITLE: '%NAME%'
   CATEGORY: Development
   ARCHITECTURE: 'x86_64'
   GROUP_CRITERIA: '%ARCHITECTURE%'

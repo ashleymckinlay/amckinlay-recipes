@@ -5,7 +5,7 @@ MinimumVersion: '2.3'
 
 Input:
   NAME: Android Studio
-  SOFTWARE_TITLE: Android_Studio
+  SOFTWARE_TITLE: '%NAME%'
   CATEGORY: Development
   ARCHITECTURE: 'arm64'
   GROUP_CRITERIA: '%ARCHITECTURE%'
