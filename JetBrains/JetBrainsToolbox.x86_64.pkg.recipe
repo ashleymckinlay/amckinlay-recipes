@@ -14,7 +14,7 @@
 		<string>JetBrains-Toolbox.x86_64</string>
 	</dict>
 	<key>MinimumVersion</key>
-	<string>1.0.0</string>
+	<string>2.3</string>
 	<key>ParentRecipe</key>
 	<string>com.github.ashleymckinlay.x86_64.download.JetBrainsToolBox</string>
 	<key>Process</key>
