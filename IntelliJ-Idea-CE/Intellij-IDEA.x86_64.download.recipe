@@ -7,7 +7,7 @@
     <key>Comment</key>
     <string>For the ARCH_TYPE variable use "mac" for Intel, use "macM1" for Apple Silicon</string>
     <key>Identifier</key>
-    <string>ccom.github.amckinlay.download.x86_64.ideace</string>
+    <string>com.github.amckinlay.download.x86_64.ideace</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
