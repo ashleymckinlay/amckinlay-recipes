@@ -1,6 +1,6 @@
 Description: Downloads the latest version of the JetBrains App, then uploads to your Jamf Pro instance.
 Identifier: com.github.ashleymckinlay.arm64.jamf.JetBrainsToolBox
-ParentRecipe: com.github.ashleymckinlay.arm64.jamf.JetBrainsToolBox
+ParentRecipe: com.github.ashleymckinlay.arm64.pkg.JetBrainsToolBox
 MinimumVersion: '1.2'
 
 Input:
