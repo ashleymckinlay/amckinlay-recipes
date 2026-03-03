@@ -7,7 +7,7 @@ Input:
   NAME: JetBrains
   SOFTWARE_TITLE: JetBrains
   CATEGORY: Applications
-  ARCHITECTURE: 'arm64'
+  ARCHITECTURE: 'x86_64'
   GROUP_CRITERIA: '%ARCHITECTURE%'
   GROUP_NAME: 'Architecture - %ARCHITECTURE%'
   GROUP_TEMPLATE: 'SmartGroup-architecture-smart.xml'
