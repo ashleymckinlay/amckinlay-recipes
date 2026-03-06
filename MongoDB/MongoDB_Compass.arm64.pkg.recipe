@@ -23,7 +23,7 @@
 				<key>Arguments</key>
 			<dict>
 				<key>pkg_path</key>
-				<string>%NAME%-%DOWNLOAD_TYPE%-%version%.pkg</string>
+				<string>%NAME%-%DOWNLOAD_TYPE%-%DOWNLOAD_VERSION%.pkg</string>
 			</dict>
 			<key>Processor</key>
 			<string>AppPkgCreator</string>
