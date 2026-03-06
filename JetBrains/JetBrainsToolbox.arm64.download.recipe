@@ -3,9 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>Description</key>
-	<string>Downloads the latest version of JetBrains Toolbox.
-ARCH can be one of 'mac' or 'macM1'
-	</string>
+	<string>Downloads the latest version of JetBrains Toolbox. ARCH can be one of 'mac' or 'macM1'</string>
 	<key>Identifier</key>
 	<string>com.github.ashleymckinlay.arm64.download.JetBrainsToolBox</string>
 	<key>Input</key>
