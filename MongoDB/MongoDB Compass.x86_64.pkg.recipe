@@ -7,7 +7,7 @@
 	<key>Description</key>
 	<string>Downloads the latest version of MongoDB Compass and creates a package.</string>
 	<key>Identifier</key>
-	<string>com.github.ashleymckinlay.pkg.MongoDBCompass</string>
+	<string>com.github.ashleymckinlay.x86_64.pkg.MongoDBCompass</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
@@ -16,7 +16,7 @@
 	<key>MinimumVersion</key>
 	<string>2.3</string>
 	<key>ParentRecipe</key>
-	<string>com.github.ashleymckinlay.download.MongoDBCompass</string>
+	<string>com.github.ashleymckinlay.x86_64.download.MongoDBCompass</string>
 	<key>Process</key>
 	<array>
 		<dict>
