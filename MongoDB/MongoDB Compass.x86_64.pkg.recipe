@@ -22,10 +22,14 @@
 		<dict>
 			<key>Processor</key>
 			<string>AppPkgCreator</string>
-			<key>Arguments</key>
-			<dict>
-                    <key>pkgname</key>
-                    <string>%RECIPE_CACHE_DIR%/%NAME%-%DOWNLOAD_TYPE%-%DOWNLOAD_VERSION%.pkg</string>
+    		<key>Processor</key>
+    		<string>PkgCopier</string>
+    		<key>Arguments</key>
+    		<dict>
+        			<key>source_pkg</key>
+        			<string>%pathname%</string>
+        			<key>pkg_path</key>
+        			<string>%RECIPE_CACHE_DIR%/%NAME%-%DOWNLOAD_TYPE%-%DOWNLOAD_VERSION%.pkg</string>
 			</dict>
 		</dict>
 	</array>
