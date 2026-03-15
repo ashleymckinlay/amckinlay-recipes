@@ -20,13 +20,13 @@
 	<key>Process</key>
 	<array>
 		<dict>
-				<key>Arguments</key>
-			<dict>
-				<key>pkg_path</key>
-				<string>%NAME%-%DOWNLOAD_TYPE%-%DOWNLOAD_VERSION%.pkg</string>
-			</dict>
 			<key>Processor</key>
 			<string>AppPkgCreator</string>
+			<key>Arguments</key>
+			<dict>
+                    <key>pkgname</key>
+                    <string>%NAME%-%DOWNLOAD_TYPE%-%DOWNLOAD_VERSION%</string>
+			</dict>
 		</dict>
 	</array>
 </dict>
