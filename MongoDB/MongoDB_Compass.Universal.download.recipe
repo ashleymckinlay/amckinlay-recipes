@@ -20,9 +20,9 @@
 		<key>SEARCH_URL</key>
 		<string>https://github.com/mongodb-js/compass/releases</string>
 		<key>INTEL_SEARCH_PATTERN</key>
-		<string>(?P&lt;url&gt;http.*?://downloads.mongodb.com/compass/mongodb-compass-*?-darwin-%INTEL_ARCHITECTURE%.dmg)</string>
+		<string>(?P&lt;url&gt;http.*?://downloads.mongodb.com/compass/mongodb-compass-%DOWNLOAD_VERSION%-darwin-%INTEL_ARCHITECTURE%.dmg)</string>
 		<key>APPLE_SILICON_SEARCH_PATTERN</key>
-		<string>(?P&lt;url&gt;http.*?://downloads.mongodb.com/compass/mongodb-compass-.*?-darwin-%APPLE_SILICON_ARCHITECTURE%.dmg)</string>
+		<string>(?P&lt;url&gt;http.*?://downloads.mongodb.com/compass/mongodb-compass-%DOWNLOAD_VERSION%-darwin-%APPLE_SILICON_ARCHITECTURE%.dmg)</string>
 		<key>INTEL_ARCHITECTURE</key>
 		<string>x64</string>
 		<key>APPLE_SILICON_ARCHITECTURE</key>
@@ -32,7 +32,20 @@
 	<string>1.0.0</string>
 	<key>Process</key>
 	<array>
-		<dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>re_pattern</key>
+                <string>mongodb-compass-([A-Za-z0-9]+(\.[A-Za-z0-9]+)+)-darwin</string>
+                <key>result_output_var_name</key>
+                <string>DOWNLOAD_VERSION</string>
+                <key>url</key>
+                <string>https://www.mongodb.com/try/download/compass</string>
+            </dict>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+        </dict>
+        <dict>
 			<key>Processor</key>
 			<string>URLTextSearcher</string>
 			<key>Arguments</key>
