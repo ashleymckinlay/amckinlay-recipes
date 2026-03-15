@@ -20,9 +20,9 @@
 		<key>SEARCH_URL</key>
 		<string>https://github.com/mongodb-js/compass/releases</string>
 		<key>INTEL_SEARCH_PATTERN</key>
-		<string>(?P&lt;url&gt;http.*?://downloads.mongodb.com/compass/mongodb-compass-%DOWNLOAD_VERSION%-darwin-%INTEL_ARCHITECTURE%.dmg)</string>
+		<string>(?P&lt;url&gt;http.*?://downloads.mongodb.com/compass/mongodb-compass-*?-darwin-%INTEL_ARCHITECTURE%.dmg)</string>
 		<key>APPLE_SILICON_SEARCH_PATTERN</key>
-		<string>(?P&lt;url&gt;http.*?://downloads.mongodb.com/compass/mongodb-compass-%DOWNLOAD_VERSION%-darwin-%APPLE_SILICON_ARCHITECTURE%.dmg)</string>
+		<string>(?P&lt;url&gt;http.*?://downloads.mongodb.com/compass/mongodb-compass-.*?-darwin-%APPLE_SILICON_ARCHITECTURE%.dmg)</string>
 		<key>INTEL_ARCHITECTURE</key>
 		<string>x64</string>
 		<key>APPLE_SILICON_ARCHITECTURE</key>
