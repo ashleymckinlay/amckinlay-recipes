@@ -1,8 +1,8 @@
 ---
 Description: Downloads the latest version of the MongoDB App, then
   uploads to your Jamf Pro instance.
-Identifier: com.github.ashleymckinlay.x86_64.jamf.MongoDB
-ParentRecipe: com.github.ashleymckinlay.x86_64.pkg.MongoDB
+Identifier: com.github.ashleymckinlay.x86_64.jamf.MongoDBCompass
+ParentRecipe: com.github.ashleymckinlay.x86_64.pkg.MongoDBCompass
 MinimumVersion: "1.2"
 Input:
   NAME: MongoDB
