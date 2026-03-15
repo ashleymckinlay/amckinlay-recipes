@@ -32,6 +32,18 @@
 	<string>1.0.0</string>
 	<key>Process</key>
 	<array>
+       <dict>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+			<key>Arguments</key>
+			<dict>
+	            <key>re_pattern</key>
+	            <string>/mongodb-js/compass/releases/tag/v([\d.]+)"</string>
+	            <key>result_output_var_name</key>
+	            <string>version</string>
+	            <key>url</key>
+	            <string>https://github.com/mongodb-js/compass/releases</string>
+        </dict>
         <dict>
 			<key>Processor</key>
 			<string>URLTextSearcher</string>
