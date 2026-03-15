@@ -20,17 +20,11 @@
 	<key>Process</key>
 	<array>
 		<dict>
-                <key>Processor</key>
-                <string>PkgCopier</string>
-                <key>Arguments</key>
-                <dict>
-                    <key>source_pkg</key>
-                    <string>%RECIPE_CACHE_DIR%/%NAME%-%DOWNLOAD_VERSION%.pkg</string>
-                    <key>pkg_path</key>
-                    <string>%RECIPE_CACHE_DIR%/%NAME%-%DOWNLOAD_TYPE%-%DOWNLOAD_VERSION%.pkg</string>
-                </dict>
-		</dict>
-		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>pkg_path</key>
+				<string>%RECIPE_CACHE_DIR%/%NAME%-%ARCH%-%DOWNLOAD_VERSION%.pkg</string>
+			</dict>
 			<key>Processor</key>
 			<string>AppPkgCreator</string>
 		</dict>
