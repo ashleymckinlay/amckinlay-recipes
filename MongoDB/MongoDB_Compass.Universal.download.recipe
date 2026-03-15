@@ -18,7 +18,7 @@
 		<key>NAMEWITHOUTSPACES</key>
 		<string>CreativeCloudInstaller</string>
 		<key>SEARCH_URL</key>
-		<string>https://github.com/mongodb-js/compass/releases</string>
+		<string>https://www.mongodb.com/try/download/compass</string>
 		<key>INTEL_SEARCH_PATTERN</key>
 		<string>(?P&lt;url&gt;http.*?://downloads.mongodb.com/compass/mongodb-compass-.*?-darwin-%INTEL_ARCHITECTURE%.dmg)</string>
 		<key>APPLE_SILICON_SEARCH_PATTERN</key>
