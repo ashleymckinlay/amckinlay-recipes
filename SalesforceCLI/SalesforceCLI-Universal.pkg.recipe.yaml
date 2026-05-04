@@ -21,13 +21,13 @@ Process:
 
   - Processor: FlatPkgUnpacker
     Arguments:
-      pkg_path: '%RECIPE_CACHE_DIR%/downloads/sf-arm64.pkg'
-      unpack_dir: '%RECIPE_CACHE_DIR%/unpack/arm64'
+      flt_pkg_path: '%RECIPE_CACHE_DIR%/downloads/sf-arm64.pkg'
+      destination_path: '%RECIPE_CACHE_DIR%/unpack/arm64'
 
-  - Processor: PackageInfoVersionReader
+  - Processor: PackageInfoVersioner
     Arguments:
-      input_plist_path: '%RECIPE_CACHE_DIR%/unpack/arm64'
-      plist_version_key: version
+      package_info_path: '%RECIPE_CACHE_DIR%/unpack/arm64'
+      version: version
 
   - Processor: Copier
     Arguments:
