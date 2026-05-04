@@ -1,0 +1,29 @@
+Comment: |
+  Utilises Shared Processors from https://github.com/jgstew/jgstew-recipes
+  This recipe uses the processor StopProcessingIfDownloadUnchanged which by defauly will stop your recipe
+  processing if the download has not changed. To override this you can run the recipe with
+  --key bypass_stop_processing_if=TRUE
+Description: Downloads the latest versions of SalesforceCLI (arm and intel).
+Identifier: com.github.ashleymckinlay.download.SalesforceCLI-Universal
+MinimumVersion: '2.4.1'
+
+Input:
+  NAME: SalesforceCLI
+  arm_dl_url: 'https://developer.salesforce.com/media/salesforce-cli/sf/channels/stable/sf-arm64.pkg'
+  intel_dl_url: 'https://developer.salesforce.com/media/salesforce-cli/sf/channels/stable/sf-x64.pkg'
+
+Process:
+  - Processor: URLDownloaderPython
+    Arguments:
+      filename: 'sf-arm64.pkg'
+      download_dir: '%RECIPE_CACHE_DIR%/downloads'
+      url: '%arm_dl_url%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      filename: 'sf-x64.pkg'
+      download_dir: '%RECIPE_CACHE_DIR%/downloads'
+      url: '%intel_dl_url%'
+
+  - Processor: EndOfCheckPhase
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
