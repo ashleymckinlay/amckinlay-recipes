@@ -1,0 +1,73 @@
+---
+Comment: |
+  Current versions of SalesforceCLI may not install correctly in unattented environments.
+  Due to recent changes to SalesforceCLI, the postinstall will check for the logged_in_user
+  and may not install correctly if there is no user logged in.
+Description: Downloads the latest versions of SalesforceCLI (arm and intel) and creates a package.
+Identifier: com.github.ashleymckinlay.pkg.SalesforceCLI-Universal
+ParentRecipe: com.github.ashleymckinlay.download.SalesforceCLI-Universal
+MinimumVersion: '2.3'
+
+Input:
+  NAME: SalesforceCLI
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgdirs:
+        pkgroot: '0775'
+        scripts: '0775'
+
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/downloads/sf-arm64.pkg'
+      unpack_dir: '%RECIPE_CACHE_DIR%/unpack/arm64'
+
+  - Processor: PackageInfoVersionReader
+    Arguments:
+      input_plist_path: '%RECIPE_CACHE_DIR%/unpack/arm64'
+      plist_version_key: version
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/downloads/sf-arm64.pkg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/sf-arm64-%version%.pkg'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/downloads/sf-x64.pkg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/sf-x64-%version%.pkg'
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/preinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+
+        if [[ $( /usr/bin/arch ) = arm64* ]]; then
+          echo "Installing SalesforceCLI-arm64-%version%"
+          /usr/sbin/installer -pkg "/Library/Receipts/sf-arm64-%version%.pkg" -target /
+        else
+          echo "Installing SalesforceCLI-x86_64-%version%"
+          /usr/sbin/installer -pkg "/Library/Receipts/sf-x64-%version%.pkg" -target /
+        fi
+
+        exit 0
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: '%bundleid%'
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%NAME%_Universal-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload/pkgroot'
+        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
+        version: '%version%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'
