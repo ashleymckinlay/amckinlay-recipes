@@ -10,6 +10,7 @@ MinimumVersion: '2.3'
 
 Input:
   NAME: SalesforceCLI
+  bundleid: com.salesforce.cli.universal
 
 Process:
   - Processor: PkgRootCreator
