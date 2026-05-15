@@ -2,27 +2,27 @@
 Description: Downloads the latest version, makes a pkg, uploads to the Jamf Pro
   Server, and creates a Self Service Policy.
 Identifier: com.github.ashleymckinlay.jamf.awscli
-MinimumVersion: "2.3"
+MinimumVersion: '2.3'
 ParentRecipe: com.github.ashleymckinlay.pkg.awscli
 
 Input:
   NAME: AWSCLI
-  ALL_COMPUTERS: "true"
+  ALL_COMPUTERS: 'true'
   CATEGORY: Applications
   GROUP_NAME: Apps
   GROUP_TEMPLATE: Live-Group-Template.xml
   INSTALL_BUTTON_TEXT: Install
-  POLICY_CATEGORY: "%CATEGORY%"
-  POLICY_NAME: "%NAME%"
+  POLICY_CATEGORY: '%CATEGORY%'
+  POLICY_NAME: '%NAME%'
   POLICY_TEMPLATE: Live-Policy-Template.xml
   REINSTALL_BUTTON_TEXT: Reinstall
-  SELF_SERVICE_AVAILABLE: "true"
+  SELF_SERVICE_AVAILABLE: 'true'
   SELF_SERVICE_CATEGORY: Collaboration
   SELF_SERVICE_DESCRIPTION: The AWS Command Line Interface (AWS CLI) is a unified tool to manage your AWS services. With just one tool to download and configure, you can control multiple AWS services from the command line and automate them through scripts.
-  SELF_SERVICE_DISPLAY_NAME: "%NAME%"
-  SELF_SERVICE_ICON: "%NAME%.png"
-  SOFTWARE_TITLE: "%NAME%"
-  SOFTWARE_TITLE_TRIGGER: "%SOFTWARE_TITLE%"
+  SELF_SERVICE_DISPLAY_NAME: '%NAME%'
+  SELF_SERVICE_ICON: '%NAME%.png'
+  SOFTWARE_TITLE: '%NAME%'
+  SOFTWARE_TITLE_TRIGGER: '%SOFTWARE_TITLE%'
   UPDATE_PREDICATE: pkg_uploaded == False
 
 ParentRecipeTrustInfo:
