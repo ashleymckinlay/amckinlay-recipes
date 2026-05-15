@@ -2,13 +2,16 @@
 Description: Downloads the latest version, makes a pkg, uploads to the Jamf Pro
   Server, and creates a Self Service Policy.
 Identifier: com.github.ashleymckinlay.jamf.awscli
+MinimumVersion: "2.3"
+ParentRecipe: com.github.ashleymckinlay.pkg.awscli
+
 Input:
+  NAME: AWSCLI
   ALL_COMPUTERS: "true"
   CATEGORY: Applications
   GROUP_NAME: Apps
   GROUP_TEMPLATE: Live-Group-Template.xml
   INSTALL_BUTTON_TEXT: Install
-  NAME: AWSCLI
   POLICY_CATEGORY: "%CATEGORY%"
   POLICY_NAME: "%NAME%"
   POLICY_TEMPLATE: Live-Policy-Template.xml
@@ -21,11 +24,8 @@ Input:
   SOFTWARE_TITLE: "%NAME%"
   SOFTWARE_TITLE_TRIGGER: "%SOFTWARE_TITLE%"
   UPDATE_PREDICATE: pkg_uploaded == False
-MinimumVersion: "2.3"
-ParentRecipe: com.github.ashleymckinlay.pkg.awscli
 
 ParentRecipeTrustInfo:
-  ParentRecipeTrustInfo:
   non_core_processors:
     com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader:
       path: ~/Library/AutoPkg/RecipeRepos/com.github.autopkg.grahampugh-recipes/JamfUploaderProcessors/JamfCategoryUploader.py
