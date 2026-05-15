@@ -8,7 +8,7 @@
 Tags are used since contents of pkg don't have easily parse-able version, probably brittle.
 </string>
 	<key>Identifier</key>
-	<string>com.github.ashleymckinlay.pkg.awscli</string>
+	<string>com.github.ashleymckinlay.pkg.AWSCLI</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
@@ -17,12 +17,10 @@ Tags are used since contents of pkg don't have easily parse-able version, probab
 	<key>MinimumVersion</key>
 	<string>0.4.0</string>
 	<key>ParentRecipe</key>
-	<string>com.github.ashleymckinlay.download.awscli</string>
+	<string>com.github.ashleymckinlay.download.AWSCLI</string>
 	<key>Process</key>
 	<array>
 		<dict>
-			<key>Processor</key>
-			<string>URLTextSearcher</string>
 			<key>Arguments</key>
 			<dict>
 				<key>Comment</key>
@@ -33,18 +31,20 @@ Tags are used since contents of pkg don't have easily parse-able version, probab
 				<string>version</string>
 				<key>url</key>
 				<string>https://api.github.com/repos/aws/aws-cli/tags</string>
-			 </dict>
+			</dict>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
 		</dict>
 		<dict>
-			<key>Processor</key>
-			<string>PkgCopier</string>
 			<key>Arguments</key>
 			<dict>
-				<key>source_pkg</key>
-				<string>%pathname%</string>
 				<key>pkg_path</key>
 				<string>%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg</string>
+				<key>source_pkg</key>
+				<string>%pathname%</string>
 			</dict>
+			<key>Processor</key>
+			<string>PkgCopier</string>
 		</dict>
 	</array>
 </dict>
