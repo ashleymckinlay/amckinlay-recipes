@@ -5,7 +5,7 @@
 	<key>Description</key>
 	<string>Downloads the latest version of http://aws.amazon.com/cli/</string>
 	<key>Identifier</key>
-	<string>com.github.amckinlay.download.awscli</string>
+	<string>com.github.ashleymckinlay.download.awscli</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
