@@ -7,7 +7,7 @@
 	<key>Description</key>
 	<string>Downloads the latest version of Rive.</string>
 	<key>Identifier</key>
-	<string>com.ashleymckinlay.download.Rive</string>
+	<string>com.github.ashleymckinlay.download.Rive</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>

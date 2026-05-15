@@ -7,7 +7,7 @@
 	<key>Description</key>
 	<string>Downloads the latest version of Rive and creates a package.</string>
 	<key>Identifier</key>
-	<string>com.ashleymckinlay.pkg.Rive</string>
+	<string>com.github.ashleymckinlay.pkg.Rive</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
@@ -16,7 +16,7 @@
 	<key>MinimumVersion</key>
 	<string>2.3</string>
 	<key>ParentRecipe</key>
-	<string>com.ashleymckinlay.download.Rive</string>
+	<string>com.github.ashleymckinlay.download.Rive</string>
 	<key>Process</key>
 	<array>
 		<dict>

@@ -1,7 +1,7 @@
 ---
 Description: Downloads the latest version, makes a pkg, uploads to the Jamf Pro
   Server, and creates a Self Service Policy.
-Identifier: com.ashleymckinlay.jamf.awscli
+Identifier: com.github.ashleymckinlay.jamf.awscli
 Input:
   ALL_COMPUTERS: "true"
   CATEGORY: Applications
@@ -22,7 +22,7 @@ Input:
   SOFTWARE_TITLE_TRIGGER: "%SOFTWARE_TITLE%"
   UPDATE_PREDICATE: pkg_uploaded == False
 MinimumVersion: "2.3"
-ParentRecipe: com.ashleymckinlay.pkg.awscli
+ParentRecipe: com.github.ashleymckinlay.pkg.awscli
 
 ParentRecipeTrustInfo:
   ParentRecipeTrustInfo:

@@ -1,7 +1,7 @@
 ---
 Description: Downloads the latest version, makes a pkg, uploads to the Jamf Pro
   Server, and creates a Self Service Policy.
-Identifier: com.ashleymckinlay.jamf.Rive
+Identifier: com.github.ashleymckinlay.jamf.Rive
 Input:
   ALL_COMPUTERS: "true"
   CATEGORY: Applications
@@ -27,7 +27,7 @@ Input:
   SOFTWARE_TITLE_TRIGGER: "%SOFTWARE_TITLE%"
   UPDATE_PREDICATE: pkg_uploaded == False
 MinimumVersion: "2.3"
-ParentRecipe: com.ashleymckinlay.pkg.Rive
+ParentRecipe: com.github.ashleymckinlay.pkg.Rive
 
 ParentRecipeTrustInfo:
   ParentRecipeTrustInfo:
