@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Creates a pkg installer for pgAdmin 4 that works on both Intel and Apple Silicon Macs.</string>
+	<key>Identifier</key>
+	<string>com.github.ashleymckinlay.pkg.pgAdmin4</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>pgAdmin4</string>
+		<key>BUNDLE_ID</key>
+		<string>org.pgadmin.pgadmin4</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>2.3</string>
+	<key>ParentRecipe</key>
+	<string>com.github.ashleymckinlay.download.pgAdmin4</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Processor</key>
+			<string>PkgRootCreator</string>
+			<key>Arguments</key>
+			<dict>
+				<key>pkgroot</key>
+				<string>%RECIPE_CACHE_DIR%/pkgroot</string>
+				<key>pkgdirs</key>
+				<dict>
+					<key>Applications</key>
+					<string>0755</string>
+				</dict>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>DmgMounter</string>
+			<key>Arguments</key>
+			<dict>
+				<key>dmg_path</key>
+				<string>%RECIPE_CACHE_DIR%/%NAME%-latest-x64.dmg</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>Copier</string>
+			<key>Arguments</key>
+			<dict>
+				<key>source_path</key>
+				<string>/Volumes/pgAdmin 4/pgAdmin 4.app</string>
+				<key>destination_path</key>
+				<string>%RECIPE_CACHE_DIR%/pkgroot/Applications/pgAdmin 4.app</string>
+				<key>overwrite</key>
+				<true/>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>PkgCreator</string>
+			<key>Arguments</key>
+			<dict>
+				<key>pkgname</key>
+				<string>%NAME%</string>
+				<key>pkgroot</key>
+				<string>%RECIPE_CACHE_DIR%/pkgroot</string>
+				<key>version</key>
+				<string>%latest_version%</string>
+				<key>identifier</key>
+				<string>%BUNDLE_ID%</string>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>

@@ -1,0 +1,32 @@
+#!/bin/bash
+# postinstall script for Go language package
+
+set -e
+
+# Create symbolic links in /usr/local/bin
+GO_BIN_PATH="/usr/local/go/bin"
+USR_LOCAL_BIN="/usr/local/bin"
+
+if [[ -f "${GO_BIN_PATH}/go" ]]; then
+    ln -sf "${GO_BIN_PATH}/go" "${USR_LOCAL_BIN}/go" || true
+    ln -sf "${GO_BIN_PATH}/gofmt" "${USR_LOCAL_BIN}/gofmt" || true
+fi
+
+# Set proper permissions
+chmod +x "${GO_BIN_PATH}"/* 2>/dev/null || true
+
+# Create a profile.d snippet for shell initialization (optional)
+GO_PROFILE_DIR="/etc/profile.d"
+if [[ -d "${GO_PROFILE_DIR}" ]]; then
+    cat > "${GO_PROFILE_DIR}/go.sh" << 'EOF'
+#!/bin/bash
+# Go language environment setup
+if [[ -d /usr/local/go/bin ]]; then
+    export PATH="/usr/local/go/bin:$PATH"
+fi
+EOF
+    chmod +x "${GO_PROFILE_DIR}/go.sh"
+fi
+
+echo "Go language installation completed successfully"
+exit 0

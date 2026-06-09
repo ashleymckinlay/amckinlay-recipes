@@ -1,0 +1,11 @@
+#!/bin/bash
+# preinstall script for Go language package
+
+set -e
+
+# Remove any existing Go installation to avoid conflicts
+if [[ -d "/usr/local/go" ]]; then
+    rm -rf /usr/local/go || true
+fi
+
+exit 0
