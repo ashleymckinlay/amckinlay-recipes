@@ -10,7 +10,6 @@ Input:
   NAME: Claude_Code
   SOFTWARE_TITLE: 'Claude Code'
   CATEGORY: Applications
-  ARCHITECTURE: 'arm64'
   GROUP_NAME: '%NAME%-update-smart'
   GROUP_TEMPLATE: SmartGroup-update-smart.xml
   POLICY_CATEGORY: Engineer
@@ -18,7 +17,7 @@ Input:
   POLICY_NAME: 'Install Latest %NAME%'
   POLICY_RUN_COMMAND: ' '
   SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
-  SELF_SERVICE_DESCRIPTION: Install the latest version of Android Studio.
+  SELF_SERVICE_DESCRIPTION: Anthropic's agentic coding tool for developers. Claude Code understands your codebase, edits files, runs commands, and helps you ship faster.
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
   INSTALL_BUTTON_TEXT: 'Install'
   REINSTALL_BUTTON_TEXT: 'Install'
