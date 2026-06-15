@@ -7,21 +7,19 @@ MinimumVersion: '2.3'
 
 
 Input:
-  NAME: 'Claude Code'
-  ALL_COMPUTERS: 'true'
+  NAME: Claude_Code
+  SOFTWARE_TITLE: 'Claude Code'
   CATEGORY: Applications
-  GROUP_NAME: Apps
-  GROUP_TEMPLATE: Live-Group-Template.xml
-  INSTALL_BUTTON_TEXT: Install
-  POLICY_CATEGORY: '%CATEGORY%'
-  POLICY_NAME: '%NAME%'
-  POLICY_TEMPLATE: Live-Policy-Template.xml
-  REINSTALL_BUTTON_TEXT: Reinstall
-  SELF_SERVICE_AVAILABLE: 'true'
-  SELF_SERVICE_CATEGORY: Collaboration
-  SELF_SERVICE_DESCRIPTION: Anthropic's agentic coding tool for developers. Claude Code understands your codebase, edits files, runs commands, and helps you ship faster.
-  SELF_SERVICE_DISPLAY_NAME: '%NAME%'
-  SELF_SERVICE_ICON: '%NAME%.png'
-  SOFTWARE_TITLE: '%NAME%'
-  SOFTWARE_TITLE_TRIGGER: '%SOFTWARE_TITLE%'
-  UPDATE_PREDICATE: pkg_uploaded == False
+  ARCHITECTURE: 'arm64'
+  GROUP_NAME: '%NAME%-update-smart'
+  GROUP_TEMPLATE: SmartGroup-update-smart.xml
+  POLICY_CATEGORY: Engineer
+  POLICY_TEMPLATE: PolicyTemplate.xml
+  POLICY_NAME: 'Install Latest %NAME%'
+  POLICY_RUN_COMMAND: ' '
+  SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
+  SELF_SERVICE_DESCRIPTION: Install the latest version of Android Studio.
+  SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
+  INSTALL_BUTTON_TEXT: 'Install'
+  REINSTALL_BUTTON_TEXT: 'Install'
+  UPDATE_PREDICATE: 'pkg_uploaded == False'
