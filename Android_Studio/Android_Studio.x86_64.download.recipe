@@ -7,7 +7,7 @@
 	<key>Description</key>
 	<string>Downloads the latest version of x86_64 Android Studio. (CURRENTLY HARD-CODED)</string>
 	<key>Identifier</key>
-	<string>com.github.amckinlay.x86_64.download.AndroidStudio</string>
+	<string>com.github.ashleymckinlay.x86_64.download.AndroidStudio</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>

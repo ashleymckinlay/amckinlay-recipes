@@ -21,7 +21,7 @@ Use the ECLIPSE_CODE input variable to specify the IDE version.
   "scout"        Eclipse IDE for Scout Developers
 </string>
 	<key>Identifier</key>
-	<string>com.github.homebysix.download.Eclipse</string>
+	<string>com.github.ashleymckinlay.download.Eclipse</string>
 	<key>Input</key>
 	<dict>
 		<key>ARCHITECTURE</key>

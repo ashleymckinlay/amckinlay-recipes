@@ -7,7 +7,7 @@ Comment: |
     https://binaries.webex.com/WebexDesktop-MACOS-Apple-Silicon-Gold/Webex.dmg
     https://binaries.webex.com/WebexTeamsDesktop-MACOS-Gold/Webex.dmg
 Description: Downloads the latest version of Webex.
-Identifier: com.github.amckinlay.download.webex
+Identifier: com.github.ashleymckinlay.download.webex
 MinimumVersion: '2.3'
 
 Input:

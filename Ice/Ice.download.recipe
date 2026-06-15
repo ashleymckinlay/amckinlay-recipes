@@ -7,7 +7,7 @@
 	<key>Description</key>
 	<string>Downloads the latest version of Ice.</string>
 	<key>Identifier</key>
-	<string>com.ashleymckinlay.download.Ice</string>
+	<string>com.github.ashleymckinlay.download.Ice</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>

@@ -1,6 +1,6 @@
 Description: Downloads the latest version of the Ice App, then uploads to your Jamf Pro instance.
 Identifier: com.github.ashleymckinlay.jamf.Ice
-ParentRecipe: com.ashleymckinlay.pkg.Ice
+ParentRecipe: com.github.ashleymckinlay.pkg.Ice
 MinimumVersion: '1.2'
 
 Input:

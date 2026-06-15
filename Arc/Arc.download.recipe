@@ -7,7 +7,7 @@
 	<key>Description</key>
 	<string>Downloads the latest version of Arc.</string>
 	<key>Identifier</key>
-	<string>com.ashleymckinlay.download.Arc</string>
+	<string>com.github.ashleymckinlay.download.Arc</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>

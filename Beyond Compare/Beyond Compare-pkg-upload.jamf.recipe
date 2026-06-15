@@ -7,7 +7,7 @@
 	<key>Description</key>
 	<string>Downloads the latest version of Beyond Compare and uploads the package to Jamf.</string>
 	<key>Identifier</key>
-	<string>com.ashleymckinlay.jamf.BeyondCompare</string>
+	<string>com.github.ashleymckinlay.jamf.BeyondCompare</string>
 	<key>Input</key>
 	<dict>
 		<key>CATEGORY</key>
@@ -18,7 +18,7 @@
 	<key>MinimumVersion</key>
 	<string>2.3</string>
 	<key>ParentRecipe</key>
-	<string>com.ashleymckinlay.pkg.BeyondCompare</string>
+	<string>com.github.ashleymckinlay.pkg.BeyondCompare</string>
 	<key>Process</key>
 	<array>
 		<dict>

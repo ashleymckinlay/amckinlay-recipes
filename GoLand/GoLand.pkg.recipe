@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Downloads JetBrains GoLand and builds a pkg.</string>
     <key>Identifier</key>
-    <string>com.github.gregneagle.pkg.goland</string>
+    <string>com.github.ashleymckinlay.pkg.goland</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
@@ -14,7 +14,7 @@
     <key>MinimumVersion</key>
     <string>1.0</string>
     <key>ParentRecipe</key>
-    <string>com.github.gregneagle.download.goland</string>
+    <string>com.github.ashleymckinlay.download.goland</string>
     <key>Process</key>
     <array>
         <dict>

@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Downloads the latest version PyCharm, and makes a package of it.</string>
     <key>Identifier</key>
-    <string>com.github.amckinlay.pkg.x86_64.pycharmce</string>
+    <string>com.github.ashleymckinlay.pkg.x86_64.pycharmce</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
@@ -14,7 +14,7 @@
     <key>MinimumVersion</key>
     <string>0.2.9</string>
     <key>ParentRecipe</key>
-    <string>com.github.amckinlay.download.x86_64.pycharmce</string>
+    <string>com.github.ashleymckinlay.download.x86_64.pycharmce</string>
     <key>Process</key>
     <array>
         <dict>

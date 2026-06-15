@@ -1,6 +1,6 @@
 Description: Downloads the latest version of Webex and creates a package.
-Identifier: com.github.amckinlay.pkg.webex
-ParentRecipe: com.github.amckinlay.download.webex
+Identifier: com.github.ashleymckinlay.pkg.webex
+ParentRecipe: com.github.ashleymckinlay.download.webex
 MinimumVersion: '2.3'
 
 Input:

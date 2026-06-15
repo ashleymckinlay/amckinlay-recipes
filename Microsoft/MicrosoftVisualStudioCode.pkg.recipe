@@ -5,7 +5,7 @@
 	<key>Description</key>
 	<string>Downloads the latest version of Visual Studio Code and creates a package.</string>
 	<key>Identifier</key>
-	<string>com.github.amckinlay.pkg.Visual_Studio_Code</string>
+	<string>com.github.ashleymckinlay.pkg.Visual_Studio_Code</string>
 	<key>Input</key>
 	<dict>
 		<key>APP_FILENAME</key>
@@ -16,7 +16,7 @@
 	<key>MinimumVersion</key>
 	<string>2.3</string>
 	<key>ParentRecipe</key>
-	<string>com.github.amckinlay.download.Visual_Studio_Code</string>
+	<string>com.github.ashleymckinlay.download.Visual_Studio_Code</string>
 	<key>Process</key>
 	<array>
 		<dict>

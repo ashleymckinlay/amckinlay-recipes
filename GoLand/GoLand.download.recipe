@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Downloads the latest version GoLand.</string>
     <key>Identifier</key>
-    <string>com.github.gregneagle.download.goland</string>
+    <string>com.github.ashleymckinlay.download.goland</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>

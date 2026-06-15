@@ -2,7 +2,7 @@
 Description: Downloads the latest version of the Ice App, then uploads to your
   Jamf Pro instance.
 Identifier: com.github.ashleymckinlay.jamf.Signal
-ParentRecipe: com.ashleymckinlay.pkg.Signal
+ParentRecipe: com.github.ashleymckinlay.pkg.Signal
 MinimumVersion: "1.2"
 Input:
   NAME: Signal

@@ -7,7 +7,7 @@
 	<key>Description</key>
 	<string>Downloads the latest version of Android Studio and creates a package.</string>
 	<key>Identifier</key>
-	<string>com.github.amckinlay.arm64.pkg.AndroidStudio</string>
+	<string>com.github.ashleymckinlay.arm64.pkg.AndroidStudio</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
@@ -16,7 +16,7 @@
 	<key>MinimumVersion</key>
 	<string>2.3</string>
 	<key>ParentRecipe</key>
-	<string>com.github.amckinlay.arm64.download.AndroidStudio</string>
+	<string>com.github.ashleymckinlay.arm64.download.AndroidStudio</string>
 	<key>Process</key>
 	<array>
 		<dict>

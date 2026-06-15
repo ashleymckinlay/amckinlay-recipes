@@ -7,7 +7,7 @@
 	<key>Description</key>
 	<string>Downloads the latest version of OmniDiskSweeper and creates a package.</string>
 	<key>Identifier</key>
-	<string>com.ashleymckinlay.pkg.OmniDiskSweeper</string>
+	<string>com.github.ashleymckinlay.pkg.OmniDiskSweeper</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
@@ -16,7 +16,7 @@
 	<key>MinimumVersion</key>
 	<string>2.3</string>
 	<key>ParentRecipe</key>
-	<string>com.ashleymckinlay.download.OmniDiskSweeper</string>
+	<string>com.github.ashleymckinlay.download.OmniDiskSweeper</string>
 	<key>Process</key>
 	<array>
 		<dict>

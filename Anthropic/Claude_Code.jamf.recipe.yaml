@@ -3,7 +3,7 @@ Description: Downloads the latest version, makes a pkg, uploads to the Jamf Pro
   Server, and creates a Self Service Policy.
 Identifier: com.github.ashleymckinlay.jamf.Claude_Code
 ParentRecipe: com.github.ashleymckinlay.pkg.Claude_Code
-MinimumVersion: '2.3'  
+MinimumVersion: '2.3'
 
 
 Input:

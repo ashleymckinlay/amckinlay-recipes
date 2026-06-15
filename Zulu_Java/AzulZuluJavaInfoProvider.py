@@ -19,7 +19,7 @@ from autopkglib import ProcessorError
 from autopkglib.URLGetter import URLGetter
 
 import urllib.request
-import json 
+import json
 
 __all__ = ["AzulZuluJavaInfoProvider"]
 

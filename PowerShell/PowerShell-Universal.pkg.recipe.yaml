@@ -1,6 +1,6 @@
 Description: Downloads both Arm and Intel verions of PowerShell from GitHub, and packages them into a universal installer
-Identifier: com.github.ashley.mckinlay.pkg.PowerShell-Universal
-ParentRecipe: com.github.ashley.mckinlay.download.PowerShell-Universal
+Identifier: com.github.ashleymckinlay.pkg.PowerShell-Universal
+ParentRecipe: com.github.ashleymckinlay.download.PowerShell-Universal
 MinimumVersion: '2.3'
 
 Input:

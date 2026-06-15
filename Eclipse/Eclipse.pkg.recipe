@@ -5,7 +5,7 @@
 	<key>Description</key>
 	<string>Downloads the latest version of Eclipse and makes a pkg of it.</string>
 	<key>Identifier</key>
-	<string>com.github.homebysix.pkg.Eclipse</string>
+	<string>com.github.ashleymckinlay.pkg.Eclipse</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
@@ -16,7 +16,7 @@
 	<key>MinimumVersion</key>
 	<string>0.2.8</string>
 	<key>ParentRecipe</key>
-	<string>com.github.homebysix.download.Eclipse</string>
+	<string>com.github.ashleymckinlay.download.Eclipse</string>
 	<key>Process</key>
 	<array>
 		<dict>

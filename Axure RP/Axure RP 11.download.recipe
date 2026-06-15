@@ -7,7 +7,7 @@
 	<key>Description</key>
 	<string>Downloads the latest version of Axure RP 11.</string>
 	<key>Identifier</key>
-	<string>com.ashleymckinlay.download.AxureRP11</string>
+	<string>com.github.ashleymckinlay.download.AxureRP11</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>

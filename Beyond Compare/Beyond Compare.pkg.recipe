@@ -7,7 +7,7 @@
 	<key>Description</key>
 	<string>Downloads the latest version of Beyond Compare and creates a package.</string>
 	<key>Identifier</key>
-	<string>com.ashleymckinlay.pkg.BeyondCompare</string>
+	<string>com.github.ashleymckinlay.pkg.BeyondCompare</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
@@ -16,7 +16,7 @@
 	<key>MinimumVersion</key>
 	<string>2.3</string>
 	<key>ParentRecipe</key>
-	<string>com.ashleymckinlay.download.BeyondCompare</string>
+	<string>com.github.ashleymckinlay.download.BeyondCompare</string>
 	<key>Process</key>
 	<array>
 		<dict>

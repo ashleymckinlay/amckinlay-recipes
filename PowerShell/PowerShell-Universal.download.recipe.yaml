@@ -1,5 +1,5 @@
 Description: Downloads the latest versions (arm and intel) of PowerShell from GitHub.
-Identifier: com.github.ashley.mckinlay.download.PowerShell-Universal
+Identifier: com.github.ashleymckinlay.download.PowerShell-Universal
 MinimumVersion: '2.3'
 
 Input:

@@ -7,7 +7,7 @@
 	<key>Description</key>
 	<string>Downloads the latest version of OmniDiskSweeper.</string>
 	<key>Identifier</key>
-	<string>com.ashleymckinlay.download.OmniDiskSweeper</string>
+	<string>com.github.ashleymckinlay.download.OmniDiskSweeper</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>

@@ -1,5 +1,5 @@
 Description: Downloads the latest VS code zip, based on an architecture you provide.
-Identifier: com.github.amckinlay.download.Visual_Studio_Code
+Identifier: com.github.ashleymckinlay.download.Visual_Studio_Code
 MinimumVersion: "2.7.6"
 Input:
   ARCH: "universal" # Intel = "x86_64", Apple Silicon = "arm64", Universal = "universal"

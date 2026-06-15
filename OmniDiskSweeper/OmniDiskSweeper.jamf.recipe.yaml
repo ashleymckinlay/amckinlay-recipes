@@ -2,7 +2,7 @@
 Description: Downloads the latest version of the OmniDiskSweeper App, then
   uploads to your Jamf Pro instance.
 Identifier: com.github.ashleymckinlay.jamf.OmniDiskSweeper
-ParentRecipe: com.ashleymckinlay.pkg.OmniDiskSweeper
+ParentRecipe: com.github.ashleymckinlay.pkg.OmniDiskSweeper
 MinimumVersion: "1.2"
 Input:
   NAME: OmniDiskSweeper

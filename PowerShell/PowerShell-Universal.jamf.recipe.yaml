@@ -1,5 +1,5 @@
-Identifier: com.github.ashley.mckinlay.jamf.PowerShell-Universal
-ParentRecipe: com.github.ashley.mckinlay.pkg.PowerShell-Universal
+Identifier: com.github.ashleymckinlay.jamf.PowerShell-Universal
+ParentRecipe: com.github.ashleymckinlay.pkg.PowerShell-Universal
 MinimumVersion: '2.3'
 
 Input:

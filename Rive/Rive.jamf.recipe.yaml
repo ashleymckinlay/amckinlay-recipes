@@ -3,7 +3,6 @@ Description: Downloads the latest version, makes a pkg, uploads to the Jamf Pro
   Server, and creates a Self Service Policy.
 Identifier: com.github.ashleymckinlay.jamf.Rive
 ParentRecipe: com.github.ashleymckinlay.pkg.Rive
-ParentRecipe: com.github.ashleymckinlay.pkg.Rive
 Input:
   NAME: Rive
   ALL_COMPUTERS: 'true'
@@ -11,7 +10,7 @@ Input:
   GROUP_NAME: Apps
   GROUP_TEMPLATE: Live-Group-Template.xml
   INSTALL_BUTTON_TEXT: Install
-  
+
   POLICY_CATEGORY: '%CATEGORY%'
   POLICY_NAME: '%NAME%'
   POLICY_TEMPLATE: Live-Policy-Template.xml

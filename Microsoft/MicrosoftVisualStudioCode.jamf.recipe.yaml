@@ -1,5 +1,5 @@
-Identifier: com.github.amckinlay.jamf.Visual_Studio_Code
-ParentRecipe: com.github.amckinlay.pkg.Visual_Studio_Code
+Identifier: com.github.ashleymckinlay.jamf.Visual_Studio_Code
+ParentRecipe: com.github.ashleymckinlay.pkg.Visual_Studio_Code
 MinimumVersion: '2.3'
 
 Input:
