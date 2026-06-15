@@ -1,0 +1,27 @@
+---
+Description: Downloads the latest version, makes a pkg, uploads to the Jamf Pro
+  Server, and creates a Self Service Policy.
+Identifier: com.github.ashleymckinlay.jamf.Claude_Code
+ParentRecipe: com.github.ashleymckinlay.pkg.Claude_Code
+MinimumVersion: '2.3'  
+
+
+Input:
+  NAME: 'Claude Code'
+  ALL_COMPUTERS: 'true'
+  CATEGORY: Applications
+  GROUP_NAME: Apps
+  GROUP_TEMPLATE: Live-Group-Template.xml
+  INSTALL_BUTTON_TEXT: Install
+  POLICY_CATEGORY: '%CATEGORY%'
+  POLICY_NAME: '%NAME%'
+  POLICY_TEMPLATE: Live-Policy-Template.xml
+  REINSTALL_BUTTON_TEXT: Reinstall
+  SELF_SERVICE_AVAILABLE: 'true'
+  SELF_SERVICE_CATEGORY: Collaboration
+  SELF_SERVICE_DESCRIPTION: Anthropic's agentic coding tool for developers. Claude Code understands your codebase, edits files, runs commands, and helps you ship faster.
+  SELF_SERVICE_DISPLAY_NAME: '%NAME%'
+  SELF_SERVICE_ICON: '%NAME%.png'
+  SOFTWARE_TITLE: '%NAME%'
+  SOFTWARE_TITLE_TRIGGER: '%SOFTWARE_TITLE%'
+  UPDATE_PREDICATE: pkg_uploaded == False
