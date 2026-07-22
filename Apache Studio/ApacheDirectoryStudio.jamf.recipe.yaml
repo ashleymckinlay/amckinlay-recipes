@@ -1,13 +1,13 @@
 ---
 Description: Downloads the latest version, makes a pkg, uploads to the Jamf Pro
   Server, and creates a Self Service Policy.
-Identifier: com.github.ashleymckinlay.jamf.SalesforceCLI-Universal
-ParentRecipe: com.github.ashleymckinlay.pkg.SalesforceCLI-Universal
+Identifier: com.github.ashleymckinlay.jamf.ApacheDirectoryStudio
+ParentRecipe: com.github.ashleymckinlay.pkg.ApacheDirectoryStudio
 MinimumVersion: '2.3'
 
 
 Input:
-  NAME: Salesforce CLI
+  NAME: 'Apache Directory Studio'
   ALL_COMPUTERS: 'true'
   CATEGORY: Applications
   GROUP_NAME: Apps
@@ -17,10 +17,10 @@ Input:
   POLICY_NAME: '%NAME%'
   POLICY_RUN_COMMAND: ' '
   POLICY_TEMPLATE: Live-Policy-Template.xml
-  REINSTALL_BUTTON_TEXT: Install
+  REINSTALL_BUTTON_TEXT: Reinstall
   SELF_SERVICE_AVAILABLE: 'true'
   SELF_SERVICE_CATEGORY: Collaboration
-  SELF_SERVICE_DESCRIPTION: Salesforce CLI is a command-line tool for interacting with Salesforce. Tackle complex challenges, analyze data, write code, and think through your hardest work.
+  SELF_SERVICE_DESCRIPTION: Apache Directory Studio is an Eclipse-based LDAP browser and directory client that allows you to manage your LDAP servers and data. It provides a user-friendly interface for browsing, editing, and searching LDAP directories, as well as tools for managing schema, LDIF files, and more.
   SELF_SERVICE_DISPLAY_NAME: '%NAME%'
   SELF_SERVICE_ICON: '%NAME%.png'
   SOFTWARE_TITLE: '%NAME%'

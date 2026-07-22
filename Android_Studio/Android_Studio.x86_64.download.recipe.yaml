@@ -1,0 +1,36 @@
+Identifier: com.github.ashleymckinlay.x86_64.download.Android_Studio
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Android Studio
+  SOFTWARE_TITLE: Android_Studio
+  ARCHITECTURE: 'x86_64'
+  ARCH_SEARCH: 'mac_x64'
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: (?P<%ARCHITECTURE%_url>(https\://edgedl\.me\.gvt1\.com/android/studio/install/(?P<version>[\d{4,}\.\d{1,}\.\d{1,}\.\d{1,}]+)/android-studio-.*-%ARCH_SEARCH%.dmg))
+      url: 'https://developer.android.com/studio'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      url: '%ARCHITECTURE%_url'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: AppDmgVersioner
+    Arguments:
+      dmg_path: '%pathname%'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      requirement: 'identifier "com.google.android.studio" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = EQHXZ8M8AV'
+      input_path: '%pathname%/Android Studio.app'

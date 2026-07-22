@@ -1,13 +1,13 @@
 ---
 Description: Downloads the latest version, makes a pkg, uploads to the Jamf Pro
   Server, and creates a Self Service Policy.
-Identifier: com.github.ashleymckinlay.jamf.SalesforceCLI-Universal
-ParentRecipe: com.github.ashleymckinlay.pkg.SalesforceCLI-Universal
+Identifier: com.github.ashleymckinlay.jamf.kubectl
+ParentRecipe: com.github.ashleymckinlay.pkg.kubectl
 MinimumVersion: '2.3'
 
 
 Input:
-  NAME: 'Salesforce CLI'
+  NAME: 'Kubernetes'
   ALL_COMPUTERS: 'true'
   CATEGORY: Applications
   GROUP_NAME: Apps
@@ -15,11 +15,12 @@ Input:
   INSTALL_BUTTON_TEXT: Install
   POLICY_CATEGORY: '%CATEGORY%'
   POLICY_NAME: '%NAME%'
+  POLICY_RUN_COMMAND: ' '
   POLICY_TEMPLATE: Live-Policy-Template.xml
   REINSTALL_BUTTON_TEXT: Reinstall
   SELF_SERVICE_AVAILABLE: 'true'
   SELF_SERVICE_CATEGORY: Collaboration
-  SELF_SERVICE_DESCRIPTION: Salesforce CLI is a powerful command-line interface that simplifies development and build automation when working with Salesforce applications. It provides a unified interface for interacting with Salesforce orgs, managing metadata, and executing commands to streamline development workflows. With Salesforce CLI, developers can easily create, test, and deploy applications, making it an essential tool for Salesforce development teams.
+  SELF_SERVICE_DESCRIPTION: Kubernetes, also known as K8s, is an open source system for automating deployment, scaling, and management of containerized applications.\ It groups containers that make up an application into logical units for easy management and discovery. Kubernetes builds upon 15 years of experience of running production workloads at Google, combined with best-of-breed ideas and practices from the community.
   SELF_SERVICE_DISPLAY_NAME: '%NAME%'
   SELF_SERVICE_ICON: '%NAME%.png'
   SOFTWARE_TITLE: '%NAME%'

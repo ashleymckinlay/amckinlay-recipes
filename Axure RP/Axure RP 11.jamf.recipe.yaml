@@ -1,13 +1,13 @@
 ---
 Description: Downloads the latest version, makes a pkg, uploads to the Jamf Pro
   Server, and creates a Self Service Policy.
-Identifier: com.github.ashleymckinlay.jamf.SalesforceCLI-Universal
-ParentRecipe: com.github.ashleymckinlay.pkg.SalesforceCLI-Universal
+Identifier: com.github.ashleymckinlay.jamf.AxureRP11
+ParentRecipe: com.github.ashleymckinlay.pkg.AxureRP11
 MinimumVersion: '2.3'
 
 
 Input:
-  NAME: 'Salesforce CLI'
+  NAME: 'Axure RP 11'
   ALL_COMPUTERS: 'true'
   CATEGORY: Applications
   GROUP_NAME: Apps
@@ -15,11 +15,12 @@ Input:
   INSTALL_BUTTON_TEXT: Install
   POLICY_CATEGORY: '%CATEGORY%'
   POLICY_NAME: '%NAME%'
+  POLICY_RUN_COMMAND: ' '
   POLICY_TEMPLATE: Live-Policy-Template.xml
   REINSTALL_BUTTON_TEXT: Reinstall
   SELF_SERVICE_AVAILABLE: 'true'
   SELF_SERVICE_CATEGORY: Collaboration
-  SELF_SERVICE_DESCRIPTION: Salesforce CLI is a powerful command-line interface that simplifies development and build automation when working with Salesforce applications. It provides a unified interface for interacting with Salesforce orgs, managing metadata, and executing commands to streamline development workflows. With Salesforce CLI, developers can easily create, test, and deploy applications, making it an essential tool for Salesforce development teams.
+  SELF_SERVICE_DESCRIPTION: Axure RP 11 is a powerful prototyping and wireframing tool that allows designers to create interactive and high-fidelity prototypes for web and mobile applications. It provides a user-friendly interface, drag-and-drop functionality, and a wide range of pre-built components to streamline the design process.
   SELF_SERVICE_DISPLAY_NAME: '%NAME%'
   SELF_SERVICE_ICON: '%NAME%.png'
   SOFTWARE_TITLE: '%NAME%'
