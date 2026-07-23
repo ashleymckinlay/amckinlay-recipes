@@ -42,17 +42,17 @@ Process:
 
   - Processor: FileCreator
     Arguments:
-      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/preinstall'
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
       file_mode: '0755'
       file_content: |
         #!/bin/bash
-
+        set -euo pipefail
         if [[ $( /usr/bin/arch ) = arm64* ]]; then
           echo "Installing SalesforceCLI-arm64-%version%"
-          /usr/sbin/installer -pkg "/Library/Receipts/sf-arm64-%version%.pkg" -target /
+          /usr/sbin/installer -pkg "sf-arm64-%version%.pkg" -target "$3"
         else
           echo "Installing SalesforceCLI-x86_64-%version%"
-          /usr/sbin/installer -pkg "/Library/Receipts/sf-x64-%version%.pkg" -target /
+          /usr/sbin/installer -pkg "sf-x64-%version%.pkg" -target "$3"
         fi
 
         exit 0
@@ -72,3 +72,4 @@ Process:
       fail_deleter_silently: true
       path_list:
         - '%RECIPE_CACHE_DIR%/payload'
+        - '%RECIPE_CACHE_DIR%/unpack'
