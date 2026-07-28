@@ -1,0 +1,58 @@
+---
+Description: Downloads the latest version, makes a pkg, uploads to the Jamf Pro
+  Server, and creates a Self Service Policy.
+Identifier: com.github.ashleymckinlay.jamf.Goland
+ParentRecipe: com.github.ashleymckinlay.pkg.Goland
+MinimumVersion: '2.3'
+
+
+Input:
+  NAME: 'GoLand'
+  ALL_COMPUTERS: 'true'
+  CATEGORY: Applications
+  GROUP_NAME: Apps
+  GROUP_TEMPLATE: Live-Group-Template.xml
+  INSTALL_BUTTON_TEXT: Install
+  POLICY_CATEGORY: '%CATEGORY%'
+  POLICY_NAME: '%NAME%'
+  POLICY_RUN_COMMAND: ' '
+  POLICY_TEMPLATE: Live-Policy-Template.xml
+  REINSTALL_BUTTON_TEXT: Reinstall
+  SELF_SERVICE_AVAILABLE: 'true'
+  SELF_SERVICE_CATEGORY: Collaboration
+  SELF_SERVICE_DESCRIPTION: GoLand is a commercial IDE for the Go programming language. It provides an ergonomic environment for Go development, with many powerful features such as code navigation, refactoring, and debugging. GoLand is developed by JetBrains, the same company that created popular IDEs like IntelliJ IDEA and PyCharm.
+  SELF_SERVICE_DISPLAY_NAME: '%NAME%'
+  SELF_SERVICE_ICON: '%NAME%.png'
+  SOFTWARE_TITLE: '%NAME%'
+  SOFTWARE_TITLE_TRIGGER: '%SOFTWARE_TITLE%'
+  UPDATE_PREDICATE: pkg_uploaded == False
+
+Process:
+  - Processor: FileMover
+    Arguments:
+      source: '%pkg_path%'
+      target: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      category_name: '%CATEGORY%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: '%CATEGORY%'
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%UPDATE_PREDICATE%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
+    Arguments:
+      computergroup_template: '%GROUP_TEMPLATE%'
+      computergroup_name: '%GROUP_NAME%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
+    Arguments:
+      policy_template: '%POLICY_TEMPLATE%'
+      policy_name: '%POLICY_NAME%'
+      icon: '%SELF_SERVICE_ICON%'
