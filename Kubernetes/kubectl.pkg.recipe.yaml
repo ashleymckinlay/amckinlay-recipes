@@ -1,0 +1,54 @@
+Description: Downloads the latest version of kubectl and creates a package.
+Identifier: com.github.ashleymckinlay.pkg.kubectl
+MinimumVersion: '1.1'
+ParentRecipe: com.github.ashleymckinlay.download.kubectl
+
+Input:
+  NAME: kubectl
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgdirs:
+        usr: '0755'
+        usr/local: '0755'
+        usr/local/bin: '0755'
+      pkgroot: '%RECIPE_CACHE_DIR%/pkgroot'
+
+  - Processor: Copier
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/pkgroot/usr/local/bin/kubectl'
+      overwrite: true
+      source_path: '%pathname%'
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        chown:
+          - group: admin
+            mode: '0755'
+            path: usr
+            user: root
+          - group: admin
+            mode: '0755'
+            path: usr/local
+            user: root
+          - group: admin
+            mode: '0755'
+            path: usr/local/bin
+            user: root
+          - group: admin
+            mode: '0755'
+            path: usr/local/bin/kubectl
+            user: root
+        id: io.kubernetes.kubectl
+        pkgname: kubectl-%version%
+        pkgroot: '%RECIPE_CACHE_DIR%/pkgroot'
+        version: '%version%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/Universal'
+        - '%RECIPE_CACHE_DIR%/extractedfile'

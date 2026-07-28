@@ -1,0 +1,38 @@
+Description: Downloads the latest version of Rectangle and creates a package.
+Identifier: com.github.ashleymckinlay.pkg.Rectangle
+MinimumVersion: '0.6.1'
+ParentRecipe: com.github.ashleymckinlay.download.Rectangle
+
+Input:
+  BUNDLE_ID: com.knollsoft.Rectangle
+  NAME: Rectangle
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/%NAME%'
+      pkgdirs:
+        Applications: '0775'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%pathname%/Rectangle.app'
+      destination_path: '%pkgroot%/Applications/Rectangle.app'
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        pkgname: '%NAME%-%version%'
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        id: '%BUNDLE_ID%'
+        options: purge_ds_store
+        chown:
+          - path: Applications
+            user: root
+            group: admin
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/extractedfile'

@@ -1,0 +1,37 @@
+Description: Downloads latest Tableau Desktop disk image and makes a pkg.
+Identifier: com.github.ashleymckinlay.pkg.tableau
+MinimumVersion: '0.2.0'
+ParentRecipe: com.github.ashleymckinlay.download.tableau
+
+Input:
+  NAME: TableauDesktop
+
+Process:
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
+      flat_pkg_path: '%pathname%/Tableau Desktop.pkg'
+      purge_destination: true
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/payload'
+      pkg_payload_path: '%RECIPE_CACHE_DIR%/unpack/Tableau App.pkg/payload'
+      purge_destination: true
+
+  - Processor: PlistReader
+    Arguments:
+      info_path: '%RECIPE_CACHE_DIR%/payload'
+      plist_keys:
+        CFBundleShortVersionString: version
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/Tableau Desktop-%version%.pkg'
+      source_pkg: '%pathname%/Tableau Desktop.pkg'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/extractedfile'

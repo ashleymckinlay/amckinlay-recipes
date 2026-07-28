@@ -1,0 +1,24 @@
+Description: Downloads the latest version of ApacheDirectoryStudio.
+Identifier: com.github.ashleymckinlay.download.ApacheDirectoryStudio
+MinimumVersion: '1.0.0'
+
+Input:
+  NAME: ApacheDirectoryStudio
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: '<a href=.*" >(.*)/</a'
+      result_output_var_name: version
+      url: https://archive.apache.org/dist/directory/studio/?C=M;O=D
+
+  - Processor: URLDownloader
+    Arguments:
+      url: https://archive.apache.org/dist/directory/studio/%version%/ApacheDirectoryStudio-%version%-macosx.cocoa.x86_64.dmg
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%pathname%/ApacheDirectoryStudio.app'
+      requirement: 'identifier "org.apache.directory.studio.product" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "2GLGAFWEQD"'

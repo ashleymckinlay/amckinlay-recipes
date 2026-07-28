@@ -60,3 +60,4 @@ Process:
       fail_deleter_silently: true
       path_list:
         - '%RECIPE_CACHE_DIR%/wrapper'
+        - '%RECIPE_CACHE_DIR%/extracted_file%'

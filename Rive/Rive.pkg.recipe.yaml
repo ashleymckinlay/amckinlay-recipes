@@ -1,0 +1,17 @@
+Comment: Created with Recipe Robot v2.5.0 (https://github.com/homebysix/recipe-robot)
+Description: Downloads the latest version of Rive and creates a package.
+Identifier: com.github.ashleymckinlay.pkg.Rive
+MinimumVersion: '2.3'
+ParentRecipe: com.github.ashleymckinlay.download.Rive
+
+Input:
+  NAME: Rive
+
+Process:
+  - Processor: AppPkgCreator
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/extractedfile'

@@ -1,0 +1,19 @@
+Description: Downloads the latest version of kubectl.
+Identifier: com.github.ashleymckinlay.download.kubectl
+MinimumVersion: '1.1'
+
+Input:
+  NAME: kubectl
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: v(\S+)
+      result_output_var_name: version
+      url: https://storage.googleapis.com/kubernetes-release/release/stable.txt
+
+  - Processor: URLDownloader
+    Arguments:
+      url: https://storage.googleapis.com/kubernetes-release/release/v%version%/bin/darwin/amd64/kubectl
+
+  - Processor: EndOfCheckPhase

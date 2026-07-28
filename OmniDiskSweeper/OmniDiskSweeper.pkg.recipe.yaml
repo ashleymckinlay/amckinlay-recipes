@@ -1,0 +1,17 @@
+Comment: Created with Recipe Robot v2.3.2 (https://github.com/homebysix/recipe-robot)
+Description: Downloads the latest version of OmniDiskSweeper and creates a package.
+Identifier: com.github.ashleymckinlay.pkg.OmniDiskSweeper
+MinimumVersion: '2.3'
+ParentRecipe: com.github.ashleymckinlay.download.OmniDiskSweeper
+
+Input:
+  NAME: OmniDiskSweeper
+
+Process:
+  - Processor: AppPkgCreator
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/extractedfile'

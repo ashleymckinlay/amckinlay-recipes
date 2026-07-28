@@ -1,0 +1,41 @@
+ParentRecipe: com.github.ashleymckinlay.download.walkme
+Description: Downloads the latest version of WalkMe and builds a pkg.
+Identifier: com.github.ashleymckinlay.pkg.walkme
+MinimumVersion: '1.0.0'
+
+Input:
+  NAME: WalkMe
+
+Process:
+  - Processor: AppDmgVersioner
+    Arguments:
+      dmg_path: '%pathname%'
+
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/%NAME%'
+      pkgdirs:
+        Applications: '0775'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%pathname%/*.app'
+      destination_path: '%pkgroot%/Applications/WalkMe.app'
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        pkgname: '%NAME%-%version%'
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        id: com.walkme.editor
+        options: purge_ds_store
+        chown:
+          - path: Applications
+            user: root
+            group: admin
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/extractedfile'

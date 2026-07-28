@@ -9,3 +9,10 @@ Input:
 
 Process:
   - Processor: AppPkgCreator
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/Universal'
+        - '%RECIPE_CACHE_DIR%/extractedfile'

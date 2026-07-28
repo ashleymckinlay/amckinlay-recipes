@@ -1,0 +1,10 @@
+Description: Downloads the latest version of Axure RP 11 and creates a package.
+Identifier: com.github.ashleymckinlay.pkg.AxureRP11
+MinimumVersion: '2.3'
+ParentRecipe: com.github.ashleymckinlay.download.AxureRP11
+
+Input:
+  NAME: Axure RP 11
+
+Process:
+  - Processor: AppPkgCreator

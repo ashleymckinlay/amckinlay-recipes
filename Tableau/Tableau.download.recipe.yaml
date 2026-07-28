@@ -1,0 +1,23 @@
+Description: Downloads latest Tableau Desktop disk image.
+Identifier: com.github.ashleymckinlay.download.tableau
+MinimumVersion: '0.3.1'
+
+Input:
+  DOWNLOAD_URL: https://www.tableau.com/downloads/desktop/mac
+  NAME: TableauDesktop
+
+Process:
+  - Processor: URLDownloader
+    Arguments:
+      filename: '%NAME%.dmg'
+      url: '%DOWNLOAD_URL%'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - Developer ID Installer: Tableau Software, LLC (QJ4XPRK37C)
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%/Tableau Desktop.pkg'

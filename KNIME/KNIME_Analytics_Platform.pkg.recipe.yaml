@@ -1,0 +1,17 @@
+Comment: Created with Recipe Robot v1.1.2 (https://github.com/homebysix/recipe-robot)
+Description: Downloads the latest version of KNIME Analytis Platform and creates a package.
+Identifier: com.github.ashleymckinlay.pkg.KNIME
+MinimumVersion: '1.0.0'
+ParentRecipe: com.github.ashleymckinlay.download.KNIME
+
+Input:
+  NAME: KNIME_Analytics_Platform
+
+Process:
+  - Processor: AppPkgCreator
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/extractedfile'

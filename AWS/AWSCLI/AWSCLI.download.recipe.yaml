@@ -1,0 +1,21 @@
+Description: Downloads the latest version of http://aws.amazon.com/cli/
+Identifier: com.github.ashleymckinlay.download.AWSCLI
+MinimumVersion: '1.1'
+
+Input:
+  NAME: AWSCLI
+
+Process:
+  - Processor: URLDownloader
+    Arguments:
+      url: https://awscli.amazonaws.com/AWSCLIV2.pkg
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - Developer ID Installer: AMZN Mobile LLC (94KV3E626L)
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%'

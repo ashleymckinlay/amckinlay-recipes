@@ -1,0 +1,22 @@
+Description: Downloads the latest version of ApacheDirectoryStudio and creates a package.
+Identifier: com.github.ashleymckinlay.pkg.ApacheDirectoryStudio
+MinimumVersion: '1.0.0'
+ParentRecipe: com.github.ashleymckinlay.download.ApacheDirectoryStudio
+
+Input:
+  NAME: ApacheDirectoryStudio
+
+Process:
+  - Processor: com.github.homebysix.VersionSplitter/VersionSplitter
+    Arguments:
+      split_on: .v
+      version: '%version%'
+
+  - Processor: AppPkgCreator
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/Universal'
+        - '%RECIPE_CACHE_DIR%/extractedfile'

@@ -1,0 +1,24 @@
+Description: Downloads the latest version of Axure RP 11.
+Identifier: com.github.ashleymckinlay.download.AxureRP11
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Axure RP 11
+
+Process:
+  - Processor: URLDownloader
+    Arguments:
+      filename: '%NAME%.dmg'
+      url: https://axure.cachefly.net/AxureRP-Setup-arm64.dmg
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%pathname%/Axure RP 11.app'
+      requirement: 'identifier "com.axure.AxureRP11" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = HUMW6UU796'
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: '%pathname%/Axure RP 11.app/Contents/Info.plist'
+      plist_version_key: CFBundleVersion

@@ -64,7 +64,7 @@ Process:
         scripts: '%RECIPE_CACHE_DIR%/Universal/Scripts'
         version: '%version%'
 
-  - Processor: com.github.ashley.mckinlay.processors/FriendlyPathDeleter
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
       fail_deleter_silently: true
       path_list:

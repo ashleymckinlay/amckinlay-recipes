@@ -1,0 +1,25 @@
+Comment: Created with Recipe Robot v2.5.0 (https://github.com/homebysix/recipe-robot)
+Description: Downloads the latest version of Rive.
+Identifier: com.github.ashleymckinlay.download.Rive
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Rive
+
+Process:
+  - Processor: URLDownloader
+    Arguments:
+      filename: '%NAME%.dmg'
+      url: https://releases.rive.app/macos/latest/Rive.dmg
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%pathname%/Rive.app'
+      requirement: 'anchor apple generic and identifier "app.rive.editor" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = NJ3JMFUNS9)'
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: '%pathname%/Rive.app/Contents/Info.plist'
+      plist_version_key: CFBundleShortVersionString
