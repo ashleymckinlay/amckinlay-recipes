@@ -1,0 +1,15 @@
+Description: |
+  Builds custom installers for IBM MQ Dev Toolkit and produces a verified artefact for downstream packaging.
+Identifier: com.github.ashleymckinlay.pkg.IBM-MQ-DevToolkit
+ParentRecipe: com.github.ashleymckinlay.download.IBM-MQ-DevToolkit
+MinimumVersion: '2.9'
+
+Input:
+  NAME: IBM MQ Dev Toolkit
+  SOFTWARE_TITLE: IBM MQ Dev Toolkit
+
+Process:
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      source_pkg: '%pathname%'

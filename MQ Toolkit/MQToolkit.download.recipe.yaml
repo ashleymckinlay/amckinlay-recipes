@@ -1,0 +1,39 @@
+Description: |
+  Downloads IBM MQ Dev Toolkit and produces a verified artefact for downstream packaging.
+Identifier: com.github.ashleymckinlay.download.IBM-MQ-DevToolkit
+MinimumVersion: '2.9'
+
+
+Input:
+  NAME: IBM MQ Dev Toolkit
+  SOFTWARE_TITLE: IBM-MQ-DevToolkit
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: '([0-9]+(?:\.[0-9]+)+)-IBM-MQ-DevToolkit-MacOS\.pkg(?![\s\S]*?(?:[0-9]+(?:\.[0-9]+)+)-IBM-MQ-DevToolkit-MacOS\.pkg)'
+      result_output_var_name: version
+      url: https://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/messaging/mqdev/mactoolkit/
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      url: https://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/messaging/mqdev/mactoolkit/%version%-IBM-MQ-DevToolkit-MacOS.pkg
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      expected_authority_names:
+        - 'Developer ID Installer: International  Business Machines Corp (PETKK2G752)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%'
