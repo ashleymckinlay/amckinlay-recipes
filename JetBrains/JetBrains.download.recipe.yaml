@@ -1,0 +1,38 @@
+Description: Downloads the current release version of JetBrains product.
+Identifier: com.github.ashleymckinlay.autopkg.download.jetbrains
+MinimumVersion: '0.2.0'
+
+Input:
+  NAME: JetBrainsProductDownload
+  PROD_CODE: 'A valid product code can be obtained from https://data.services.jetbrains.com/products'
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      url: 'https://data.services.jetbrains.com/products/releases?code=%PROD_CODE%&latest=true&type=release'
+      re_pattern: '"%ARCH_TYPE%":\{"link":"(https://download.jetbrains.com/.*?.dmg)"'
+      request_headers:
+        user-agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:46.0) Gecko/20100101 Firefox/46.0'
+
+  - Processor: URLDownloader
+    Arguments:
+      url: '%match%'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: FileFinder
+    Arguments:
+      pattern: '%pathname%/*.app'
+
+  - Processor: PlistReader
+    Arguments:
+      info_path: '%pathname%/%dmg_found_filename%'
+      plist_keys:
+        CFBundleShortVersionString: version
+        LSMinimumSystemVersion: min_os_vers
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%pathname%/%dmg_found_filename%'
+      requirement: '%CSV_REQ%'
+      strict_verification: true

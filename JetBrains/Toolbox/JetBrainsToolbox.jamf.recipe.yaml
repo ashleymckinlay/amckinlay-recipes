@@ -1,16 +1,14 @@
 Description: Downloads the latest version of the JetBrains App, then uploads to your Jamf Pro instance.
-Identifier: com.github.ashleymckinlay.arm64.jamf.JetBrainsToolBox
-ParentRecipe: com.github.ashleymckinlay.arm64.pkg.JetBrainsToolBox
+Identifier: com.github.ashleymckinlay.jamf.JetBrainsToolBox
+ParentRecipe: com.github.ashleymckinlay.pkg.JetBrainsToolBox
 MinimumVersion: '1.2'
 
 Input:
-  NAME: JetBrains
-  SOFTWARE_TITLE: JetBrains
+  NAME: JetBrains Toolbox
+  SOFTWARE_TITLE: JetBrains Toolbox
   CATEGORY: Applications
-  ARCHITECTURE: 'arm64'
-  GROUP_CRITERIA: '%ARCHITECTURE%'
-  GROUP_NAME: 'Architecture - %ARCHITECTURE%'
-  GROUP_TEMPLATE: 'SmartGroup-architecture-smart.xml'
+  GROUP_NAME: Apps
+  GROUP_TEMPLATE: Live-Group-Template.xml
   POLICY_CATEGORY: Applications
   POLICY_TEMPLATE: PolicyTemplate.xml
   POLICY_NAME: 'Install Latest %NAME% (%ARCHITECTURE%)'

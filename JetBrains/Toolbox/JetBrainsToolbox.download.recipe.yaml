@@ -1,0 +1,48 @@
+Description: Downloads the latest Intel and Apple Silicon versions of GoLand.
+Identifier: com.github.ashleymckinlay.download.JetBrainsToolBox
+MinimumVersion: '2.9'
+
+Input:
+  NAME: JetBrains Toolbox
+  SOFTWARE_TITLE: JetBrains Toolbox
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: 'https://download\.jetbrains\.com/toolbox/jetbrains-toolbox-([0-9.]+)(?:-arm64)?\.dmg'
+      result_output_var_name: version
+      url: https://data.services.jetbrains.com/products/releases?code=TBA
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-x86_64.dmg'
+      url: https://download.jetbrains.com/toolbox/jetbrains-toolbox-%version%.dmg
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-arm64.dmg'
+      url: https://download.jetbrains.com/toolbox/jetbrains-toolbox-%version%-arm64.dmg
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/%SOFTWARE_TITLE%.app'
+      requirement: identifier "com.jetbrains.toolbox" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "2ZEFAR8TH3"
+      strict_verification: true
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg/%SOFTWARE_TITLE%.app'
+      requirement: identifier "com.jetbrains.toolbox" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "2ZEFAR8TH3"
+      strict_verification: true

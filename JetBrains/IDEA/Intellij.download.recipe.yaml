@@ -1,0 +1,48 @@
+Description: Downloads the latest Intel and Apple Silicon versions of Intellij.
+Identifier: com.github.ashleymckinlay.download.IDEA
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Intellij
+  SOFTWARE_TITLE: idea
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: '"version":"([0-9.]+)"'
+      result_output_var_name: version
+      url: https://data.services.jetbrains.com/products/releases?code=II
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-x86_64.dmg'
+      url: https://download.jetbrains.com/idea/%SOFTWARE_TITLE%-%version%.dmg
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-arm64.dmg'
+      url: https://download.jetbrains.com/idea/%SOFTWARE_TITLE%-%version%-aarch64.dmg
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/Intellij IDEA.app'
+      requirement: identifier "com.jetbrains.intellij" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "2ZEFAR8TH3"
+      strict_verification: true
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg/Intellij IDEA.app'
+      requirement: identifier "com.jetbrains.intellij" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "2ZEFAR8TH3"
+      strict_verification: true

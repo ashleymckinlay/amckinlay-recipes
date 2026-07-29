@@ -20,13 +20,13 @@ Process:
 
   - Processor: AppPkgCreator
     Arguments:
-      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/GoLand.app'
+      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/%SOFTWARE_TITLE%.app'
       force_pkg_build: true
       pkg_path: '%RECIPE_CACHE_DIR%/wrapper/scripts/%SOFTWARE_TITLE%-arm64.pkg'
 
   - Processor: AppPkgCreator
     Arguments:
-      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg/GoLand.app'
+      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg/%SOFTWARE_TITLE%.app'
       force_pkg_build: true
       pkg_path: '%RECIPE_CACHE_DIR%/wrapper/scripts/%SOFTWARE_TITLE%-x86_64.pkg'
 
