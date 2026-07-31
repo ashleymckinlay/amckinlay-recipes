@@ -8,7 +8,7 @@ Input:
 Process:
   - Processor: URLTextSearcher
     Arguments:
-      re_pattern: '<a href=.*" >(.*)/</a'
+      re_pattern: '<a href=.*">(.*)/</a'
       result_output_var_name: version
       url: https://archive.apache.org/dist/directory/studio/?C=M;O=D
 
