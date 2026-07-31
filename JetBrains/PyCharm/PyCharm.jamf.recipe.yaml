@@ -5,6 +5,7 @@ MinimumVersion: '2.3'
 
 Input:
   NAME: IntelliJ PyCharmCE
+  ALL_COMPUTERS: 'true'
   SOFTWARE_TITLE: '%NAME%'
   CATEGORY: Applications
   GROUP_NAME: Apps
@@ -17,7 +18,7 @@ Input:
   REINSTALL_BUTTON_TEXT: Reinstall
   SELF_SERVICE_AVAILABLE: 'true'
   SELF_SERVICE_CATEGORY: Collaboration
-  SELF_SERVICE_DESCRIPTION: Make teamwork your best work.
+  SELF_SERVICE_DESCRIPTION: PyCharm is an IDE for Python development, providing code analysis, a graphical debugger, an integrated unit tester, integration with version control systems, and supports web development with Django.
   SELF_SERVICE_DISPLAY_NAME: '%NAME%'
   SELF_SERVICE_ICON: '%NAME%.png'
   SOFTWARE_TITLE_TRIGGER: '%SOFTWARE_TITLE%'

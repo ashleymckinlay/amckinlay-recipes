@@ -6,6 +6,7 @@ MinimumVersion: '1.2'
 Input:
   NAME: JetBrains Toolbox
   SOFTWARE_TITLE: JetBrains Toolbox
+  ALL_COMPUTERS: 'true'
   CATEGORY: Applications
   GROUP_NAME: Apps
   GROUP_TEMPLATE: Live-Group-Template.xml
