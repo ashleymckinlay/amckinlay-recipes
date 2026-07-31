@@ -7,7 +7,7 @@ MinimumVersion: '2.3'
 
 
 Input:
-  NAME: 'KubeCTL'
+  NAME: 'Kubernetes Command Line Tool'
   ALL_COMPUTERS: 'true'
   CATEGORY: Applications
   GROUP_NAME: Apps
@@ -20,7 +20,7 @@ Input:
   REINSTALL_BUTTON_TEXT: Reinstall
   SELF_SERVICE_AVAILABLE: 'true'
   SELF_SERVICE_CATEGORY: Collaboration
-  SELF_SERVICE_DESCRIPTION: KubeCTL is a command line tool for controlling Kubernetes clusters. It allows you to run commands against Kubernetes clusters, deploy applications, inspect and manage cluster resources, and view logs.
+  SELF_SERVICE_DESCRIPTION: kubectl is a command line tool for controlling Kubernetes clusters. It allows you to run commands against Kubernetes clusters, deploy applications, inspect and manage cluster resources, and view logs.
   SELF_SERVICE_DISPLAY_NAME: '%NAME%'
   SELF_SERVICE_ICON: '%NAME%.png'
   SOFTWARE_TITLE: '%NAME%'
