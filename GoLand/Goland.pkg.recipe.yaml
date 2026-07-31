@@ -2,8 +2,8 @@ Description: |
   Builds separate arm64 and x86_64 component packages, then wraps them in a
   top-level installer whose postinstall script installs only the package that
   matches the device architecture.
-Identifier: com.github.ashleymckinlay.pkg.GoLand
-ParentRecipe: com.github.ashleymckinlay.download.GoLand
+Identifier: com.github.ashleymckinlay.pkg.Goland
+ParentRecipe: com.github.ashleymckinlay.download.Goland
 MinimumVersion: '2.9'
 
 Input:

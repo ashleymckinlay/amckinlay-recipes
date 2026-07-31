@@ -1,5 +1,5 @@
 Description: Downloads the latest Intel and Apple Silicon versions of GoLand.
-Identifier: com.github.ashleymckinlay.download.GoLand
+Identifier: com.github.ashleymckinlay.download.Goland
 MinimumVersion: '2.9'
 
 Input:
