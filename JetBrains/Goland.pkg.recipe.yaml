@@ -1,45 +1,46 @@
+---
 Description: |
-  Builds separate arm64 and x86_64 component packages, then wraps them in a
-  top-level installer whose postinstall script installs only the package that
-  matches the device architecture.
+  Builds separate arm64 and x86_64 component packages, then wraps them in a top-level installer whose postinstall script installs only the package that matches the device architecture.
 Identifier: com.github.ashleymckinlay.pkg.Goland
 ParentRecipe: com.github.ashleymckinlay.download.Goland
 MinimumVersion: '2.9'
 
 Input:
   NAME: GoLand
-  SOFTWARE_TITLE: goland
+  SOFTWARE_TITLE: GoLand
 
 Process:
   - Processor: PkgRootCreator
     Arguments:
-      pkgroot: '%RECIPE_CACHE_DIR%/wrapper'
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
       pkgdirs:
         pkgroot: '0755'
         scripts: '0755'
 
   - Processor: AppPkgCreator
     Arguments:
-      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/%SOFTWARE_TITLE%.app'
+      app_path: '%RECIPE_CACHE_DIR%/downloads/GoLand-arm64.dmg/GoLand.app'
       force_pkg_build: true
-      pkg_path: '%RECIPE_CACHE_DIR%/wrapper/scripts/%SOFTWARE_TITLE%-arm64.pkg'
+      pkg_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-arm64.pkg'
 
   - Processor: AppPkgCreator
     Arguments:
-      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg/%SOFTWARE_TITLE%.app'
+      app_path: '%RECIPE_CACHE_DIR%/downloads/GoLand-x86_64.dmg/GoLand.app'
       force_pkg_build: true
-      pkg_path: '%RECIPE_CACHE_DIR%/wrapper/scripts/%SOFTWARE_TITLE%-x86_64.pkg'
+      pkg_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-x86_64.pkg'
 
   - Processor: FileCreator
     Arguments:
-      file_path: '%RECIPE_CACHE_DIR%/wrapper/scripts/postinstall'
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
       file_mode: '0755'
       file_content: |
         #!/bin/bash
         set -euo pipefail
         if [[ $( /usr/bin/arch ) = arm64* ]]; then
+        echo "Installing GoLand-arm64-%version%"
           /usr/sbin/installer -pkg "%SOFTWARE_TITLE%-arm64.pkg" -target "$3"
         else
+        echo "Installing GoLand-x86_64-%version%"
           /usr/sbin/installer -pkg "%SOFTWARE_TITLE%-x86_64.pkg" -target "$3"
         fi
         exit 0
@@ -51,13 +52,13 @@ Process:
         options: purge_ds_store
         pkgdir: '%RECIPE_CACHE_DIR%'
         pkgname: '%SOFTWARE_TITLE%-%version%'
-        pkgroot: '%RECIPE_CACHE_DIR%/wrapper/pkgroot'
-        scripts: '%RECIPE_CACHE_DIR%/wrapper/scripts'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload/pkgroot'
+        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
         version: '%version%'
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
       fail_deleter_silently: true
       path_list:
-        - '%RECIPE_CACHE_DIR%/wrapper'
+        - '%RECIPE_CACHE_DIR%/payload'
         - '%RECIPE_CACHE_DIR%/extracted_file%'
