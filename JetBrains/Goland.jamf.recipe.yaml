@@ -1,4 +1,3 @@
----
 Description: Downloads the latest version, makes a pkg, uploads to the Jamf Pro
   Server, and creates a Self Service Policy.
 Identifier: com.github.ashleymckinlay.jamf.Goland
