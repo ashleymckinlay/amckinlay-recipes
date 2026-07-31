@@ -32,16 +32,16 @@ Process:
   - Processor: FileMover
     Arguments:
       source: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-arm64.pkg'
-      target: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-arm64.pkg'
+      target: '%RECIPE_CACHE_DIR%/payload/%SOFTWARE_TITLE%-arm64.pkg'
 
   - Processor: FileMover
     Arguments:
       source: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-x86_64.pkg'
-      target: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-x86_64.pkg'
+      target: '%RECIPE_CACHE_DIR%/payload/%SOFTWARE_TITLE%-x86_64.pkg'
 
   - Processor: FileCreator
     Arguments:
-      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
+      file_path: '%RECIPE_CACHE_DIR%/payload/postinstall'
       file_mode: '0755'
       file_content: |
         #!/bin/bash
@@ -68,7 +68,6 @@ Process:
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
-      fail_deleter_silently: true
       path_list:
         - '%RECIPE_CACHE_DIR%/payload'
         - '%RECIPE_CACHE_DIR%/unpack'
