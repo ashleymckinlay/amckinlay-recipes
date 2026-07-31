@@ -21,13 +21,23 @@ Process:
     Arguments:
       app_path: '%RECIPE_CACHE_DIR%/downloads/GoLand-arm64.dmg/GoLand.app'
       force_pkg_build: true
-      pkg_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-arm64.pkg'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-arm64.pkg'
 
   - Processor: AppPkgCreator
     Arguments:
       app_path: '%RECIPE_CACHE_DIR%/downloads/GoLand-x86_64.dmg/GoLand.app'
       force_pkg_build: true
-      pkg_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-x86_64.pkg'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-x86_64.pkg'
+
+  - Processor: FileMover
+    Arguments:
+      source: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-arm64.pkg'
+      target: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-arm64.pkg'
+
+  - Processor: FileMover
+    Arguments:
+      source: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-x86_64.pkg'
+      target: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-x86_64.pkg'
 
   - Processor: FileCreator
     Arguments:
@@ -61,4 +71,4 @@ Process:
       fail_deleter_silently: true
       path_list:
         - '%RECIPE_CACHE_DIR%/payload'
-        - '%RECIPE_CACHE_DIR%/extracted_file%'
+        - '%RECIPE_CACHE_DIR%/unpack'
