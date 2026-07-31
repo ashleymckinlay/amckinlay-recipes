@@ -11,7 +11,7 @@ Input:
   GROUP_TEMPLATE: Live-Group-Template.xml
   POLICY_CATEGORY: Applications
   POLICY_TEMPLATE: PolicyTemplate.xml
-  POLICY_NAME: 'Install Latest %NAME% (%ARCHITECTURE%)'
+  POLICY_NAME: '%NAME%'
   POLICY_RUN_COMMAND: ' '
   SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
   SELF_SERVICE_DESCRIPTION: 'Install, update, and manage your JetBrains IDEs on remote machines just as easily as on your local setup.'
