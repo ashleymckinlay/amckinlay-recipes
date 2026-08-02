@@ -13,35 +13,42 @@ Input:
 Process:
   - Processor: PkgRootCreator
     Arguments:
-      pkgroot: '%RECIPE_CACHE_DIR%/wrapper'
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
       pkgdirs:
-        pkgroot: '0755'
-        scripts: '0755'
+        pkgroot: '0775'
+        scripts: '0775'
 
-  - Processor: AppPkgCreator
+  - Processor: Copier
     Arguments:
-      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/%SOFTWARE_TITLE%.app'
-      force_pkg_build: true
-      pkg_path: '%RECIPE_CACHE_DIR%/wrapper/scripts/%SOFTWARE_TITLE%-arm64.pkg'
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-arm64.dmg'
 
-  - Processor: AppPkgCreator
+  - Processor: Copier
     Arguments:
-      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg/%SOFTWARE_TITLE%.app'
-      force_pkg_build: true
-      pkg_path: '%RECIPE_CACHE_DIR%/wrapper/scripts/%SOFTWARE_TITLE%-x86_64.pkg'
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-x86_64.dmg'
+
+  - Processor: PlistReader
+    Arguments:
+      info_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/%SOFTWARE_TITLE%.app/Contents/Info.plist'
+      plist_keys:
+        CFBundleIdentifier: bundleid
+        CFBundleName: app_name
 
   - Processor: FileCreator
     Arguments:
-      file_path: '%RECIPE_CACHE_DIR%/wrapper/scripts/postinstall'
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
       file_mode: '0755'
       file_content: |
         #!/bin/bash
-        set -euo pipefail
         if [[ $( /usr/bin/arch ) = arm64* ]]; then
-          /usr/sbin/installer -pkg "%SOFTWARE_TITLE%-arm64.pkg" -target "$3"
+          /usr/bin/hdiutil attach "%SOFTWARE_TITLE%-arm64.dmg" -mountpoint "/Volumes/%SOFTWARE_TITLE%" -nobrowse
         else
-          /usr/sbin/installer -pkg "%SOFTWARE_TITLE%-x86_64.pkg" -target "$3"
+          /usr/bin/hdiutil attach "%SOFTWARE_TITLE%-x86_64.dmg" -mountpoint "/Volumes/%SOFTWARE_TITLE%" -nobrowse
         fi
+
+        /bin/cp -R "/Volumes/%SOFTWARE_TITLE%/%SOFTWARE_TITLE%.app" "/Applications/%SOFTWARE_TITLE%.app"
+        /usr/bin/hdiutil detach "/Volumes/%SOFTWARE_TITLE%"
         exit 0
 
   - Processor: PkgCreator
@@ -51,13 +58,12 @@ Process:
         options: purge_ds_store
         pkgdir: '%RECIPE_CACHE_DIR%'
         pkgname: '%SOFTWARE_TITLE%-%version%'
-        pkgroot: '%RECIPE_CACHE_DIR%/wrapper/pkgroot'
-        scripts: '%RECIPE_CACHE_DIR%/wrapper/scripts'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload/pkgroot'
+        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
         version: '%version%'
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
       fail_deleter_silently: true
       path_list:
-        - '%RECIPE_CACHE_DIR%/wrapper'
-        - '%RECIPE_CACHE_DIR%/extracted_file%'
+        - '%RECIPE_CACHE_DIR%/payload'
