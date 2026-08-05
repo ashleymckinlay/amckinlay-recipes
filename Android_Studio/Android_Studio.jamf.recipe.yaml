@@ -1,34 +1,41 @@
-Comment: Set ARCHITECTURE to x86_64 or arm64
+---
+Description: Downloads the latest version, makes a pkg, uploads to the Jamf Pro
+  Server, and creates a Self Service Policy.
 Identifier: com.github.ashleymckinlay.x86_64.jamf.AndroidStudio
 ParentRecipe: com.github.ashleymckinlay.x86_64.pkg.AndroidStudio
 MinimumVersion: '2.3'
 
+
 Input:
   NAME: 'Android Studio'
-  SOFTWARE_TITLE: '%NAME%'
-  CATEGORY: Development
-  ARCHITECTURE: 'x86_64'
-  GROUP_CRITERIA: '%ARCHITECTURE%'
-  GROUP_NAME: 'Architecture - %ARCHITECTURE%'
-  GROUP_TEMPLATE: 'SmartGroup-architecture-smart.xml'
-  POLICY_CATEGORY: Testing
-  POLICY_TEMPLATE: PolicyTemplate.xml
-  POLICY_NAME: 'Install Latest %NAME% (%ARCHITECTURE%)'
+  ALL_COMPUTERS: 'true'
+  CATEGORY: Applications
+  GROUP_NAME: Apps
+  GROUP_TEMPLATE: Live-Group-Template.xml
+  INSTALL_BUTTON_TEXT: Install
+  POLICY_CATEGORY: '%CATEGORY%'
+  POLICY_NAME: '%NAME%'
   POLICY_RUN_COMMAND: ' '
-  SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
-  SELF_SERVICE_DESCRIPTION: Install the latest version of Android Studio.
-  SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
-  INSTALL_BUTTON_TEXT: 'Install'
-  REINSTALL_BUTTON_TEXT: 'Install'
-  UPDATE_PREDICATE: 'pkg_uploaded == False'
+  POLICY_TEMPLATE: Live-Policy-Template.xml
+  REINSTALL_BUTTON_TEXT: Reinstall
+  SELF_SERVICE_AVAILABLE: 'true'
+  SELF_SERVICE_CATEGORY: Collaboration
+  SELF_SERVICE_DESCRIPTION: 'Android Studio is the official IDE for Android development.'
+  SELF_SERVICE_DISPLAY_NAME: '%NAME%'
+  SELF_SERVICE_ICON: '%NAME%.png'
+  SOFTWARE_TITLE: '%NAME%'
+  SOFTWARE_TITLE_TRIGGER: '%SOFTWARE_TITLE%'
+  UPDATE_PREDICATE: pkg_uploaded == False
 
 Process:
-  - Processor: StopProcessingIf
+  - Processor: FileMover
     Arguments:
-      predicate: '%UPDATE_PREDICATE%'
+      source: '%pkg_path%'
+      target: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
       category_name: '%CATEGORY%'
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
