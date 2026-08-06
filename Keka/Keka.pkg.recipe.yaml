@@ -1,0 +1,9 @@
+Description: Downloads the latest version of Keka and creates a package.
+Identifier: com.github.ashleymckinlay.pkg.Keka
+Input:
+  APP_FILENAME: Keka
+  NAME: Keka
+MinimumVersion: '1.0.0'
+ParentRecipe: com.github.ashleymckinlay.download.Keka
+Process:
+  - Processor: AppPkgCreator

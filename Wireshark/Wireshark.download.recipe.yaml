@@ -1,0 +1,23 @@
+Description: Downloads the latest stable version of Wireshark.
+Identifier: com.github.ashleymckinlay.download.Wireshark
+Input:
+  NAME: Wireshark
+MinimumVersion: '0.4.1'
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: 'Wireshark%20([\d\.]+)\.dmg'
+      result_output_var_name: version
+      url: 'https://www.wireshark.org/download.html'
+
+  - Processor: URLDownloader
+    Arguments:
+      filename: '%NAME%-%version%.dmg'
+      url: 'https://2.na.dl.wireshark.org/osx/Wireshark%20%version%.dmg'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%pathname%/Wireshark*.app'
+      requirement: 'anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "7Z6EMTD2C6"'

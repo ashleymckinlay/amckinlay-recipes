@@ -2,26 +2,28 @@ Comment: GROUP_CRITERIA should be either 'arm64' or 'x86_64' and Arch should be 
 Description: Downloads the latest version and makes a pkg. Then, uploads the package to the Jamf Pro Server and creates a Self Service Policy and Smart Group.
 Identifier: com.github.ashleymckinlay.jamf.wireshark
 MinimumVersion: '2.3'
-ParentRecipe: com.github.homebysix.pkg.Wireshark
+ParentRecipe: com.github.ashleymckinlay.pkg.Wireshark
 
 Input:
   NAME: Wireshark
-  CATEGORY: Network
-  GROUP_CRITERIA: 'x84_64'
-  ARCH: Intel
-  GROUP_NAME: 'Architecture - %ARCHITECTURE%'
-  GROUP_TEMPLATE: SmartGroup-architecture-smart.xml
-  TESTING_GROUP_NAME: Testing
-  POLICY_CATEGORY: Testing
-  POLICY_TEMPLATE: Policy-install-latest.xml
-  POLICY_NAME: 'Install Latest %NAME% (%ARCHITECTURE%)'
+  ALL_COMPUTERS: 'true'
+  CATEGORY: Applications
+  GROUP_NAME: Apps
+  GROUP_TEMPLATE: Live-Group-Template.xml
+  INSTALL_BUTTON_TEXT: Install
+  POLICY_CATEGORY: '%CATEGORY%'
+  POLICY_NAME: '%NAME%'
   POLICY_RUN_COMMAND: ' '
-  SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
-  SELF_SERVICE_DESCRIPTION: Wireshark is a network protocol analyzer.
+  POLICY_TEMPLATE: Live-Policy-Template.xml
+  REINSTALL_BUTTON_TEXT: Reinstall
+  SELF_SERVICE_AVAILABLE: 'true'
+  SELF_SERVICE_CATEGORY: Collaboration
+  SELF_SERVICE_DESCRIPTION: 'Wireshark is the world’s foremost and widely-used network protocol analyzer. It lets you see what’s happening on your network at a microscopic level.'
+  SELF_SERVICE_DISPLAY_NAME: '%NAME%'
   SELF_SERVICE_ICON: '%NAME%.png'
-  INSTALL_BUTTON_TEXT: 'Install'
-  REINSTALL_BUTTON_TEXT: 'Install'
-  UPDATE_PREDICATE: 'pkg_uploaded == False'
+  SOFTWARE_TITLE: '%NAME%'
+  SOFTWARE_TITLE_TRIGGER: '%SOFTWARE_TITLE%'
+  UPDATE_PREDICATE: pkg_uploaded == False
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
