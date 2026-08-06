@@ -2,13 +2,13 @@ Description: |
   Builds separate arm64 and x86_64 component packages, then wraps them in a
   top-level installer whose postinstall script installs only the package that
   matches the device architecture.
-Identifier: com.github.ashleymckinlay.pkg.DBeaver
-ParentRecipe: com.github.ashleymckinlay.download.DBeaver
+Identifier: com.github.ashleymckinlay.pkg.MongoDB
+ParentRecipe: com.github.ashleymckinlay.download.MongoDB
 MinimumVersion: '2.9'
 
 Input:
-  NAME: DBeaver
-  SOFTWARE_TITLE: DBeaver
+  NAME: MongoDB
+  SOFTWARE_TITLE: 'MongoDB Compass'
 
 Process:
   - Processor: PkgRootCreator
@@ -20,20 +20,13 @@ Process:
 
   - Processor: Copier
     Arguments:
-      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg'
-      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-arm64.dmg'
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-arm64.dmg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%NAME%-arm64.dmg'
 
   - Processor: Copier
     Arguments:
-      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg'
-      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-x86_64.dmg'
-
-  - Processor: PlistReader
-    Arguments:
-      info_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/%SOFTWARE_TITLE%.app/Contents/Info.plist'
-      plist_keys:
-        CFBundleIdentifier: bundleid
-        CFBundleName: app_name
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-x86_64.dmg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%NAME%-x86_64.dmg'
 
   - Processor: FileCreator
     Arguments:
@@ -42,9 +35,9 @@ Process:
       file_content: |
         #!/bin/bash
         if [[ $( /usr/bin/arch ) = arm64* ]]; then
-          /usr/bin/hdiutil attach "%SOFTWARE_TITLE%-arm64.dmg" -mountpoint "/Volumes/%SOFTWARE_TITLE%" -nobrowse
+          /usr/bin/hdiutil attach "%NAME%-arm64.dmg" -mountpoint "/Volumes/%SOFTWARE_TITLE%" -nobrowse
         else
-          /usr/bin/hdiutil attach "%SOFTWARE_TITLE%-x86_64.dmg" -mountpoint "/Volumes/%SOFTWARE_TITLE%" -nobrowse
+          /usr/bin/hdiutil attach "%NAME%-x86_64.dmg" -mountpoint "/Volumes/%SOFTWARE_TITLE%" -nobrowse
         fi
 
         /bin/cp -R "/Volumes/%SOFTWARE_TITLE%/%SOFTWARE_TITLE%.app" "/Applications/%SOFTWARE_TITLE%.app"
@@ -54,13 +47,13 @@ Process:
   - Processor: PkgCreator
     Arguments:
       pkg_request:
-        id: '%bundleid%'
+        id: 'com.mongodb.compass'
         options: purge_ds_store
         pkgdir: '%RECIPE_CACHE_DIR%'
-        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgname: '%SOFTWARE_TITLE%-%DOWNLOAD_VERSION%'
         pkgroot: '%RECIPE_CACHE_DIR%/payload/pkgroot'
         scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
-        version: '%version%'
+        version: '%DOWNLOAD_VERSION%'
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
