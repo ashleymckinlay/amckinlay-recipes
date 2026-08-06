@@ -2,13 +2,13 @@ Description: |
   Builds separate arm64 and x86_64 component packages, then wraps them in a
   top-level installer whose postinstall script installs only the package that
   matches the device architecture.
-Identifier: com.github.ashleymckinlay.pkg.Hoppscotch
-ParentRecipe: com.github.ashleymckinlay.download.Hoppscotch
+Identifier: com.github.ashleymckinlay.pkg.SoapUI
+ParentRecipe: com.github.ashleymckinlay.download.SoapUI
 MinimumVersion: '2.9'
 
 Input:
-  NAME: Hoppscotch
-  SOFTWARE_TITLE: Hoppscotch
+  NAME: SoapUI
+  SOFTWARE_TITLE: SoapUI
 
 Process:
   - Processor: PkgRootCreator
@@ -30,7 +30,7 @@ Process:
 
   - Processor: PlistReader
     Arguments:
-      info_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/%SOFTWARE_TITLE%.app/Contents/Info.plist'
+      info_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/%SOFTWARE_TITLE%-%version%.app/Contents/Info.plist'
       plist_keys:
         CFBundleIdentifier: bundleid
         CFBundleName: app_name
@@ -47,7 +47,7 @@ Process:
           /usr/bin/hdiutil attach "%SOFTWARE_TITLE%-x86_64.dmg" -mountpoint "/Volumes/%SOFTWARE_TITLE%" -nobrowse
         fi
 
-        /bin/cp -R "/Volumes/%SOFTWARE_TITLE%/%SOFTWARE_TITLE%.app" "/Applications/%SOFTWARE_TITLE%.app"
+        /bin/cp -R "/Volumes/%SOFTWARE_TITLE%/%SOFTWARE_TITLE%-%version%.app" "/Applications/%SOFTWARE_TITLE%.app"
         /usr/bin/hdiutil detach "/Volumes/%SOFTWARE_TITLE%"
         exit 0
 

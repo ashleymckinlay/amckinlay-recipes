@@ -1,6 +1,6 @@
 Description: Downloads the latest version of the Rectangle App, then uploads to your Jamf Pro instance.
 Identifier: com.github.ashleymckinlay.jamf.SoapUI
-ParentRecipe: com.github.dataJAR-recipes.pkg.SoapUI
+ParentRecipe: com.github.ashleymckinlay.pkg.SoapUI
 MinimumVersion: '1.2'
 
 Input:

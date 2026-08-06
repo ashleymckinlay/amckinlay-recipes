@@ -1,0 +1,41 @@
+Description: |
+  Downloads the latest version of SoapUI.
+
+Identifier: com.github.ashleymckinlay.download.SoapUI
+Input:
+  NAME: SoapUI
+  SOFTWARE_TITLE: SoapUI
+MinimumVersion: '1.1'
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: 'newVersion="(\d+(\.\d+)+)"'
+      result_output_var_name: version
+      url: 'https://dl.eviware.com/version-update/soapui-updates-os.xml'
+
+  - Processor: URLDownloader
+    Arguments:
+      filename: '%NAME%-arm64.dmg'
+      url: 'https://dl.eviware.com/soapuios/%version%/SoapUI-arm64-%version%.dmg'
+
+  - Processor: URLDownloader
+    Arguments:
+      filename: '%NAME%-x86_64.dmg'
+      url: 'https://dl.eviware.com/soapuios/%version%/SoapUI-x64-%version%.dmg'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/%SOFTWARE_TITLE%-%version%.app'
+      requirement: 'anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = HVA5GNL2LF'
+      strict_verification: true
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg/%SOFTWARE_TITLE%-%version%.app'
+      requirement: 'anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = HVA5GNL2LF'
+      strict_verification: true

@@ -1,6 +1,6 @@
 Description: Downloads the latest version of the Maccy Clipboard App, then uploads to your Jamf Pro instance.
 Identifier: com.github.ashleymckinlay.jamf.Maccy
-ParentRecipe: com.skoobasteeve.pkg.Maccy
+ParentRecipe: com.github.ashleymckinlay.pkg.Maccy
 MinimumVersion: '1.2'
 
 Input:

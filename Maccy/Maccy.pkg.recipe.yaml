@@ -1,0 +1,13 @@
+Description: Downloads the latest version of Maccy and creates a package.
+Identifier: com.github.ashleymckinlay.pkg.Maccy
+
+Input:
+  NAME: Maccy
+MinimumVersion: '1.0.0'
+
+ParentRecipe: com.github.ashleymckinlay.download.Maccy
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%RECIPE_CACHE_DIR%/%NAME%/Maccy.app'

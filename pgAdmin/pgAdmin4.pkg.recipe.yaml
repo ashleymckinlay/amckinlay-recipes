@@ -1,14 +1,14 @@
-Description: |
+why Description: |
   Builds separate arm64 and x86_64 component packages, then wraps them in a
   top-level installer whose postinstall script installs only the package that
   matches the device architecture.
-Identifier: com.github.ashleymckinlay.pkg.Hoppscotch
-ParentRecipe: com.github.ashleymckinlay.download.Hoppscotch
+Identifier: com.github.ashleymckinlay.pkg.pgAdmin4
+ParentRecipe: com.github.ashleymckinlay.download.pgAdmin4
 MinimumVersion: '2.9'
 
 Input:
-  NAME: Hoppscotch
-  SOFTWARE_TITLE: Hoppscotch
+  NAME: pgAdmin4
+  SOFTWARE_TITLE: pgAdmin 4
 
 Process:
   - Processor: PkgRootCreator

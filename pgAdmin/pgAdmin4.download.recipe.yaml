@@ -1,0 +1,70 @@
+Description: Downloads the latest version of pgAdmin 4 for macOS (Intel and Apple Silicon compatible).
+Identifier: com.github.ashleymckinlay.download.pgAdmin4
+MinimumVersion: '2.9'
+
+Input:
+  NAME: pgAdmin4
+  SOFTWARE_TITLE: pgAdmin 4
+  BASE_URL: https://www.postgresql.org/ftp/pgadmin/pgadmin4
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      url: '%BASE_URL%/'
+      re_pattern: 'v(\d+\.\d+)'
+      request_headers:
+        User-Agent: AutoPkg
+      result_output_var_name: latest_version
+
+  - Processor: URLTextSearcher
+    Arguments:
+      url: '%BASE_URL%/v%latest_version%/macos/'
+      re_pattern: 'pgadmin4-%latest_version%-x64\.dmg'
+      request_headers:
+        User-Agent: AutoPkg
+      result_output_var_name: filename_x64
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%NAME%-x86_64.dmg'
+      url: 'https://ftp.postgresql.org/pub/pgadmin/pgadmin4/v%latest_version%/macos/%filename_x64%'
+
+  - Processor: URLTextSearcher
+    Arguments:
+      url: '%BASE_URL%/v%latest_version%/macos/'
+      re_pattern: 'pgadmin4-%latest_version%-arm64\.dmg'
+      request_headers:
+        User-Agent: AutoPkg
+      result_output_var_name: filename_arm64
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%NAME%-arm64.dmg'
+      url: 'https://ftp.postgresql.org/pub/pgadmin/pgadmin4/v%latest_version%/macos/%filename_arm64%'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-arm64.dmg/pgAdmin 4.app'
+      requirement: identifier "org.pgadmin.pgadmin4" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "TCHGL2R7C5"
+      strict_verification: true
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-x64.dmg/pgAdmin 4.app'
+      requirement: identifier "org.pgadmin.pgadmin4" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "TCHGL2R7C5"
+      strict_verification: true
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-x64.dmg/pgAdmin 4.app/Contents/Info.plist'
+      plist_version_key: CFBundleShortVersionString

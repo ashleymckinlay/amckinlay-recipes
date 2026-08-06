@@ -1,0 +1,26 @@
+Description: Uploads pgAdmin 4 pkg to Jamf Pro and creates a policy for deployment.
+Identifier: com.github.ashleymckinlay.jamf.pgAdmin4
+ParentRecipe: com.github.ashleymckinlay.pkg.pgAdmin4
+
+Input:
+  NAME: pgAdmin4
+  JAMF_URL: https://jamf.example.com
+  JAMF_USER: autopkg
+  JAMF_PASS: ''
+  CATEGORY: Databases
+  POLICY_CATEGORY: Databases
+  POLICY_TEMPLATE: '%RECIPE_DIR%/PolicyTemplate.xml'
+MinimumVersion: '2.3'
+
+Process:
+  - Processor: JamfPackageUploader
+    Arguments:
+      pkg_path: '%pkg_path%'
+      prod_name: '%NAME%'
+      category: '%CATEGORY%'
+
+  - Processor: JamfPolicyUploader
+    Arguments:
+      policy_template: '%POLICY_TEMPLATE%'
+      policy_name: '%NAME% - Install Latest'
+      category: '%POLICY_CATEGORY%'
