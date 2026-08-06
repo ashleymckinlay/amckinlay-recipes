@@ -1,8 +1,8 @@
 ---
 Description: Downloads the latest version, makes a pkg, uploads to the Jamf Pro
   Server, and creates a Self Service Policy.
-Identifier: com.github.ashleymckinlay.x86_64.jamf.AndroidStudio
-ParentRecipe: com.github.ashleymckinlay.x86_64.pkg.AndroidStudio
+Identifier: com.github.ashleymckinlay.jamf.AndroidStudio
+ParentRecipe: com.github.ashleymckinlay.pkg.AndroidStudio
 MinimumVersion: '2.3'
 
 
