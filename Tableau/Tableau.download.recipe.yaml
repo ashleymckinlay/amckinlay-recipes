@@ -17,7 +17,7 @@ Process:
   - Processor: CodeSignatureVerifier
     Arguments:
       expected_authority_names:
-        - Developer ID Installer: Tableau Software, LLC (QJ4XPRK37C)
+        - 'Developer ID Installer: Tableau Software, LLC (QJ4XPRK37C)'
         - Developer ID Certification Authority
         - Apple Root CA
       input_path: '%pathname%/Tableau Desktop.pkg'
