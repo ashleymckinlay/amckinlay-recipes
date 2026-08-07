@@ -6,6 +6,7 @@ MinimumVersion: '1.2'
 Input:
   NAME: SoapUI
   SOFTWARE_TITLE: SoapUI
+  ALL_COMPUTERS: 'true'
   CATEGORY: Applications
   GROUP_NAME: '%NAME%-update-smart'
   GROUP_TEMPLATE: SmartGroup-update-smart.xml
