@@ -59,6 +59,5 @@ Process:
   - Processor: PathDeleter
     Arguments:
       path_list:
-        - '%RECIPE_CACHE_DIR%/Universal'
         - '%RECIPE_CACHE_DIR%/scripts'
         - '%RECIPE_CACHE_DIR%/universal_pkg'

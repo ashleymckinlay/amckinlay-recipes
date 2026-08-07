@@ -5,34 +5,33 @@ MinimumVersion: '2.3'
 
 Input:
   NAME: IntelliJ IDEA
-  ALL_COMPUTERS: 'true'
   SOFTWARE_TITLE: '%NAME%'
+  ALL_COMPUTERS: 'true'
   CATEGORY: Applications
   GROUP_NAME: Apps
   GROUP_TEMPLATE: Live-Group-Template.xml
-  INSTALL_BUTTON_TEXT: Install
-  POLICY_CATEGORY: '%CATEGORY%'
+  POLICY_CATEGORY: Applications
+  POLICY_TEMPLATE: Live-Policy-Template.xml
   POLICY_NAME: '%NAME%'
   POLICY_RUN_COMMAND: ' '
-  POLICY_TEMPLATE: Live-Policy-Template.xml
+  SELF_SERVICE_DISPLAY_NAME: '%NAME%'
+  INSTALL_BUTTON_TEXT: Install
   REINSTALL_BUTTON_TEXT: Reinstall
   SELF_SERVICE_AVAILABLE: 'true'
   SELF_SERVICE_CATEGORY: Collaboration
   SELF_SERVICE_DESCRIPTION: 'IntelliJ IDEA is a Java IDE for professional developers. It provides a robust environment for coding, debugging, and testing Java applications.'
-  SELF_SERVICE_DISPLAY_NAME: '%NAME%'
+
   SELF_SERVICE_ICON: '%NAME%.png'
   SOFTWARE_TITLE_TRIGGER: '%SOFTWARE_TITLE%'
   UPDATE_PREDICATE: pkg_uploaded == False
 
 Process:
-  - Processor: FileMover
+  - Processor: StopProcessingIf
     Arguments:
-      source: '%pkg_path%'
-      target: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      predicate: '%UPDATE_PREDICATE%'
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
-      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
       category_name: '%CATEGORY%'
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
