@@ -18,13 +18,13 @@ Process:
   - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
-      filename: '%SOFTWARE_TITLE%-x86_64.dmg'
+      filename: '%SOFTWARE_TITLE%-%version%-x86_64.dmg'
       url: https://download.jetbrains.com/go/goland-%version%.dmg
 
   - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
-      filename: '%SOFTWARE_TITLE%-arm64.dmg'
+      filename: '%SOFTWARE_TITLE%-%version%-arm64.dmg'
       url: https://download.jetbrains.com/go/goland-%version%-aarch64.dmg
 
   - Processor: EndOfCheckPhase
@@ -36,13 +36,13 @@ Process:
   - Processor: CodeSignatureVerifier
     Arguments:
       deep_verification: true
-      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/%SOFTWARE_TITLE%.app'
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%version%-arm64.dmg/%SOFTWARE_TITLE%.app'
       requirement: identifier "com.jetbrains.goland" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "2ZEFAR8TH3"
       strict_verification: true
 
   - Processor: CodeSignatureVerifier
     Arguments:
       deep_verification: true
-      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg/%SOFTWARE_TITLE%.app'
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%version%-x86_64.dmg/%SOFTWARE_TITLE%.app'
       requirement: identifier "com.jetbrains.goland" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "2ZEFAR8TH3"
       strict_verification: true
