@@ -20,17 +20,17 @@ Process:
 
   - Processor: Copier
     Arguments:
-      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg'
-      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-arm64.dmg'
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%version%-arm64.dmg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-%version%-arm64.dmg'
 
   - Processor: Copier
     Arguments:
-      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg'
-      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-x86_64.dmg'
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%version%-x86_64.dmg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-%version%-x86_64.dmg'
 
   - Processor: PlistReader
     Arguments:
-      info_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/%NAME%.app/Contents/Info.plist'
+      info_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%version%-arm64.dmg/%NAME%.app/Contents/Info.plist'
       plist_keys:
         CFBundleIdentifier: bundleid
         CFBundleName: app_name
@@ -42,9 +42,9 @@ Process:
       file_content: |
         #!/bin/bash
         if [[ $( /usr/bin/arch ) = arm64* ]]; then
-          /usr/bin/hdiutil attach "%SOFTWARE_TITLE%-arm64.dmg" -mountpoint "/Volumes/%NAME%" -nobrowse
+          /usr/bin/hdiutil attach "%SOFTWARE_TITLE%-%version%-arm64.dmg" -mountpoint "/Volumes/%NAME%" -nobrowse
         else
-          /usr/bin/hdiutil attach "%SOFTWARE_TITLE%-x86_64.dmg" -mountpoint "/Volumes/%NAME%" -nobrowse
+          /usr/bin/hdiutil attach "%SOFTWARE_TITLE%-%version%-x86_64.dmg" -mountpoint "/Volumes/%NAME%" -nobrowse
         fi
 
         /bin/cp -R "/Volumes/%NAME%/%NAME%.app" "/Applications/%NAME%.app"
