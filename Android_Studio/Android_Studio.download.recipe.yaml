@@ -20,7 +20,7 @@ Input:
 Process:
   - Processor: URLTextSearcher
     Arguments:
-      re_pattern: '(?P<arm64_url>https://edgedl\.me\.gvt1\.com/android/studio/install/(?P<version>\d{4,}\.\d+\.\d+\.\d+)/android-studio-(?P<codename>.+)-mac_arm\.dmg)'
+      re_pattern: '(?P<arm64_url>https://edgedl\.me\.gvt1\.com/android/studio/install/(?P<version>\d{4,}(?:\.\d+){2,3})/android-studio-(?P<codename>.+)-mac_arm\.dmg)'
       result_output_var_name: version
       url: 'https://developer.android.com/studio'
 
