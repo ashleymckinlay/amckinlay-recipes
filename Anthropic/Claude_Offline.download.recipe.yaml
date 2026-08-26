@@ -1,0 +1,59 @@
+Description: Downloads Claude and produces a verified artefact for downstream packaging.
+Identifier: com.github.ashleymckinlay.download.Claude_Offline
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Claude_Offline
+  SOFTWARE_TITLE: Claude
+  RELEASES_URL: https://downloads.claude.ai/releases/darwin/universal/RELEASES.json
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: '"currentRelease":"([^"]+)"'
+      result_output_var_name: version
+      url: '%RELEASES_URL%'
+
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: 'Claude-([a-f0-9]{40})\.zip'
+      result_output_var_name: hash
+      url: '%RELEASES_URL%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-arm64.dmg'
+      url: 'https://downloads.claude.ai/releases-offline/darwin/arm64/%version%/Claude-%hash%-offline.dmg'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      filename: '%SOFTWARE_TITLE%-x86_64.dmg'
+      url: 'https://downloads.claude.ai/releases-offline/darwin/x64/%version%/Claude-%hash%-offline.dmg'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/Claude.app'
+      requirement: identifier "com.anthropic.claudefordesktop" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "Q6L2SF6YDW"
+      strict_verification: true
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg/Claude.app'
+      requirement: identifier "com.anthropic.claudefordesktop" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "Q6L2SF6YDW"
+      strict_verification: true
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/Claude.app/Contents/Info.plist'
+      plist_version_key: CFBundleShortVersionString

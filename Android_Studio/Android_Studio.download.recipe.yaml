@@ -25,20 +25,20 @@ Process:
 
   - Processor: URLTextSearcher
     Arguments:
-      re_pattern: '(?P<arm64_url>https://edgedl\.me\.gvt1\.com/android/studio/install/(?P<version>\d{4,}\.\d+\.\d+\.\d+)/android-studio-(?P<codename>[^-]+)-mac_arm\.dmg)'
+      re_pattern: '(?P<arm64_url>https://edgedl\.me\.gvt1\.com/android/studio/install/(?P<version>\d{4,}\.\d+\.\d+\.\d+)/android-studio-(?P<codename>.+)-mac_arm\.dmg)'
       result_output_var_name: codename
       url: 'https://developer.android.com/studio'
 
   - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
-      filename: '%SOFTWARE_TITLE%-x86_64.dmg'
+      filename: '%SOFTWARE_TITLE%-%version%-x86_64.dmg'
       url: https://edgedl.me.gvt1.com/android/studio/install/%version%/android-studio-%codename%-mac.dmg
 
   - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
-      filename: '%SOFTWARE_TITLE%-arm64.dmg'
+      filename: '%SOFTWARE_TITLE%-%version%-arm64.dmg'
       url: https://edgedl.me.gvt1.com/android/studio/install/%version%/android-studio-%codename%-mac_arm.dmg
 
   - Processor: EndOfCheckPhase
@@ -46,18 +46,18 @@ Process:
   - Processor: CodeSignatureVerifier
     Arguments:
       deep_verification: true
-      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/Android Studio.app'
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%version%-arm64.dmg/Android Studio.app'
       requirement: 'identifier "com.google.android.studio" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = EQHXZ8M8AV'
       strict_verification: true
 
   - Processor: CodeSignatureVerifier
     Arguments:
       deep_verification: true
-      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg/Android Studio.app'
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%version%-x86_64.dmg/Android Studio.app'
       requirement: 'identifier "com.google.android.studio" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = EQHXZ8M8AV'
       strict_verification: true
 
   - Processor: Versioner
     Arguments:
-      input_plist_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/Android Studio.app/Contents/Info.plist'
+      input_plist_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%version%-arm64.dmg/Android Studio.app/Contents/Info.plist'
       plist_version_key: CFBundleShortVersionString
