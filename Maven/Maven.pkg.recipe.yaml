@@ -1,0 +1,45 @@
+Description: Packages a the latest version of Apache Maven
+Identifier: com.github.ashleymckinlay.pkg.Maven
+Input:
+  NAME: Maven
+MinimumVersion: "0.1.0"
+ParentRecipe: com.github.ashleymckinlay.download.Maven
+Process:
+  - Arguments:
+      pkgdirs:
+        usr: "0755"
+        usr/local: "0755"
+        usr/local/bin: "0755"
+      pkgroot: "%RECIPE_CACHE_DIR%/payload"
+    Processor: PkgRootCreator
+  - Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/unpack"
+      purge_destination: true
+    Processor: Unarchiver
+  - Arguments:
+      destination_path: "%pkgroot%/usr/local/maven-%version%"
+      overwrite: true
+      source_path: "%RECIPE_CACHE_DIR%/unpack/*/"
+    Processor: Copier
+  - Arguments:
+      destination_path: "%pkgroot%/usr/local/maven"
+      source_path: "/usr/local/maven-%version%"
+    Processor: Symlinker
+  - Arguments:
+      destination_path: "%pkgroot%/usr/local/bin/mvn"
+      source_path: "/usr/local/maven/bin/mvn"
+    Processor: Symlinker
+  - Arguments:
+      pkg_request:
+        chown:
+          - group: wheel
+            mode: "0755"
+            path: usr
+            user: root
+        id: org.apache.maven
+        pkgdir: "%RECIPE_CACHE_DIR%"
+        pkgname: "%NAME%-%version%"
+        pkgroot: "%pkgroot%"
+        pkgtype: flat
+        version: "%version%"
+    Processor: PkgCreator

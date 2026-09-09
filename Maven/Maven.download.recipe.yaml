@@ -1,0 +1,15 @@
+Description: Downloads the latest version of Apache Maven binaries
+Identifier: com.github.ashleymckinlay.download.Maven
+Input:
+  DOWNLOAD_URL: https://maven.apache.org/download.cgi
+  NAME: Maven
+MinimumVersion: "0.2.9"
+Process:
+  - Arguments:
+      re_pattern: 'href="(?P<url>https?[^\"]*(?P<filename>apache-maven-(?P<version>.+?)-bin.tar.gz))'
+      url: "%DOWNLOAD_URL%"
+    Processor: URLTextSearcher
+  - Arguments:
+      filename: "%filename%"
+    Processor: URLDownloader
+  - Processor: EndOfCheckPhase
