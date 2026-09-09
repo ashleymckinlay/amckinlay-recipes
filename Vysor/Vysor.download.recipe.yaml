@@ -1,0 +1,22 @@
+Description: >
+  Downloads the latest DMG version of Vysor.
+  Set PRERELEASE to a non-empty string to download prereleases, either
+  via Input in an override or via the -k option,
+  i.e.: `-k PRERELEASE=yes`
+Identifier: com.github.ashleymckinlay.download.Vysor
+Input:
+  NAME: Vysor
+  PRERELEASE: ""
+MinimumVersion: "1.0.0"
+Process:
+  - Arguments:
+      asset_regex: (.*?\.dmg)
+      github_repo: koush/vysor.io
+      include_prereleases: "%PRERELEASE%"
+    Processor: GitHubReleasesInfoProvider
+  - Processor: URLDownloader
+  - Processor: EndOfCheckPhase
+  - Arguments:
+      input_path: "%pathname%/Vysor.app"
+      requirement: 'identifier "com.electron.vysor" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = XT4C9EJNUG'
+    Processor: CodeSignatureVerifier
