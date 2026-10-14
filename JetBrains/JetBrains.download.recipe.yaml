@@ -5,6 +5,7 @@ MinimumVersion: '0.2.0'
 Input:
   NAME: JetBrainsProductDownload
   PROD_CODE: 'A valid product code can be obtained from https://data.services.jetbrains.com/products'
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
   - Processor: URLTextSearcher
@@ -19,6 +20,10 @@ Process:
       url: '%match%'
 
   - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
   - Processor: FileFinder
     Arguments:

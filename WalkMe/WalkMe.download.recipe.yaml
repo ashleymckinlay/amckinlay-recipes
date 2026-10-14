@@ -4,6 +4,7 @@ MinimumVersion: '1.0.0'
 
 Input:
   NAME: WalkMe
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
   - Processor: URLDownloader
@@ -12,6 +13,10 @@ Process:
       url: https://cdn.walkme.com/walkme-editor/latest/mac/WalkMeInstaller.dmg
 
   - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
   - Processor: CodeSignatureVerifier
     Arguments:

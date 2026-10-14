@@ -9,6 +9,7 @@ MinimumVersion: '0.6.1'
 Input:
   PRERELEASE: ''
   NAME: Rectangle
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
   - Processor: GitHubReleasesInfoProvider
@@ -22,6 +23,10 @@ Process:
       filename: '%NAME%-%version%.dmg'
 
   - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
   - Processor: CodeSignatureVerifier
     Arguments:

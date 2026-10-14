@@ -3,6 +3,7 @@ Identifier: com.github.ashleymckinlay.download.Maven
 Input:
   DOWNLOAD_URL: https://maven.apache.org/download.cgi
   NAME: Maven
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 MinimumVersion: "0.2.9"
 Process:
   - Arguments:
@@ -13,3 +14,7 @@ Process:
       filename: "%filename%"
     Processor: URLDownloader
   - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'

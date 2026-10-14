@@ -6,6 +6,7 @@ MinimumVersion: '1.0.0'
 Input:
   DOWNLOAD_URL: https://download.knime.org/analytics-platform/macosx/knime-latest-app.macosx.cocoa.x86_64.dmg
   NAME: KNIME_Analytics_Platform
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
   - Processor: URLDownloader
@@ -14,6 +15,10 @@ Process:
       url: '%DOWNLOAD_URL%'
 
   - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
   - Processor: CodeSignatureVerifier
     Arguments:

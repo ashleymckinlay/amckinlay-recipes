@@ -5,6 +5,7 @@ Identifier: com.github.ashleymckinlay.download.SoapUI
 Input:
   NAME: SoapUI
   SOFTWARE_TITLE: SoapUI
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 MinimumVersion: '1.1'
 
 Process:
@@ -19,12 +20,20 @@ Process:
       filename: '%NAME%-arm64.dmg'
       url: 'https://dl.eviware.com/soapuios/%version%/SoapUI-arm64-%version%.dmg'
 
+  - Processor: com.github.ashleymckinlay.SharedProcessors/DownloadChangedRecorder
+    Arguments:
+      result_output_var_name: download_1_changed
+
   - Processor: URLDownloader
     Arguments:
       filename: '%NAME%-x86_64.dmg'
       url: 'https://dl.eviware.com/soapuios/%version%/SoapUI-x64-%version%.dmg'
 
   - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_1_changed == False AND download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
   - Processor: CodeSignatureVerifier
     Arguments:

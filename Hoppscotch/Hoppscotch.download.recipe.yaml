@@ -27,6 +27,10 @@ Process:
       filename: '%SOFTWARE_TITLE%-arm64.dmg'
       url: '%DOWNLOAD_URL_ARM64%'
 
+  - Processor: com.github.ashleymckinlay.SharedProcessors/DownloadChangedRecorder
+    Arguments:
+      result_output_var_name: download_1_changed
+
   - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
@@ -37,7 +41,7 @@ Process:
 
   - Processor: StopProcessingIf
     Arguments:
-      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+      predicate: 'download_1_changed == False AND download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
   - Processor: CodeSignatureVerifier
     Arguments:
