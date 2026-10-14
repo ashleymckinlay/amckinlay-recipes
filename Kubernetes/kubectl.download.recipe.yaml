@@ -22,3 +22,16 @@ Process:
   - Processor: StopProcessingIf
     Arguments:
       predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  # kubectl isn't code signed, so verify it against the published SHA-256 instead
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: '^[0-9a-f]{64}'
+      result_output_var_name: expected_sha256
+      url: https://storage.googleapis.com/kubernetes-release/release/v%version%/bin/darwin/amd64/kubectl.sha256
+
+  - Processor: com.github.ashleymckinlay.SharedProcessors/HashVerifier
+    Arguments:
+      input_path: '%pathname%'
+      expected_hash: '%expected_sha256%'
+      algorithm: sha256

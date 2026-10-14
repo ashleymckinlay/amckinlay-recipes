@@ -31,3 +31,11 @@ Process:
 - Processor: StopProcessingIf
   Arguments:
     predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+- Processor: CodeSignatureVerifier
+  Arguments:
+    input_path: "%pathname%/*.pkg"
+    expected_authority_names:
+      - "Developer ID Installer: Azul Systems, Inc. (TDTHCUPYFR)"
+      - Developer ID Certification Authority
+      - Apple Root CA

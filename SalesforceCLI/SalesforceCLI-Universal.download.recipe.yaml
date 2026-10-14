@@ -32,3 +32,19 @@ Process:
   - Processor: StopProcessingIf
     Arguments:
       predicate: 'download_1_changed == False AND download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%RECIPE_CACHE_DIR%/downloads/sf-arm64.pkg'
+      expected_authority_names:
+        - 'Developer ID Installer: salesforce.com (62J96EUJ9N)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%RECIPE_CACHE_DIR%/downloads/sf-x64.pkg'
+      expected_authority_names:
+        - 'Developer ID Installer: salesforce.com (62J96EUJ9N)'
+        - Developer ID Certification Authority
+        - Apple Root CA
