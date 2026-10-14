@@ -47,7 +47,15 @@ Process:
           /usr/bin/hdiutil attach "%SOFTWARE_TITLE%-%version%-x86_64.dmg" -mountpoint "/Volumes/%NAME%" -nobrowse
         fi
 
-        /bin/cp -R "/Volumes/%NAME%/%NAME%.app" "/Applications/%NAME%.app"
+        if [[ ! -d "/Volumes/%NAME%/%NAME%.app" ]]; then
+          echo "/Volumes/%NAME%/%NAME%.app not found"
+          /usr/bin/hdiutil detach "/Volumes/%NAME%"
+          exit 1
+        fi
+
+        # Remove any existing copy first; cp -R into an existing .app nests the new bundle inside it
+        /bin/rm -rf "/Applications/%NAME%.app"
+        /usr/bin/ditto "/Volumes/%NAME%/%NAME%.app" "/Applications/%NAME%.app"
         /usr/bin/hdiutil detach "/Volumes/%NAME%"
         exit 0
 
