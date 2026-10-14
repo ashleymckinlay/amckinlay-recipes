@@ -17,7 +17,7 @@ ParentRecipe: com.github.ashleymckinlay.arm64.pkg.AzulZuluJava21
 Input:
   NAME: AzulZuluJava
   JAVA_MAJOR_VERSION: "21"
-  ARCHITECTURE: x86
+  ARCHITECTURE: arm
   BUNDLE_TYPE: jdk
   JAMF_CATEGORY: Developer Tools
   JAMF_CATEGORY_PRIORITY: '10'
