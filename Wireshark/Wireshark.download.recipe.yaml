@@ -2,6 +2,7 @@ Description: Downloads the latest stable version of Wireshark.
 Identifier: com.github.ashleymckinlay.download.Wireshark
 Input:
   NAME: Wireshark
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 MinimumVersion: '0.4.1'
 Process:
   - Processor: URLTextSearcher
@@ -16,6 +17,10 @@ Process:
       url: 'https://2.na.dl.wireshark.org/osx/Wireshark%20%version%.dmg'
 
   - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
   - Processor: CodeSignatureVerifier
     Arguments:

@@ -1,0 +1,7 @@
+Description: Stub recipe so other recipes can use the shared processors in this directory as com.github.ashleymckinlay.SharedProcessors/<ProcessorName>.
+Identifier: com.github.ashleymckinlay.SharedProcessors
+MinimumVersion: '2.3'
+
+Input: {}
+
+Process: []

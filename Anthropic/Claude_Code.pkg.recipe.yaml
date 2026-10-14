@@ -1,6 +1,7 @@
 Description: |
-  Downloads the latest version of Claude Code and creates a universal installer.
-  INSTALL_TARGET controls where the correct-architecture binary lands:
+  Downloads the latest version of Claude Code and creates an arm64 (Apple silicon) installer.
+  The postinstall exits with an error on Intel Macs.
+  INSTALL_TARGET controls where the binary lands:
     user     - the console user's ~/.local/bin/claude; if no console user is present,
                defer (log + exit 0) so a later run installs it.
     system   - always /usr/local/bin/claude, root-owned (all users; not
@@ -31,11 +32,6 @@ Process:
       source_path: '%RECIPE_CACHE_DIR%/downloads/claude-arm64-%version%'
       destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/claude-arm64'
 
-  - Processor: Copier
-    Arguments:
-      source_path: '%RECIPE_CACHE_DIR%/downloads/claude-x86_64-%version%'
-      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/claude-x86_64'
-
   - Processor: FileCreator
     Arguments:
       file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
@@ -63,13 +59,12 @@ Process:
 
         logged_in_user=$( /usr/sbin/scutil <<< "show State:/Users/ConsoleUser" | /usr/bin/awk '/Name :/ && ! /loginwindow/ { print $3 }' )
 
-        if [[ $( /usr/bin/arch ) = arm64* ]]; then
-          echo "Setting arm64 version of $TOOL"
-          TOOL_BINARY="claude-arm64"
-        else
-          echo "Setting x86_64 version of $TOOL"
-          TOOL_BINARY="claude-x86_64"
+        # arm64-only build; hw.optional.arm64 is 1 on Apple silicon even under Rosetta
+        if [[ "$( /usr/sbin/sysctl -n hw.optional.arm64 2>/dev/null )" != "1" ]]; then
+          echo "ERROR: $TOOL package is Apple silicon (arm64) only; this Mac is Intel."
+          exit 1
         fi
+        TOOL_BINARY="claude-arm64"
 
         console_user_present() {
           [[ -n "$logged_in_user" ]] && [[ ! "$logged_in_user" =~ (loginwindow|_mbsetupuser|root) ]]

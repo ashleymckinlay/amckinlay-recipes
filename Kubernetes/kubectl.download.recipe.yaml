@@ -4,6 +4,7 @@ MinimumVersion: '1.1'
 
 Input:
   NAME: kubectl
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
   - Processor: URLTextSearcher
@@ -17,3 +18,7 @@ Process:
       url: https://storage.googleapis.com/kubernetes-release/release/v%version%/bin/darwin/amd64/kubectl
 
   - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'

@@ -1,4 +1,4 @@
-Description: Downloads the latest version of Claude Desktop.
+Description: Downloads the latest arm64 (Apple silicon) version of Claude Desktop.
 Identifier: com.github.ashleymckinlay.download.Claude
 MinimumVersion: '2.9'
 
@@ -10,14 +10,14 @@ Input:
 Process:
   - Processor: URLTextSearcher
     Arguments:
-      re_pattern: https?://downloads\.claude\.ai/releases/darwin/universal/[0-9]+(?:\.[0-9]+)*/Claude-[a-f0-9]{40}(?=\.zip)
-      url: https://downloads.claude.ai/releases/darwin/universal/RELEASES.json
+      re_pattern: https?://downloads\.claude\.ai/releases/darwin/arm64/[0-9]+(?:\.[0-9]+)*/Claude-[a-f0-9]{40}\.zip
+      url: https://downloads.claude.ai/releases/darwin/arm64/RELEASES.json
 
   - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
-      filename: '%NAME%.dmg'
-      url: '%match%.dmg'
+      filename: '%NAME%-arm64.zip'
+      url: '%match%'
       request_headers:
         user-agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
 
@@ -27,13 +27,20 @@ Process:
     Arguments:
       predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
-  - Processor: AppDmgVersioner
+  - Processor: Unarchiver
     Arguments:
-      dmg_path: '%pathname%'
+      archive_path: '%pathname%'
+      destination_path: '%RECIPE_CACHE_DIR%/extractedfile'
+      purge_destination: true
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: '%RECIPE_CACHE_DIR%/extractedfile/Claude.app/Contents/Info.plist'
+      plist_version_key: CFBundleShortVersionString
 
   - Processor: CodeSignatureVerifier
     Arguments:
       deep_verification: true
       strict_verification: true
-      input_path: '%pathname%/Claude.app'
+      input_path: '%RECIPE_CACHE_DIR%/extractedfile/Claude.app'
       requirement: identifier "com.anthropic.claudefordesktop" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = Q6L2SF6YDW

@@ -26,15 +26,15 @@ Process:
         pkgroot: '0775'
       pkgroot: '%RECIPE_CACHE_DIR%/Universal'
 
-  - Processor: FileMover
+  - Processor: Copier
     Arguments:
-      source: '%RECIPE_CACHE_DIR%/downloads/%NAME%-arm64.pkg'
-      target: '%RECIPE_CACHE_DIR%/Universal/Scripts/%NAME%-arm64-%version%.pkg'
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-arm64.pkg'
+      destination_path: '%RECIPE_CACHE_DIR%/Universal/Scripts/%NAME%-arm64-%version%.pkg'
 
-  - Processor: FileMover
+  - Processor: Copier
     Arguments:
-      source: '%RECIPE_CACHE_DIR%/downloads/%NAME%-x86_64.pkg'
-      target: '%RECIPE_CACHE_DIR%/Universal/Scripts/%NAME%-x86_64-%version%.pkg'
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-x86_64.pkg'
+      destination_path: '%RECIPE_CACHE_DIR%/Universal/Scripts/%NAME%-x86_64-%version%.pkg'
 
   - Processor: FileCreator
     Arguments:

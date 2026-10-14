@@ -5,6 +5,7 @@ MinimumVersion: '2.3'
 
 Input:
   NAME: Ice
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
   - Processor: SparkleUpdateInfoProvider
@@ -16,6 +17,10 @@ Process:
       filename: '%NAME%-%version%.zip'
 
   - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
   - Processor: Unarchiver
     Arguments:

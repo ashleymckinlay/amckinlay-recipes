@@ -1,4 +1,4 @@
-Description: Downloads the current release version of Claude Code.
+Description: Downloads the current arm64 (Apple silicon) release version of Claude Code.
 Identifier: com.github.ashleymckinlay.download.Claude_Code
 MinimumVersion: '2.9'
 
@@ -26,14 +26,6 @@ Process:
       request_headers:
         user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15
 
-  - Processor: URLDownloaderPython
-    Arguments:
-      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
-      filename: claude-x86_64-%version%
-      url: '%base_url%/%version%/darwin-x64/claude'
-      request_headers:
-        user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15
-
   - Processor: EndOfCheckPhase
 
   - Processor: StopProcessingIf
@@ -45,17 +37,6 @@ Process:
       deep_verification: true
       strict_verification: true
       input_path: '%RECIPE_CACHE_DIR%/downloads/claude-arm64-%version%'
-      requirement: |
-        identifier "com.anthropic.claude-code" and anchor apple generic and
-        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
-        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
-        certificate leaf[subject.OU] = "Q6L2SF6YDW"
-
-  - Processor: CodeSignatureVerifier
-    Arguments:
-      deep_verification: true
-      strict_verification: true
-      input_path: '%RECIPE_CACHE_DIR%/downloads/claude-x86_64-%version%'
       requirement: |
         identifier "com.anthropic.claude-code" and anchor apple generic and
         certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and

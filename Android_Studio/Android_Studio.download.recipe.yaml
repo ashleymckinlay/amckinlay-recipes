@@ -16,6 +16,7 @@ Input:
   NAME: Android Studio
   SOFTWARE_TITLE: Android Studio
   DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
   - Processor: URLTextSearcher
@@ -30,6 +31,10 @@ Process:
       filename: '%SOFTWARE_TITLE%-%version%-x86_64.dmg'
       url: https://edgedl.me.gvt1.com/android/studio/install/%version%/android-studio-%codename%-mac.dmg
 
+  - Processor: com.github.ashleymckinlay.SharedProcessors/DownloadChangedRecorder
+    Arguments:
+      result_output_var_name: download_1_changed
+
   - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
@@ -37,6 +42,10 @@ Process:
       url: https://edgedl.me.gvt1.com/android/studio/install/%version%/android-studio-%codename%-mac_arm.dmg
 
   - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_1_changed == False AND download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
   - Processor: CodeSignatureVerifier
     Arguments:

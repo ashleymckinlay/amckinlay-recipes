@@ -5,6 +5,7 @@ MinimumVersion: '2.3'
 Input:
   NAME: PowerShell
   MAJOR_VERSION: '7.6'
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
   - Processor: GitHubReleasesInfoProvider
@@ -17,6 +18,10 @@ Process:
       download_dir: '%RECIPE_CACHE_DIR%/downloads'
       filename: '%NAME%-arm64.pkg'
 
+  - Processor: com.github.ashleymckinlay.SharedProcessors/DownloadChangedRecorder
+    Arguments:
+      result_output_var_name: download_1_changed
+
   - Processor: GitHubReleasesInfoProvider
     Arguments:
       asset_regex: powershell-%MAJOR_VERSION%[0-9\.]+-osx-x64.pkg
@@ -28,6 +33,10 @@ Process:
       filename: '%NAME%-x86_64.pkg'
 
   - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_1_changed == False AND download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
   - Processor: CodeSignatureVerifier
     Arguments:
