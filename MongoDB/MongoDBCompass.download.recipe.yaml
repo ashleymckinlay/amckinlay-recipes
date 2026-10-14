@@ -7,7 +7,7 @@ Description: |
   on no-op re-runs. Pointing the upload recipe at a pre-built pkg would defeat
   this cache and re-upload on every CI run.
   MongoDB publishes separate arm64 (`aarch64`) and Intel (`x86_64`) `.dmg` files. We pull both so the resulting pkg can install on either architecture (see MongoDB.pkg.recipe.yaml).
-Identifier: com.github.ashleymckinlay.download.MongoDB
+Identifier: com.github.ashleymckinlay.download.MongoDBCompass
 MinimumVersion: '2.9'
 
 Input:

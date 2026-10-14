@@ -2,8 +2,8 @@ Description: |
   Builds separate arm64 and x86_64 component packages, then wraps them in a
   top-level installer whose postinstall script installs only the package that
   matches the device architecture.
-Identifier: com.github.ashleymckinlay.pkg.MongoDB
-ParentRecipe: com.github.ashleymckinlay.download.MongoDB
+Identifier: com.github.ashleymckinlay.pkg.MongoDBCompass
+ParentRecipe: com.github.ashleymckinlay.download.MongoDBCompass
 MinimumVersion: '2.9'
 
 Input:
