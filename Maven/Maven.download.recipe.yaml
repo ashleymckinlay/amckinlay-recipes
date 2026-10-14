@@ -18,3 +18,19 @@ Process:
   - Processor: StopProcessingIf
     Arguments:
       predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  # The tarball isn't code signed, so verify it against Apache's published SHA-512 instead
+  - Arguments:
+      re_pattern: 'href="(?P<sha512_url>https://downloads\.apache\.org/[^"]*/%filename%\.sha512)"'
+      url: "%DOWNLOAD_URL%"
+    Processor: URLTextSearcher
+  - Arguments:
+      re_pattern: '^[0-9a-f]{128}'
+      result_output_var_name: expected_sha512
+      url: "%sha512_url%"
+    Processor: URLTextSearcher
+  - Arguments:
+      input_path: "%pathname%"
+      expected_hash: "%expected_sha512%"
+      algorithm: sha512
+    Processor: com.github.ashleymckinlay.SharedProcessors/HashVerifier
