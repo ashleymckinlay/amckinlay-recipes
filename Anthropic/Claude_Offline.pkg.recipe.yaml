@@ -1,7 +1,4 @@
-Description: |
-  Builds separate arm64 and x86_64 component packages, then wraps them in a
-  top-level installer whose postinstall script installs only the package that
-  matches the device architecture.
+Description: Downloads the latest arm64 (Apple silicon) offline version of Claude and creates a Package.
 Identifier: com.github.ashleymckinlay.pkg.Claude_Offline
 ParentRecipe: com.github.ashleymckinlay.download.Claude_Offline
 MinimumVersion: '2.9'

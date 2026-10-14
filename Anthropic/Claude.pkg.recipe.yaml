@@ -1,4 +1,4 @@
-Description: Downloads latest version of the Claude DMG and creates a Package.
+Description: Downloads the latest arm64 (Apple silicon) version of Claude and creates a Package.
 Identifier: com.github.ashleymckinlay.pkg.Claude
 ParentRecipe: com.github.ashleymckinlay.download.Claude
 MinimumVersion: '2.9'
@@ -9,10 +9,11 @@ Input:
 
 Process:
   - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%RECIPE_CACHE_DIR%/extractedfile/Claude.app'
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
       fail_deleter_silently: true
       path_list:
-        - '%RECIPE_CACHE_DIR%/Universal'
         - '%RECIPE_CACHE_DIR%/extractedfile'
