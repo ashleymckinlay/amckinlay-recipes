@@ -9,6 +9,8 @@ MinimumVersion: '2.9'
 Input:
   NAME: pgAdmin4
   SOFTWARE_TITLE: pgAdmin 4
+  # The app bundle name; kept separate because NAME/SOFTWARE_TITLE are often overridden
+  APP_NAME: pgAdmin 4
 
 Process:
   - Processor: PkgRootCreator
@@ -20,17 +22,17 @@ Process:
 
   - Processor: Copier
     Arguments:
-      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg'
-      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-arm64.dmg'
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-arm64.dmg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%NAME%-arm64.dmg'
 
   - Processor: Copier
     Arguments:
-      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg'
-      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-x86_64.dmg'
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-x86_64.dmg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%NAME%-x86_64.dmg'
 
   - Processor: PlistReader
     Arguments:
-      info_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/%SOFTWARE_TITLE%.app/Contents/Info.plist'
+      info_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-arm64.dmg/%APP_NAME%.app/Contents/Info.plist'
       plist_keys:
         CFBundleIdentifier: bundleid
         CFBundleName: app_name
@@ -42,20 +44,20 @@ Process:
       file_content: |
         #!/bin/bash
         if [[ $( /usr/bin/arch ) = arm64* ]]; then
-          /usr/bin/hdiutil attach "%SOFTWARE_TITLE%-arm64.dmg" -mountpoint "/Volumes/%SOFTWARE_TITLE%" -nobrowse
+          /usr/bin/hdiutil attach "%NAME%-arm64.dmg" -mountpoint "/Volumes/%SOFTWARE_TITLE%" -nobrowse
         else
-          /usr/bin/hdiutil attach "%SOFTWARE_TITLE%-x86_64.dmg" -mountpoint "/Volumes/%SOFTWARE_TITLE%" -nobrowse
+          /usr/bin/hdiutil attach "%NAME%-x86_64.dmg" -mountpoint "/Volumes/%SOFTWARE_TITLE%" -nobrowse
         fi
 
-        if [[ ! -d "/Volumes/%SOFTWARE_TITLE%/%SOFTWARE_TITLE%.app" ]]; then
-          echo "/Volumes/%SOFTWARE_TITLE%/%SOFTWARE_TITLE%.app not found"
+        if [[ ! -d "/Volumes/%SOFTWARE_TITLE%/%APP_NAME%.app" ]]; then
+          echo "/Volumes/%SOFTWARE_TITLE%/%APP_NAME%.app not found"
           /usr/bin/hdiutil detach "/Volumes/%SOFTWARE_TITLE%"
           exit 1
         fi
 
         # Remove any existing copy first; cp -R into an existing .app nests the new bundle inside it
-        /bin/rm -rf "/Applications/%SOFTWARE_TITLE%.app"
-        /usr/bin/ditto "/Volumes/%SOFTWARE_TITLE%/%SOFTWARE_TITLE%.app" "/Applications/%SOFTWARE_TITLE%.app"
+        /bin/rm -rf "/Applications/%APP_NAME%.app"
+        /usr/bin/ditto "/Volumes/%SOFTWARE_TITLE%/%APP_NAME%.app" "/Applications/%APP_NAME%.app"
         /usr/bin/hdiutil detach "/Volumes/%SOFTWARE_TITLE%"
         exit 0
 
