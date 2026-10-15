@@ -5,6 +5,9 @@ MinimumVersion: '2.9'
 Input:
   NAME: Intellij
   SOFTWARE_TITLE: idea
+  # Kept separate from NAME/SOFTWARE_TITLE, which overrides and the jamf recipe change
+  DOWNLOAD_BASENAME: idea
+  APP_NAME: IntelliJ IDEA
   DOWNLOAD_MISSING_FILE: null
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
@@ -18,8 +21,8 @@ Process:
   - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
-      filename: '%SOFTWARE_TITLE%-%version%-x86_64.dmg'
-      url: https://download.jetbrains.com/idea/%SOFTWARE_TITLE%-%version%.dmg
+      filename: '%DOWNLOAD_BASENAME%-%version%-x86_64.dmg'
+      url: https://download.jetbrains.com/idea/%DOWNLOAD_BASENAME%-%version%.dmg
 
   - Processor: com.github.ashleymckinlay.SharedProcessors/DownloadChangedRecorder
     Arguments:
@@ -28,8 +31,8 @@ Process:
   - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
-      filename: '%SOFTWARE_TITLE%-%version%-arm64.dmg'
-      url: https://download.jetbrains.com/idea/%SOFTWARE_TITLE%-%version%-aarch64.dmg
+      filename: '%DOWNLOAD_BASENAME%-%version%-arm64.dmg'
+      url: https://download.jetbrains.com/idea/%DOWNLOAD_BASENAME%-%version%-aarch64.dmg
 
   - Processor: EndOfCheckPhase
 
@@ -40,13 +43,13 @@ Process:
   - Processor: CodeSignatureVerifier
     Arguments:
       deep_verification: true
-      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%version%-arm64.dmg/Intellij IDEA.app'
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%DOWNLOAD_BASENAME%-%version%-arm64.dmg/%APP_NAME%.app'
       requirement: identifier "com.jetbrains.intellij" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "2ZEFAR8TH3"
       strict_verification: true
 
   - Processor: CodeSignatureVerifier
     Arguments:
       deep_verification: true
-      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%version%-x86_64.dmg/Intellij IDEA.app'
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%DOWNLOAD_BASENAME%-%version%-x86_64.dmg/%APP_NAME%.app'
       requirement: identifier "com.jetbrains.intellij" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "2ZEFAR8TH3"
       strict_verification: true
