@@ -9,6 +9,9 @@ MinimumVersion: '2.9'
 Input:
   NAME: Intellij IDEA
   SOFTWARE_TITLE: idea
+  # Kept separate from NAME/SOFTWARE_TITLE, which overrides and the jamf recipe change
+  DOWNLOAD_BASENAME: idea
+  APP_NAME: IntelliJ IDEA
 
 Process:
   - Processor: PkgRootCreator
@@ -20,17 +23,17 @@ Process:
 
   - Processor: Copier
     Arguments:
-      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%version%-arm64.dmg'
-      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-%version%-arm64.dmg'
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%DOWNLOAD_BASENAME%-%version%-arm64.dmg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%DOWNLOAD_BASENAME%-%version%-arm64.dmg'
 
   - Processor: Copier
     Arguments:
-      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%version%-x86_64.dmg'
-      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-%version%-x86_64.dmg'
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%DOWNLOAD_BASENAME%-%version%-x86_64.dmg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%DOWNLOAD_BASENAME%-%version%-x86_64.dmg'
 
   - Processor: PlistReader
     Arguments:
-      info_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%version%-arm64.dmg/%NAME%.app/Contents/Info.plist'
+      info_path: '%RECIPE_CACHE_DIR%/downloads/%DOWNLOAD_BASENAME%-%version%-arm64.dmg/%APP_NAME%.app/Contents/Info.plist'
       plist_keys:
         CFBundleIdentifier: bundleid
         CFBundleName: app_name
@@ -42,20 +45,20 @@ Process:
       file_content: |
         #!/bin/bash
         if [[ $( /usr/bin/arch ) = arm64* ]]; then
-          /usr/bin/hdiutil attach "%SOFTWARE_TITLE%-%version%-arm64.dmg" -mountpoint "/Volumes/%NAME%" -nobrowse
+          /usr/bin/hdiutil attach "%DOWNLOAD_BASENAME%-%version%-arm64.dmg" -mountpoint "/Volumes/%NAME%" -nobrowse
         else
-          /usr/bin/hdiutil attach "%SOFTWARE_TITLE%-%version%-x86_64.dmg" -mountpoint "/Volumes/%NAME%" -nobrowse
+          /usr/bin/hdiutil attach "%DOWNLOAD_BASENAME%-%version%-x86_64.dmg" -mountpoint "/Volumes/%NAME%" -nobrowse
         fi
 
-        if [[ ! -d "/Volumes/%NAME%/%NAME%.app" ]]; then
-          echo "/Volumes/%NAME%/%NAME%.app not found"
+        if [[ ! -d "/Volumes/%NAME%/%APP_NAME%.app" ]]; then
+          echo "/Volumes/%NAME%/%APP_NAME%.app not found"
           /usr/bin/hdiutil detach "/Volumes/%NAME%"
           exit 1
         fi
 
         # Remove any existing copy first; cp -R into an existing .app nests the new bundle inside it
-        /bin/rm -rf "/Applications/%NAME%.app"
-        /usr/bin/ditto "/Volumes/%NAME%/%NAME%.app" "/Applications/%NAME%.app"
+        /bin/rm -rf "/Applications/%APP_NAME%.app"
+        /usr/bin/ditto "/Volumes/%NAME%/%APP_NAME%.app" "/Applications/%APP_NAME%.app"
         /usr/bin/hdiutil detach "/Volumes/%NAME%"
         exit 0
 
