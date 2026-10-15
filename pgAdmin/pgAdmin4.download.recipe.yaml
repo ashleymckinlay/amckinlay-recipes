@@ -65,11 +65,11 @@ Process:
   - Processor: CodeSignatureVerifier
     Arguments:
       deep_verification: true
-      input_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-x64.dmg/pgAdmin 4.app'
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-x86_64.dmg/pgAdmin 4.app'
       requirement: identifier "org.pgadmin.pgadmin4" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "TCHGL2R7C5"
       strict_verification: true
 
   - Processor: Versioner
     Arguments:
-      input_plist_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-x64.dmg/pgAdmin 4.app/Contents/Info.plist'
+      input_plist_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-x86_64.dmg/pgAdmin 4.app/Contents/Info.plist'
       plist_version_key: CFBundleShortVersionString
