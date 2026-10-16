@@ -1,0 +1,35 @@
+Description: |
+  Downloads the latest version of Suspicious Package (inspect macOS installer packages) from Mothers' Ruin Software,
+  https://mothersruin.com/software/SuspiciousPackage/. The app is universal (Intel and Apple silicon) and requires macOS 14
+  or later. It's verified against Mothers' Ruin's Developer ID (Randy Saldinger, Team ID 936EB786NH).
+Identifier: com.github.ashleymckinlay.download.SuspiciousPackage
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Suspicious Package
+  SOFTWARE_TITLE: SuspiciousPackage
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLDownloader
+    Arguments:
+      url: https://mothersruin.com/software/downloads/SuspiciousPackage.dmg
+      filename: '%SOFTWARE_TITLE%.dmg'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      input_path: '%pathname%/Suspicious Package.app'
+      requirement: 'identifier "com.mothersruin.SuspiciousPackageApp" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "936EB786NH"'
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: '%pathname%/Suspicious Package.app/Contents/Info.plist'
+      plist_version_key: CFBundleShortVersionString
