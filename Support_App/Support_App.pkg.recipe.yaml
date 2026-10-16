@@ -1,0 +1,17 @@
+Description: |
+  Downloads the latest Support App installer and copies the vendor-signed pkg with a versioned name.
+  It installs /Applications/Support.app and its LaunchAgent, and its postinstall restarts the app for the logged-in
+  user. Configure it with a configuration profile (nl.root3.support). Requires macOS 11 or later.
+Identifier: com.github.ashleymckinlay.pkg.Support_App
+ParentRecipe: com.github.ashleymckinlay.download.Support_App
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Support App
+  SOFTWARE_TITLE: Support_App
+
+Process:
+  - Processor: PkgCopier
+    Arguments:
+      source_pkg: '%pathname%'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
