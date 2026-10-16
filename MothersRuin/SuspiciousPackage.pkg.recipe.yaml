@@ -1,0 +1,14 @@
+Description: Downloads the latest version of Suspicious Package and creates a package that installs it to /Applications.
+Identifier: com.github.ashleymckinlay.pkg.SuspiciousPackage
+ParentRecipe: com.github.ashleymckinlay.download.SuspiciousPackage
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Suspicious Package
+  SOFTWARE_TITLE: SuspiciousPackage
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%pathname%/Suspicious Package.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
