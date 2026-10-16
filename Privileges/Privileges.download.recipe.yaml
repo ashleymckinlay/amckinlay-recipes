@@ -1,0 +1,37 @@
+Description: |
+  Downloads the latest SAP Privileges installer pkg (https://github.com/SAP/macOS-enterprise-privileges) and
+  verifies it is signed by SAP SE's Developer ID Installer (Team ID 7R5ZEU67FQ). The pkg is universal.
+  PKG_VARIANT selects the build: empty (default) for the standard pkg with launch constraints, or _noLC for the
+  build without them, which SAP provides only for macOS 13 (where launch constraints are misreported).
+Identifier: com.github.ashleymckinlay.download.Privileges
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Privileges
+  SOFTWARE_TITLE: Privileges
+  PKG_VARIANT: ''
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      github_repo: SAP/macOS-enterprise-privileges
+      asset_regex: ^Privileges_[0-9.]+%PKG_VARIANT%\.pkg$
+
+  - Processor: URLDownloader
+    Arguments:
+      filename: '%SOFTWARE_TITLE%.pkg'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%pathname%'
+      expected_authority_names:
+        - 'Developer ID Installer: SAP SE (7R5ZEU67FQ)'
+        - Developer ID Certification Authority
+        - Apple Root CA
