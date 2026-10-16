@@ -1,0 +1,52 @@
+---
+Description: Downloads the latest version, makes a pkg, uploads to the Jamf Pro
+  Server, and creates a Self Service Policy.
+Identifier: com.github.ashleymckinlay.jamf.GitHub_Copilot
+ParentRecipe: com.github.ashleymckinlay.pkg.GitHub_Copilot
+MinimumVersion: '2.3'
+
+
+Input:
+  NAME: 'GitHub Copilot'
+  ALL_COMPUTERS: 'true'
+  CATEGORY: Applications
+  GROUP_NAME: Apps
+  GROUP_TEMPLATE: Live-Group-Template.xml
+  INSTALL_BUTTON_TEXT: Install
+  POLICY_CATEGORY: '%CATEGORY%'
+  POLICY_NAME: '%NAME%'
+  POLICY_TEMPLATE: Live-Policy-Template.xml
+  REINSTALL_BUTTON_TEXT: Reinstall
+  SELF_SERVICE_AVAILABLE: 'true'
+  SELF_SERVICE_CATEGORY: Collaboration
+  SELF_SERVICE_DESCRIPTION: The GitHub Copilot app is an agent-native desktop experience for finding, running, steering, and landing software work across your GitHub repositories.
+  SELF_SERVICE_DISPLAY_NAME: '%NAME%'
+  SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
+  SOFTWARE_TITLE: GitHub_Copilot
+  SOFTWARE_TITLE_TRIGGER: '%SOFTWARE_TITLE%'
+  UPDATE_PREDICATE: pkg_uploaded == False
+
+Process:
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
+    Arguments:
+      pkg_path: '%pkg_path%'
+      category_name: '%CATEGORY%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: '%CATEGORY%'
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%UPDATE_PREDICATE%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
+    Arguments:
+      computergroup_template: '%GROUP_TEMPLATE%'
+      computergroup_name: '%GROUP_NAME%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
+    Arguments:
+      policy_template: '%POLICY_TEMPLATE%'
+      policy_name: '%POLICY_NAME%'
+      icon: '%SELF_SERVICE_ICON%'
