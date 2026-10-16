@@ -1,0 +1,67 @@
+Description: |
+  Downloads the latest arm64 (Apple silicon) Sysl and creates a package that installs sysl to
+  /usr/local/bin. The preinstall exits with an error on Intel Macs.
+Identifier: com.github.ashleymckinlay.pkg.Sysl
+ParentRecipe: com.github.ashleymckinlay.download.Sysl
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Sysl
+  SOFTWARE_TITLE: Sysl
+  BUNDLE_ID: com.anz-bank.sysl
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgdirs:
+        root: '0755'
+        root/usr: '0755'
+        root/usr/local: '0755'
+        root/usr/local/bin: '0755'
+        scripts: '0755'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/unpack/sysl'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/root/usr/local/bin/sysl'
+      overwrite: true
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/preinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+        # arm64-only build; hw.optional.arm64 is 1 on Apple silicon even under Rosetta
+        if [[ "$( /usr/sbin/sysctl -n hw.optional.arm64 2>/dev/null )" != "1" ]]; then
+          echo "ERROR: Sysl package is Apple silicon (arm64) only; this Mac is Intel."
+          exit 1
+        fi
+        exit 0
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: '%BUNDLE_ID%'
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload/root'
+        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
+        version: '%version%'
+        chown:
+          - path: usr
+            user: root
+            group: wheel
+          - path: usr/local/bin/sysl
+            user: root
+            group: wheel
+            mode: '0755'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'
+        - '%RECIPE_CACHE_DIR%/unpack'

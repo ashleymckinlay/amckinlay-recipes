@@ -1,0 +1,45 @@
+Description: |
+  Downloads the latest arm64 (Apple silicon) release of Sysl (https://github.com/anz-bank/sysl), the system
+  specification language CLI. sysl is only ad-hoc signed, so the tarball is verified against the release's
+  checksums.txt.
+Identifier: com.github.ashleymckinlay.download.Sysl
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Sysl
+  SOFTWARE_TITLE: Sysl
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      github_repo: anz-bank/sysl
+      asset_regex: sysl_[0-9.]+_darwin-arm64\.tar\.gz
+
+  - Processor: URLDownloader
+    Arguments:
+      filename: '%SOFTWARE_TITLE%-arm64.tar.gz'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  # sysl is only ad-hoc signed, so verify the tarball against the release's checksums.txt instead
+  - Processor: URLTextSearcher
+    Arguments:
+      url: https://github.com/anz-bank/sysl/releases/download/v%version%/sysl_%version%_checksums.txt
+      re_pattern: '(?P<expected_sha256>[0-9a-f]{64})\s+sysl_%version%_darwin-arm64\.tar\.gz'
+
+  - Processor: com.github.ashleymckinlay.SharedProcessors/HashVerifier
+    Arguments:
+      input_path: '%pathname%'
+      expected_hash: '%expected_sha256%'
+      algorithm: sha256
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%pathname%'
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
+      purge_destination: true
