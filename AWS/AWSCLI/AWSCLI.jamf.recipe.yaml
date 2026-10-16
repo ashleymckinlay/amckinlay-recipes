@@ -25,7 +25,7 @@ Input:
   SOFTWARE_TITLE_TRIGGER: '%SOFTWARE_TITLE%'
   UPDATE_PREDICATE: pkg_uploaded == False
 
-  Process:
+Process:
   - Processor: FileMover
     Arguments:
       source: '%pkg_path%'
