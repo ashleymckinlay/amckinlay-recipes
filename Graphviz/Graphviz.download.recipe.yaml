@@ -1,0 +1,28 @@
+Description: |
+  Downloads Homebrew's Apple silicon bottles of Graphviz (https://graphviz.org/) and all of its runtime
+  dependencies, for bundling into a self-contained package. Graphviz doesn't publish a complete macOS package
+  (its experimental pkg still links against Homebrew libraries), so this uses Homebrew's builds.
+  Each bottle is verified against the SHA-256 published in the formulae.brew.sh API.
+  BOTTLE_TAG sets the oldest macOS the bundle supports (arm64_sequoia = macOS 15); every dependency must have a
+  bottle for it.
+Identifier: com.github.ashleymckinlay.download.Graphviz
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Graphviz
+  SOFTWARE_TITLE: Graphviz
+  BOTTLE_TAG: arm64_sequoia
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: com.github.ashleymckinlay.SharedProcessors/HomebrewBottleDownloader
+    Arguments:
+      formula: graphviz
+      bottle_tag: '%BOTTLE_TAG%'
+
+  - Processor: EndOfCheckPhase
+
+  # download_changed is True if any bottle (Graphviz or a dependency) was new
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
