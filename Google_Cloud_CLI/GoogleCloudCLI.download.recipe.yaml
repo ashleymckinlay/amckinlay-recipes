@@ -1,0 +1,75 @@
+Description: |
+  Downloads the latest arm64 (Apple silicon) Google Cloud CLI (gcloud, gsutil, bq) from
+  https://docs.cloud.google.com/sdk/docs/install-sdk, plus the Python installer that release of gcloud
+  uses on macOS.
+  The CLI tarball isn't code signed, so it's verified against the SHA-256 published in the install docs.
+  The Python installer is verified against the Python Software Foundation's Developer ID (BMM5U3QVKW).
+Identifier: com.github.ashleymckinlay.download.GoogleCloudCLI
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Google Cloud CLI
+  SOFTWARE_TITLE: GoogleCloudCLI
+  DOWNLOAD_BASE_URL: https://dl.google.com/dl/cloudsdk/channels/rapid
+  DOCS_URL: https://docs.cloud.google.com/sdk/docs/install-sdk
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLDownloader
+    Arguments:
+      url: '%DOWNLOAD_BASE_URL%/downloads/google-cloud-cli-darwin-arm.tar.gz'
+      filename: '%SOFTWARE_TITLE%-arm64.tar.gz'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  # The tarball isn't code signed, so verify it against the SHA-256 in the install docs' download table
+  - Processor: URLTextSearcher
+    Arguments:
+      url: '%DOCS_URL%'
+      re_pattern: '>google-cloud-cli-darwin-arm\.tar\.gz\s*</a>[\s\S]*?(?P<expected_sha256>[0-9a-f]{64})'
+
+  - Processor: com.github.ashleymckinlay.SharedProcessors/HashVerifier
+    Arguments:
+      input_path: '%pathname%'
+      expected_hash: '%expected_sha256%'
+      algorithm: sha256
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%pathname%'
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
+      purge_destination: true
+
+  - Processor: URLTextSearcher
+    Arguments:
+      url: 'file://%RECIPE_CACHE_DIR%/unpack/google-cloud-sdk/VERSION'
+      re_pattern: '^(?P<version>[0-9.]+)'
+
+  # gcloud installs python.org's Python on macOS from dl.google.com; use the build this release asks for
+  - Processor: URLTextSearcher
+    Arguments:
+      url: 'file://%RECIPE_CACHE_DIR%/unpack/google-cloud-sdk/lib/googlecloudsdk/core/updater/python_manager.py'
+      re_pattern: "MACOS_PYTHON = '(?P<python_archive>python-(?P<python_version>[0-9.]+)-macos[0-9]+)\\.tar\\.gz'"
+
+  - Processor: URLDownloader
+    Arguments:
+      url: '%DOWNLOAD_BASE_URL%/%python_archive%.tar.gz'
+      filename: '%python_archive%.tar.gz'
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%pathname%'
+      destination_path: '%RECIPE_CACHE_DIR%/python'
+      purge_destination: true
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%RECIPE_CACHE_DIR%/python/%python_archive%.pkg'
+      expected_authority_names:
+        - 'Developer ID Installer: Python Software Foundation (BMM5U3QVKW)'
+        - Developer ID Certification Authority
+        - Apple Root CA
