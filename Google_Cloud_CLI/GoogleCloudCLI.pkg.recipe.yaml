@@ -1,0 +1,162 @@
+Description: |
+  Downloads the latest arm64 (Apple silicon) Google Cloud CLI and builds a system-wide installer.
+    - Installs the SDK to /usr/local/google-cloud-sdk (root-owned) and links gcloud, gsutil, bq,
+      docker-credential-gcloud and git-credential-gcloud.sh into /usr/local/bin.
+    - The preinstall removes any existing /usr/local/google-cloud-sdk so files from older versions don't linger.
+    - The postinstall installs the python.org Python that gcloud expects (framework, /usr/local/bin links and pip
+      only; no shell profile changes) if that Python version isn't already installed.
+    - The component manager's update check is disabled, since users can't update a root-owned install;
+      updates come from new packages.
+  The postinstall exits with an error on Intel Macs.
+Identifier: com.github.ashleymckinlay.pkg.GoogleCloudCLI
+ParentRecipe: com.github.ashleymckinlay.download.GoogleCloudCLI
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Google Cloud CLI
+  SOFTWARE_TITLE: GoogleCloudCLI
+  BUNDLE_ID: com.google.cloud.sdk
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgdirs:
+        root: '0755'
+        root/usr: '0755'
+        root/usr/local: '0755'
+        root/usr/local/bin: '0755'
+        scripts: '0755'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/unpack/google-cloud-sdk'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/root/usr/local/google-cloud-sdk'
+      overwrite: true
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/root/usr/local/google-cloud-sdk/properties'
+      file_mode: '0644'
+      file_content: |
+        [core]
+        disable_usage_reporting = True
+
+        [component_manager]
+        disable_update_check = True
+
+  - Processor: Symlinker
+    Arguments:
+      source_path: /usr/local/google-cloud-sdk/bin/gcloud
+      destination_path: '%RECIPE_CACHE_DIR%/payload/root/usr/local/bin/gcloud'
+
+  - Processor: Symlinker
+    Arguments:
+      source_path: /usr/local/google-cloud-sdk/bin/gsutil
+      destination_path: '%RECIPE_CACHE_DIR%/payload/root/usr/local/bin/gsutil'
+
+  - Processor: Symlinker
+    Arguments:
+      source_path: /usr/local/google-cloud-sdk/bin/bq
+      destination_path: '%RECIPE_CACHE_DIR%/payload/root/usr/local/bin/bq'
+
+  - Processor: Symlinker
+    Arguments:
+      source_path: /usr/local/google-cloud-sdk/bin/docker-credential-gcloud
+      destination_path: '%RECIPE_CACHE_DIR%/payload/root/usr/local/bin/docker-credential-gcloud'
+
+  - Processor: Symlinker
+    Arguments:
+      source_path: /usr/local/google-cloud-sdk/bin/git-credential-gcloud.sh
+      destination_path: '%RECIPE_CACHE_DIR%/payload/root/usr/local/bin/git-credential-gcloud.sh'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/python/%python_archive%.pkg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/python.pkg'
+      overwrite: true
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/preinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+        # arm64-only build; hw.optional.arm64 is 1 on Apple silicon even under Rosetta
+        if [[ "$( /usr/sbin/sysctl -n hw.optional.arm64 2>/dev/null )" != "1" ]]; then
+          echo "ERROR: Google Cloud CLI package is Apple silicon (arm64) only; this Mac is Intel."
+          exit 1
+        fi
+
+        # Remove the previous install so files dropped in this version don't linger
+        if [[ -d "$3/usr/local/google-cloud-sdk" ]]; then
+          echo "Removing existing $3/usr/local/google-cloud-sdk"
+          /bin/rm -rf "$3/usr/local/google-cloud-sdk"
+        fi
+        exit 0
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+        # Install the python.org Python that this gcloud release expects (%python_version%), the same
+        # build gcloud's own installer uses, unless that Python minor version is already installed.
+        PY_VERSION="%python_version%"
+        PY_MINOR="${PY_VERSION%.*}"
+        PY_BIN="$3/Library/Frameworks/Python.framework/Versions/${PY_MINOR}/bin/python3"
+
+        if [[ -x "$PY_BIN" ]]; then
+          echo "Python ${PY_MINOR} already installed: $("$PY_BIN" --version 2>&1)"
+        else
+          echo "Installing Python ${PY_VERSION}"
+          choices=$(/usr/bin/mktemp /tmp/gcloud-python-choices.XXXXXX)
+          # Framework, /usr/local/bin links and pip only: skip the /Applications folder, docs and
+          # the shell profile changes (which would edit root's profile when run from an installer).
+          {
+            echo '<?xml version="1.0" encoding="UTF-8"?>'
+            echo '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">'
+            echo '<plist version="1.0"><array>'
+            for choice in PythonApplications PythonDocumentation PythonProfileChanges; do
+              echo "<dict><key>attributeSetting</key><integer>0</integer><key>choiceAttribute</key><string>selected</string><key>choiceIdentifier</key><string>org.python.Python.${choice}-${PY_MINOR}</string></dict>"
+            done
+            echo '</array></plist>'
+          } > "$choices"
+          /usr/sbin/installer -pkg "python.pkg" -target "$3" -applyChoiceChangesXML "$choices"
+          rc=$?
+          /bin/rm -f "$choices"
+          if [[ $rc -ne 0 ]]; then
+            echo "ERROR: Python ${PY_VERSION} install failed ($rc)"
+            exit 1
+          fi
+        fi
+
+        # Precompile gcloud's Python, as gcloud's install.sh does, since users can't write .pyc files
+        # into the root-owned install
+        "$PY_BIN" -m compileall -q -x 'third_party/.*/tests?/' "$3/usr/local/google-cloud-sdk/lib" >/dev/null 2>&1 || true
+
+        exit 0
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: '%BUNDLE_ID%'
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload/root'
+        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
+        version: '%version%'
+        chown:
+          - path: usr
+            user: root
+            group: wheel
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'
+        - '%RECIPE_CACHE_DIR%/unpack'
+        - '%RECIPE_CACHE_DIR%/python'
