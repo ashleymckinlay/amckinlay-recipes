@@ -1,0 +1,56 @@
+Description: |
+  Downloads the latest universal (Intel and Apple silicon) installer pkg of GitHub CLI (gh) from https://cli.github.com/.
+  The pkg itself isn't signed, so it's verified against the SHA-256 in the release's checksums.txt, and the gh
+  binary inside it is verified against GitHub's Developer ID (VEKTX9H2N7).
+Identifier: com.github.ashleymckinlay.download.GitHub_CLI
+MinimumVersion: '2.3'
+
+Input:
+  NAME: GitHub CLI
+  SOFTWARE_TITLE: GitHub_CLI
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      github_repo: cli/cli
+      asset_regex: gh_[0-9.]+_macOS_universal\.pkg
+
+  - Processor: URLDownloader
+    Arguments:
+      filename: '%SOFTWARE_TITLE%.pkg'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: '(?P<expected_sha256>[0-9a-f]{64})\s+gh_%version%_macOS_universal\.pkg'
+      url: https://github.com/cli/cli/releases/download/v%version%/gh_%version%_checksums.txt
+
+  - Processor: com.github.ashleymckinlay.SharedProcessors/HashVerifier
+    Arguments:
+      input_path: '%pathname%'
+      expected_hash: '%expected_sha256%'
+      algorithm: sha256
+
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      flat_pkg_path: '%pathname%'
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
+      purge_destination: true
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      pkg_payload_path: '%RECIPE_CACHE_DIR%/unpack/com.github.cli.pkg/Payload'
+      destination_path: '%RECIPE_CACHE_DIR%/payload'
+      purge_destination: true
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%RECIPE_CACHE_DIR%/payload/usr/local/bin/gh'
+      requirement: identifier "gh" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = VEKTX9H2N7
+      strict_verification: true
