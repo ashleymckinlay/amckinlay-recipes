@@ -1,0 +1,111 @@
+Description: |
+  Builds a self-contained Apple silicon Graphviz package from Homebrew's bottles, so it works on Macs without
+  Homebrew.
+    - Installs to GRAPHVIZ_PREFIX (/usr/local/graphviz), root-owned, with bin on PATH through /etc/paths.d/graphviz.
+    - Bundles only the dependency libraries Graphviz loads (cairo, pango, gd, glib, gts, librsvg, webp and so on)
+      into GRAPHVIZ_PREFIX/lib, rewriting their Homebrew paths and re-signing them ad hoc.
+    - The commands in bin are wrappers that set GVBINDIR (plugin directory) and FONTCONFIG_FILE (the bundled
+      fontconfig config, which uses the macOS font folders), and stop glib/gdk-pixbuf loading modules from a
+      Homebrew install, before running the real binaries in libexec.
+    - The preinstall refuses Intel Macs and removes the previous install; the postinstall registers the plugins
+      with 'dot -c'.
+  The package version is the Graphviz version plus a short hash of every bottle's SHA-256, so a dependency
+  update also produces a new package.
+Identifier: com.github.ashleymckinlay.pkg.Graphviz
+ParentRecipe: com.github.ashleymckinlay.download.Graphviz
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Graphviz
+  SOFTWARE_TITLE: Graphviz
+  BUNDLE_ID: org.graphviz.graphviz
+  GRAPHVIZ_PREFIX: /usr/local/graphviz
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgdirs:
+        root: '0755'
+        root/etc: '0755'
+        root/etc/paths.d: '0755'
+        scripts: '0755'
+
+  - Processor: com.github.ashleymckinlay.SharedProcessors/HomebrewBottleBundler
+    Arguments:
+      bottle_manifest: '%bottle_manifest%'
+      install_prefix: '%GRAPHVIZ_PREFIX%'
+      pkgroot: '%RECIPE_CACHE_DIR%/payload/root'
+      etc_from_formulae:
+        - fontconfig
+      wrapper_environment:
+        GVBINDIR: '{prefix}/lib/graphviz'
+        FONTCONFIG_FILE: '{prefix}/etc/fonts/fonts.conf?'
+        # Keep glib/gdk-pixbuf from loading modules from a Homebrew install, which would bring in a
+        # second copy of glib; the bundle doesn't need any
+        GIO_MODULE_DIR: '{prefix}/lib/gio/modules'
+        GDK_PIXBUF_MODULE_FILE: '{prefix}/lib/gdk-pixbuf-2.0/loaders.cache'
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/root/etc/paths.d/graphviz'
+      file_mode: '0644'
+      file_content: |
+        %GRAPHVIZ_PREFIX%/bin
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/preinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+        # Apple silicon only; hw.optional.arm64 is 1 on Apple silicon even under Rosetta
+        if [[ "$( /usr/sbin/sysctl -n hw.optional.arm64 2>/dev/null )" != "1" ]]; then
+          echo "ERROR: Graphviz package is Apple silicon (arm64) only; this Mac is Intel."
+          exit 1
+        fi
+
+        # Remove the previous install so libraries dropped in this version don't linger
+        if [[ -d "$3%GRAPHVIZ_PREFIX%" ]]; then
+          echo "Removing existing $3%GRAPHVIZ_PREFIX%"
+          /bin/rm -rf "$3%GRAPHVIZ_PREFIX%"
+        fi
+        exit 0
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+        # Register the plugins (writes lib/graphviz/config8); the dot wrapper sets GVBINDIR
+        [[ "$3" == "/" ]] || exit 0
+        if ! "%GRAPHVIZ_PREFIX%/bin/dot" -c; then
+          echo "ERROR: 'dot -c' failed"
+          exit 1
+        fi
+        exit 0
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: '%BUNDLE_ID%'
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%SOFTWARE_TITLE%-%bundle_version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload/root'
+        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
+        version: '%bundle_version%'
+        chown:
+          - path: etc
+            user: root
+            group: wheel
+          - path: usr
+            user: root
+            group: wheel
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'
