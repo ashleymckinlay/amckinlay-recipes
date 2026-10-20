@@ -2,6 +2,7 @@
 """See docstring for HashVerifier class"""
 
 import hashlib
+import re
 
 from autopkglib import Processor, ProcessorError
 
@@ -21,7 +22,8 @@ class HashVerifier(Processor):
         },
         "expected_hash": {
             "required": True,
-            "description": "Expected hex digest (case-insensitive).",
+            "description": "Expected hex digest. Case and whitespace are ignored, so "
+            "multi-line 'gpg --print-md' style checksums (as Apache publishes) work.",
         },
         "algorithm": {
             "required": False,
@@ -34,7 +36,7 @@ class HashVerifier(Processor):
     def main(self) -> None:
         path = self.env["input_path"]
         algorithm = self.env.get("algorithm", "sha256")
-        expected = self.env["expected_hash"].strip().lower()
+        expected = re.sub(r"\s+", "", self.env["expected_hash"]).lower()
         try:
             digest = hashlib.new(algorithm)
         except ValueError as err:

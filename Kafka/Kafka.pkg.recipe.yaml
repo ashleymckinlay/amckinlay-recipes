@@ -1,0 +1,97 @@
+Description: |
+  Downloads the latest Apache Kafka binary release and builds a system-wide installer.
+    - Installs Kafka to /usr/local/kafka (root-owned) and adds /usr/local/kafka/bin to PATH through /etc/paths.d/kafka.
+    - /usr/local/kafka/logs is world-writable with the sticky bit (like /tmp), because kafka-server-start.sh
+      writes its logs there and users run local brokers without admin rights.
+    - The preinstall removes any existing /usr/local/kafka so files from older versions don't linger.
+    - Kafka needs Java 17 or later, which this package doesn't include (see the Azul Zulu JDK recipes); the
+      postinstall logs a warning if none is installed.
+  Kafka runs on the JVM, so the same package works on Intel and Apple silicon.
+Identifier: com.github.ashleymckinlay.pkg.Kafka
+ParentRecipe: com.github.ashleymckinlay.download.Kafka
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Kafka
+  SOFTWARE_TITLE: Kafka
+  BUNDLE_ID: org.apache.kafka
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgdirs:
+        root: '0755'
+        root/etc: '0755'
+        root/etc/paths.d: '0755'
+        root/usr: '0755'
+        root/usr/local: '0755'
+        scripts: '0755'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/unpack/kafka_%SCALA_VERSION%-%version%'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/root/usr/local/kafka'
+      overwrite: true
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/root/etc/paths.d/kafka'
+      file_mode: '0644'
+      file_content: |
+        /usr/local/kafka/bin
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/preinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+        # Remove the previous install so files dropped in this version don't linger
+        if [[ -d "$3/usr/local/kafka" ]]; then
+          echo "Removing existing $3/usr/local/kafka"
+          /bin/rm -rf "$3/usr/local/kafka"
+        fi
+        exit 0
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+        # kafka-server-start.sh writes to $KAFKA_HOME/logs; make it writable by everyone, sticky like /tmp
+        /bin/mkdir -p "$3/usr/local/kafka/logs"
+        /usr/sbin/chown root:wheel "$3/usr/local/kafka/logs"
+        /bin/chmod 1777 "$3/usr/local/kafka/logs"
+
+        # Kafka needs a Java 17+ runtime, which isn't part of this package
+        if ! /usr/libexec/java_home -v 17+ >/dev/null 2>&1; then
+          echo "WARNING: Kafka %version% is installed, but no Java 17 or later runtime was found. Install a JDK (eg Azul Zulu 17, 21 or 25) to run Kafka."
+        fi
+        exit 0
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: '%BUNDLE_ID%'
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload/root'
+        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
+        version: '%version%'
+        chown:
+          - path: etc
+            user: root
+            group: wheel
+          - path: usr
+            user: root
+            group: wheel
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'
+        - '%RECIPE_CACHE_DIR%/unpack'

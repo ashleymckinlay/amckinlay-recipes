@@ -1,0 +1,48 @@
+Description: |
+  Downloads the latest Apache Kafka binary release (https://kafka.apache.org/) built for SCALA_VERSION.
+  The tarball comes from Apache's CDN and is verified against the SHA-512 published on downloads.apache.org
+  (the tarball isn't code signed).
+Identifier: com.github.ashleymckinlay.download.Kafka
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Kafka
+  SOFTWARE_TITLE: Kafka
+  SCALA_VERSION: '2.13'
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  # downloads.apache.org only lists current releases; V=1 sorts them by version, newest first
+  - Processor: URLTextSearcher
+    Arguments:
+      url: 'https://downloads.apache.org/kafka/?C=N;O=D;V=1'
+      re_pattern: 'href="(?P<version>[0-9]+\.[0-9]+\.[0-9]+)/"'
+
+  - Processor: URLDownloader
+    Arguments:
+      url: https://dlcdn.apache.org/kafka/%version%/kafka_%SCALA_VERSION%-%version%.tgz
+      filename: '%SOFTWARE_TITLE%.tgz'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  # Apache's checksum is in gpg --print-md format (uppercase, spaced over several lines); HashVerifier ignores that
+  - Processor: URLTextSearcher
+    Arguments:
+      url: https://downloads.apache.org/kafka/%version%/kafka_%SCALA_VERSION%-%version%.tgz.sha512
+      re_pattern: '\.tgz:\s*(?P<expected_sha512>[0-9A-Fa-f\s]+)'
+
+  - Processor: com.github.ashleymckinlay.SharedProcessors/HashVerifier
+    Arguments:
+      input_path: '%pathname%'
+      expected_hash: '%expected_sha512%'
+      algorithm: sha512
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%pathname%'
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
+      purge_destination: true
