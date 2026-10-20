@@ -1,0 +1,53 @@
+Description: |
+  Downloads the latest arm64 (Apple silicon) release of HashiCorp Terraform (https://developer.hashicorp.com/terraform/install).
+  The zip is verified against the release's SHA256SUMS, and the terraform binary against HashiCorp's
+  Developer ID (D38WU7D763).
+Identifier: com.github.ashleymckinlay.download.Terraform
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Terraform
+  SOFTWARE_TITLE: Terraform
+  RELEASES_URL: https://releases.hashicorp.com/terraform
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  # Latest non-prerelease version from HashiCorp's releases API
+  - Processor: URLTextSearcher
+    Arguments:
+      url: https://api.releases.hashicorp.com/v1/releases/terraform/latest
+      re_pattern: '"version":\s*"(?P<version>[0-9]+\.[0-9]+\.[0-9]+)"'
+
+  - Processor: URLDownloader
+    Arguments:
+      url: '%RELEASES_URL%/%version%/terraform_%version%_darwin_arm64.zip'
+      filename: '%SOFTWARE_TITLE%-arm64.zip'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: URLTextSearcher
+    Arguments:
+      url: '%RELEASES_URL%/%version%/terraform_%version%_SHA256SUMS'
+      re_pattern: '(?P<expected_sha256>[0-9a-f]{64})\s+terraform_%version%_darwin_arm64\.zip'
+
+  - Processor: com.github.ashleymckinlay.SharedProcessors/HashVerifier
+    Arguments:
+      input_path: '%pathname%'
+      expected_hash: '%expected_sha256%'
+      algorithm: sha256
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%pathname%'
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
+      purge_destination: true
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%RECIPE_CACHE_DIR%/unpack/terraform'
+      requirement: identifier "terraform" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = D38WU7D763
+      strict_verification: true
