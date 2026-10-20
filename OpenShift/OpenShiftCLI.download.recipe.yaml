@@ -1,0 +1,49 @@
+Description: |
+  Downloads the latest arm64 (Apple silicon) OpenShift CLI (oc, https://github.com/openshift/oc) from Red Hat's
+  official client mirror. CHANNEL selects the mirror directory, eg stable (default), fast, or stable-4.22 to stay
+  on a minor version.
+  oc is only ad-hoc signed, so the tarball is verified against the release's published sha256sum.txt.
+Identifier: com.github.ashleymckinlay.download.OpenShiftCLI
+MinimumVersion: '2.3'
+
+Input:
+  NAME: OpenShift CLI
+  SOFTWARE_TITLE: OpenShiftCLI
+  CHANNEL: stable
+  MIRROR_URL: https://mirror.openshift.com/pub/openshift-v4/clients/ocp/%CHANNEL%
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      url: '%MIRROR_URL%/release.txt'
+      re_pattern: 'Name:\s+(?P<version>[0-9][0-9A-Za-z.+-]*)'
+
+  - Processor: URLDownloader
+    Arguments:
+      url: '%MIRROR_URL%/openshift-client-mac-arm64-%version%.tar.gz'
+      filename: '%SOFTWARE_TITLE%-arm64.tar.gz'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  # oc is only ad-hoc signed, so verify the tarball against the release's sha256sum.txt instead
+  - Processor: URLTextSearcher
+    Arguments:
+      url: '%MIRROR_URL%/sha256sum.txt'
+      re_pattern: '(?P<expected_sha256>[0-9a-f]{64})\s+openshift-client-mac-arm64-%version%\.tar\.gz'
+
+  - Processor: com.github.ashleymckinlay.SharedProcessors/HashVerifier
+    Arguments:
+      input_path: '%pathname%'
+      expected_hash: '%expected_sha256%'
+      algorithm: sha256
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%pathname%'
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
+      purge_destination: true
