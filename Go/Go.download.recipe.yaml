@@ -1,0 +1,48 @@
+Description: |
+  Downloads the latest stable arm64 (Apple silicon) installer pkg of the Go programming language (https://go.dev/dl/).
+  The pkg is verified against the SHA-256 published in go.dev's download list, and against Google's Developer ID
+  Installer certificate (EQHXZ8M8AV).
+Identifier: com.github.ashleymckinlay.download.Go
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Go
+  SOFTWARE_TITLE: Go
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  # The first release in go.dev's JSON download list is the latest stable one
+  - Processor: URLTextSearcher
+    Arguments:
+      url: https://go.dev/dl/?mode=json
+      re_pattern: '"version":\s*"go(?P<version>[0-9]+\.[0-9]+(?:\.[0-9]+)?)"'
+
+  - Processor: URLDownloader
+    Arguments:
+      url: https://go.dev/dl/go%version%.darwin-arm64.pkg
+      filename: '%SOFTWARE_TITLE%-arm64.pkg'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: URLTextSearcher
+    Arguments:
+      url: https://go.dev/dl/?mode=json
+      re_pattern: '"filename":\s*"go%version%\.darwin-arm64\.pkg"[^}]*"sha256":\s*"(?P<expected_sha256>[0-9a-f]{64})"'
+
+  - Processor: com.github.ashleymckinlay.SharedProcessors/HashVerifier
+    Arguments:
+      input_path: '%pathname%'
+      expected_hash: '%expected_sha256%'
+      algorithm: sha256
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%pathname%'
+      expected_authority_names:
+        - 'Developer ID Installer: Google LLC (EQHXZ8M8AV)'
+        - Developer ID Certification Authority
+        - Apple Root CA

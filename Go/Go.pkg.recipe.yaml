@@ -1,0 +1,17 @@
+Description: |
+  Downloads the latest stable arm64 (Apple silicon) Go installer and copies it with a versioned name.
+  Google's pkg installs Go to /usr/local/go (removing any previous /usr/local/go first), adds /usr/local/go/bin
+  to PATH through /etc/paths.d/go, and only installs on Apple silicon.
+Identifier: com.github.ashleymckinlay.pkg.Go
+ParentRecipe: com.github.ashleymckinlay.download.Go
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Go
+  SOFTWARE_TITLE: Go
+
+Process:
+  - Processor: PkgCopier
+    Arguments:
+      source_pkg: '%pathname%'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
