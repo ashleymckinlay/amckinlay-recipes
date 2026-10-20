@@ -1,0 +1,34 @@
+Description: |
+  Downloads the latest swiftDialog installer pkg (https://github.com/swiftDialog/swiftDialog) and verifies it is
+  signed by its Developer ID Installer (Team ID PWA5E9TQ59). The pkg is universal (Intel and Apple silicon).
+Identifier: com.github.ashleymckinlay.download.swiftDialog
+MinimumVersion: '2.3'
+
+Input:
+  NAME: swiftDialog
+  SOFTWARE_TITLE: swiftDialog
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      github_repo: swiftDialog/swiftDialog
+      asset_regex: ^dialog-[0-9.]+-[0-9]+\.pkg$
+
+  - Processor: URLDownloader
+    Arguments:
+      filename: '%SOFTWARE_TITLE%.pkg'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%pathname%'
+      expected_authority_names:
+        - 'Developer ID Installer: Commonwealth Scientific and Industrial Research Organisation (PWA5E9TQ59)'
+        - Developer ID Certification Authority
+        - Apple Root CA

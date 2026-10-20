@@ -1,0 +1,17 @@
+Description: |
+  Downloads the latest swiftDialog installer and copies the vendor-signed pkg with a versioned name.
+  It installs Dialog.app to /Library/Application Support/Dialog and its postinstall links /usr/local/bin/dialog.
+  swiftDialog 3.x requires macOS 15 or later.
+Identifier: com.github.ashleymckinlay.pkg.swiftDialog
+ParentRecipe: com.github.ashleymckinlay.download.swiftDialog
+MinimumVersion: '2.3'
+
+Input:
+  NAME: swiftDialog
+  SOFTWARE_TITLE: swiftDialog
+
+Process:
+  - Processor: PkgCopier
+    Arguments:
+      source_pkg: '%pathname%'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
