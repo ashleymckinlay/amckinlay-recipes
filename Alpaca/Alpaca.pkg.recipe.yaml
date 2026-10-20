@@ -1,0 +1,138 @@
+Description: |
+  Downloads the latest arm64 (Apple silicon) Alpaca and creates a package that installs alpaca to /usr/local/bin,
+  plus a LaunchAgent that runs it for every user at login (like 'brew services start alpaca').
+    - alpaca listens on localhost:3128 and uses the Mac's PAC settings unless ALPACA_ARGUMENTS says otherwise
+      (eg '-C https://example.com/proxy.pac'). Users still point http_proxy/https_proxy at http://localhost:3128.
+    - Output is logged to ~/Library/Logs/alpaca.log, and launchd restarts alpaca if it exits with an error.
+    - The pre/postinstall stop and restart the agent for the logged-in user so upgrades apply without logging out.
+  The preinstall exits with an error on Intel Macs.
+Identifier: com.github.ashleymckinlay.pkg.Alpaca
+ParentRecipe: com.github.ashleymckinlay.download.Alpaca
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Alpaca
+  SOFTWARE_TITLE: Alpaca
+  BUNDLE_ID: com.github.samuong.alpaca
+  LAUNCHAGENT_LABEL: com.github.samuong.alpaca
+  ALPACA_ARGUMENTS: ''
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgdirs:
+        root: '0755'
+        root/usr: '0755'
+        root/usr/local: '0755'
+        root/usr/local/bin: '0755'
+        root/Library: '0755'
+        root/Library/LaunchAgents: '0755'
+        scripts: '0755'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%pathname%'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/root/usr/local/bin/alpaca'
+      overwrite: true
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/root/Library/LaunchAgents/%LAUNCHAGENT_LABEL%.plist'
+      file_mode: '0644'
+      file_content: |
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <dict>
+          <key>Label</key>
+          <string>%LAUNCHAGENT_LABEL%</string>
+          <key>ProgramArguments</key>
+          <array>
+            <string>/bin/sh</string>
+            <string>-c</string>
+            <string>exec /usr/local/bin/alpaca %ALPACA_ARGUMENTS% &gt;&gt; "$HOME/Library/Logs/alpaca.log" 2&gt;&amp;1</string>
+          </array>
+          <key>RunAtLoad</key>
+          <true/>
+          <key>KeepAlive</key>
+          <dict>
+            <key>SuccessfulExit</key>
+            <false/>
+          </dict>
+          <key>LimitLoadToSessionType</key>
+          <string>Aqua</string>
+        </dict>
+        </plist>
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/preinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+        # arm64-only build; hw.optional.arm64 is 1 on Apple silicon even under Rosetta
+        if [[ "$( /usr/sbin/sysctl -n hw.optional.arm64 2>/dev/null )" != "1" ]]; then
+          echo "ERROR: Alpaca package is Apple silicon (arm64) only; this Mac is Intel."
+          exit 1
+        fi
+
+        # Stop the running agent for the logged-in user so the binary can be replaced cleanly
+        logged_in_user=$( /usr/sbin/scutil <<< "show State:/Users/ConsoleUser" | /usr/bin/awk '/Name :/ && ! /loginwindow/ { print $3 }' )
+        if [[ -n "$logged_in_user" ]] && [[ ! "$logged_in_user" =~ (loginwindow|_mbsetupuser|root) ]]; then
+          uid=$( /usr/bin/id -u "$logged_in_user" )
+          if /bin/launchctl print "gui/${uid}/%LAUNCHAGENT_LABEL%" >/dev/null 2>&1; then
+            echo "Stopping %LAUNCHAGENT_LABEL% for $logged_in_user"
+            /bin/launchctl bootout "gui/${uid}/%LAUNCHAGENT_LABEL%" 2>/dev/null || true
+          fi
+        fi
+        exit 0
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+        # Start the agent for the logged-in user now; other users get it at their next login
+        [[ "$3" == "/" ]] || exit 0
+        logged_in_user=$( /usr/sbin/scutil <<< "show State:/Users/ConsoleUser" | /usr/bin/awk '/Name :/ && ! /loginwindow/ { print $3 }' )
+        if [[ -n "$logged_in_user" ]] && [[ ! "$logged_in_user" =~ (loginwindow|_mbsetupuser|root) ]]; then
+          uid=$( /usr/bin/id -u "$logged_in_user" )
+          echo "Starting %LAUNCHAGENT_LABEL% for $logged_in_user"
+          /bin/launchctl bootstrap "gui/${uid}" "/Library/LaunchAgents/%LAUNCHAGENT_LABEL%.plist" 2>/dev/null \
+            || /bin/launchctl kickstart -k "gui/${uid}/%LAUNCHAGENT_LABEL%" 2>/dev/null || true
+        fi
+        exit 0
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: '%BUNDLE_ID%'
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload/root'
+        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
+        version: '%version%'
+        chown:
+          - path: usr
+            user: root
+            group: wheel
+          - path: usr/local/bin/alpaca
+            user: root
+            group: wheel
+            mode: '0755'
+          - path: Library
+            user: root
+            group: wheel
+          - path: Library/LaunchAgents/%LAUNCHAGENT_LABEL%.plist
+            user: root
+            group: wheel
+            mode: '0644'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'

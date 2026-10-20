@@ -1,0 +1,40 @@
+Description: |
+  Downloads the latest arm64 (Apple silicon) release of Alpaca (https://github.com/samuong/alpaca), a local HTTP
+  proxy for command-line tools with PAC, NTLM, Kerberos and Basic proxy authentication support.
+  alpaca is only ad-hoc signed and the release has no checksum file, so the binary is verified against the
+  SHA-256 digest GitHub records for the release asset.
+Identifier: com.github.ashleymckinlay.download.Alpaca
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Alpaca
+  SOFTWARE_TITLE: Alpaca
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      github_repo: samuong/alpaca
+      asset_regex: ^alpaca_v[0-9.]+_darwin-arm64$
+
+  - Processor: URLDownloader
+    Arguments:
+      filename: '%SOFTWARE_TITLE%-arm64'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  # No checksum file is published, so use the SHA-256 digest GitHub records for the release asset
+  - Processor: URLTextSearcher
+    Arguments:
+      url: https://api.github.com/repos/samuong/alpaca/releases/tags/v%version%
+      re_pattern: '"name":\s*"alpaca_v%version%_darwin-arm64"[\s\S]*?"digest":\s*"sha256:(?P<expected_sha256>[0-9a-f]{64})"'
+
+  - Processor: com.github.ashleymckinlay.SharedProcessors/HashVerifier
+    Arguments:
+      input_path: '%pathname%'
+      expected_hash: '%expected_sha256%'
+      algorithm: sha256
