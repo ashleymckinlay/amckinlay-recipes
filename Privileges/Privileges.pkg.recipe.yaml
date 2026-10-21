@@ -1,0 +1,17 @@
+Description: |
+  Downloads the latest SAP Privileges installer and copies the vendor-signed pkg with a versioned name.
+  It installs /Applications/Privileges.app, and its postinstall installs and loads the Privileges LaunchDaemons
+  and LaunchAgent. Requires macOS 12 or later.
+Identifier: com.github.ashleymckinlay.pkg.Privileges
+ParentRecipe: com.github.ashleymckinlay.download.Privileges
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Privileges
+  SOFTWARE_TITLE: Privileges
+
+Process:
+  - Processor: PkgCopier
+    Arguments:
+      source_pkg: '%pathname%'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
