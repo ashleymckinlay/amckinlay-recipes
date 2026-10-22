@@ -43,6 +43,8 @@ Process:
   - Processor: URLDownloader
     Arguments:
       url: https://archive.apache.org/dist/directory/studio/%version%/ApacheDirectoryStudio-%version%-macosx.cocoa.x86_64.dmg
+      # Arguments persist as variables, so without this the JDK download's filename would be reused
+      filename: ApacheDirectoryStudio-%version%-macosx.cocoa.x86_64.dmg
 
   - Processor: com.github.ashleymckinlay.SharedProcessors/DownloadChangedRecorder
     Arguments:
