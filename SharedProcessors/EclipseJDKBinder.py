@@ -85,12 +85,48 @@ class EclipseJDKBinder(Processor):
         "jdk_implementor_version": {"description": "IMPLEMENTOR_VERSION from the JDK's release file, eg Zulu25.28+85-CA."},
     }
 
-    def find_jdk_bundle(self, work):
+    def find_jdk_home(self, work):
+        """Returns the real path of the JDK home (the directory holding bin/java and release) in the
+        unpacked archive. Symlinked directories are checked too, but not walked into."""
+        found = []
         for root, dirs, _ in os.walk(work):
-            for d in dirs:
-                if d.endswith(".jdk") and os.path.isfile(os.path.join(root, d, "Contents/Home/bin/java")):
-                    return os.path.join(root, d)
-        raise ProcessorError("No .jdk bundle with Contents/Home/bin/java found in jdk_archive.")
+            for d in [root] + [os.path.join(root, x) for x in dirs]:
+                if os.path.isfile(os.path.join(d, "bin/java")) and os.path.isfile(os.path.join(d, "release")):
+                    found.append(os.path.realpath(d))
+        if not found:
+            listing = []
+            for root, dirs, files in os.walk(work):
+                depth = root[len(work):].count(os.sep)
+                if depth > 2:
+                    continue
+                for x in sorted(dirs + files):
+                    p = os.path.join(root, x)
+                    kind = "-> " + os.readlink(p) if os.path.islink(p) else ("/" if os.path.isdir(p) else "")
+                    listing.append(f"  {os.path.relpath(p, work)}{kind}")
+            raise ProcessorError(
+                "No JDK (bin/java with a release file) found in jdk_archive. Top of archive:\n"
+                + "\n".join(listing[:60])
+            )
+        # Prefer a home inside a .jdk bundle
+        found.sort(key=lambda h: (not h.endswith(".jdk/Contents/Home"), len(h)))
+        return found[0]
+
+    def stage_bundle(self, home, work):
+        """Returns a .jdk bundle directory for the JDK home: the archive's own bundle if the home is
+        inside one, otherwise a new bundle in work with the home copied to Contents/Home."""
+        if home.endswith(".jdk/Contents/Home"):
+            return os.path.dirname(os.path.dirname(home))
+        bundle = os.path.join(work, "staged.jdk")
+        os.makedirs(os.path.join(bundle, "Contents"))
+        home_dest = os.path.join(bundle, "Contents/Home")
+        run(["/usr/bin/ditto", home, home_dest])
+        # Drop any .jdk entries a flat layout links back to itself
+        for x in os.listdir(home_dest):
+            if x.endswith(".jdk"):
+                p = os.path.join(home_dest, x)
+                os.unlink(p) if os.path.islink(p) else shutil.rmtree(p)
+        self.output("JDK archive has no .jdk bundle; wrapped its home in one")
+        return bundle
 
     def find_ini(self, app):
         macos = os.path.join(app, "Contents/MacOS")
@@ -117,8 +153,15 @@ class EclipseJDKBinder(Processor):
         work = os.path.join(self.env["RECIPE_CACHE_DIR"], "jdk_unpacked")
         shutil.rmtree(work, ignore_errors=True)
         os.makedirs(work)
+        with open(self.env["jdk_archive"], "rb") as f:
+            if f.read(2) != b"\x1f\x8b":
+                raise ProcessorError(
+                    f"{self.env['jdk_archive']} isn't a gzip file; delete it so it's downloaded again."
+                )
         run(["/usr/bin/tar", "-xzf", self.env["jdk_archive"], "-C", work])
-        bundle = self.find_jdk_bundle(work)
+        home = self.find_jdk_home(work)
+        self.output(f"Found JDK home {os.path.relpath(home, work)}")
+        bundle = self.stage_bundle(home, work)
         if arch not in archs(os.path.join(bundle, "Contents/Home/bin/java")):
             raise ProcessorError(f"JDK in {self.env['jdk_archive']} isn't {arch}.")
 
