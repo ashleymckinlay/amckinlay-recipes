@@ -1,10 +1,24 @@
-Description: Downloads the latest version of ApacheDirectoryStudio and creates a package.
+Description: |
+  Builds an Apache Directory Studio package that brings its own Intel Azul Zulu JDK, so it runs the same on Intel
+  and Apple silicon Macs whatever other Java is installed.
+    - Installs ApacheDirectoryStudio.app (Intel build) to /Applications.
+    - Installs the Intel Zulu JDK to JDK_INSTALL_PATH (/Library/Java/JavaVirtualMachines/zulu-25.jdk-intel). The
+      folder doesn't end in .jdk, so /usr/libexec/java_home doesn't list it and no other app or tool will use it.
+    - Sets '-vm JDK_INSTALL_PATH/Contents/Home/bin/java' in the app's ApacheDirectoryStudio.ini, so the app ignores
+      JAVA_HOME and any Apple silicon JDKs, then re-signs the app ad hoc (editing the .ini breaks its seal).
+    - The preinstall removes the previous app and JDK so dropped files don't linger; the postinstall installs
+      Rosetta 2 on Apple silicon Macs that don't have it.
+  The package version is the Apache Directory Studio version; the file name also carries the JDK version, so a
+  JDK update alone produces a new package.
 Identifier: com.github.ashleymckinlay.pkg.ApacheDirectoryStudio
-MinimumVersion: '1.0.0'
+MinimumVersion: '2.3'
 ParentRecipe: com.github.ashleymckinlay.download.ApacheDirectoryStudio
 
 Input:
   NAME: ApacheDirectoryStudio
+  BUNDLE_ID: org.apache.directory.studio.product
+  # Keep in step with JAVA_MAJOR_VERSION; not ending in .jdk keeps it out of java_home
+  JDK_INSTALL_PATH: /Library/Java/JavaVirtualMachines/zulu-25.jdk-intel
 
 Process:
   - Processor: com.github.homebysix.VersionSplitter/VersionSplitter
@@ -12,11 +26,81 @@ Process:
       split_on: .v
       version: '%version%'
 
-  - Processor: AppPkgCreator
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgdirs:
+        root: '0755'
+        root/Applications: '0775'
+        root/Library: '0755'
+        root/Library/Java: '0755'
+        root/Library/Java/JavaVirtualMachines: '0755'
+        scripts: '0755'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%pathname%/ApacheDirectoryStudio.app'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/root/Applications/ApacheDirectoryStudio.app'
+      overwrite: true
+
+  - Processor: com.github.ashleymckinlay.SharedProcessors/EclipseJDKBinder
+    Arguments:
+      jdk_archive: '%RECIPE_CACHE_DIR%/downloads/AzulZuluJDK%JAVA_MAJOR_VERSION%-x86.tar.gz'
+      pkgroot: '%RECIPE_CACHE_DIR%/payload/root'
+      jdk_install_path: '%JDK_INSTALL_PATH%'
+      app_path: '%RECIPE_CACHE_DIR%/payload/root/Applications/ApacheDirectoryStudio.app'
+      required_arch: x86_64
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/preinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+        # Remove the previous install so files dropped in this version don't linger
+        for p in "$3/Applications/ApacheDirectoryStudio.app" "$3%JDK_INSTALL_PATH%"; do
+          if [[ -d "$p" ]]; then
+            echo "Removing existing $p"
+            /bin/rm -rf "$p"
+          fi
+        done
+        exit 0
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+        # The app and its JDK are Intel; Apple silicon needs Rosetta 2 to run them
+        [[ "$3" == "/" ]] || exit 0
+        if [[ "$( /usr/sbin/sysctl -n hw.optional.arm64 2>/dev/null )" == "1" ]] \
+          && ! /usr/bin/arch -x86_64 /usr/bin/true 2>/dev/null; then
+          echo "Installing Rosetta 2"
+          /usr/sbin/softwareupdate --install-rosetta --agree-to-license || echo "WARNING: Rosetta 2 install failed"
+        fi
+        exit 0
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: '%BUNDLE_ID%'
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%NAME%-%version%-zulu%java_version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload/root'
+        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
+        version: '%version%'
+        chown:
+          - path: Applications
+            user: root
+            group: admin
+          - path: Library
+            user: root
+            group: wheel
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
       fail_deleter_silently: true
       path_list:
-        - '%RECIPE_CACHE_DIR%/Universal'
-        - '%RECIPE_CACHE_DIR%/extractedfile'
+        - '%RECIPE_CACHE_DIR%/payload'
