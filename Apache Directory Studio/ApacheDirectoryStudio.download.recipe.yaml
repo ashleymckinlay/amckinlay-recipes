@@ -1,12 +1,39 @@
-Description: Downloads the latest version of ApacheDirectoryStudio.
+Description: |
+  Downloads the latest Intel version of ApacheDirectoryStudio, and the latest Azul Zulu JDK (JAVA_MAJOR_VERSION,
+  Intel, tar.gz) that the pkg recipe bundles with it. The JDK is verified against Azul's published SHA-256.
+  Processing continues if either download changed.
 Identifier: com.github.ashleymckinlay.download.ApacheDirectoryStudio
-MinimumVersion: '1.0.0'
+MinimumVersion: '2.3'
 
 Input:
   NAME: ApacheDirectoryStudio
+  JAVA_MAJOR_VERSION: '25'
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
+  # Azul Zulu JDK first: AzulZuluJavaInfoProvider sets url and version, which the
+  # Apache Directory Studio steps below then replace with their own
+  - Processor: com.github.ashleymckinlay.x86_64.download.AzulZuluJava25/AzulZuluJavaInfoProvider
+    Arguments:
+      java_major_version: '%JAVA_MAJOR_VERSION%'
+      arch: x86
+      extension: tar.gz
+      bundle_type: jdk
+
+  - Processor: URLDownloader
+    Arguments:
+      filename: AzulZuluJDK%JAVA_MAJOR_VERSION%-x86.tar.gz
+
+  - Processor: com.github.ashleymckinlay.SharedProcessors/HashVerifier
+    Arguments:
+      input_path: '%pathname%'
+      expected_hash: '%sha256_hash%'
+
+  - Processor: com.github.ashleymckinlay.SharedProcessors/DownloadChangedRecorder
+    Arguments:
+      result_output_var_name: jdk_download_changed
+
+  # Apache Directory Studio
   - Processor: URLTextSearcher
     Arguments:
       re_pattern: '<a href=.*">(.*)/</a'
@@ -17,11 +44,15 @@ Process:
     Arguments:
       url: https://archive.apache.org/dist/directory/studio/%version%/ApacheDirectoryStudio-%version%-macosx.cocoa.x86_64.dmg
 
+  - Processor: com.github.ashleymckinlay.SharedProcessors/DownloadChangedRecorder
+    Arguments:
+      result_output_var_name: app_download_changed
+
   - Processor: EndOfCheckPhase
 
   - Processor: StopProcessingIf
     Arguments:
-      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+      predicate: 'app_download_changed == False AND jdk_download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
   - Processor: CodeSignatureVerifier
     Arguments:
