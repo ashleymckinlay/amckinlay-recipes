@@ -2,6 +2,7 @@
 """See docstring for EclipseJDKBinder class"""
 
 import os
+import plistlib
 import shutil
 import subprocess
 
@@ -21,25 +22,45 @@ def archs(path):
     return run(["/usr/bin/lipo", "-archs", path]).split()
 
 
-def set_vm(ini_text, java_path):
-    """Returns the Eclipse .ini text with any -vm entry replaced by java_path, placed before -vmargs
-    (the launcher ignores -vm after -vmargs)."""
-    lines = ini_text.splitlines()
+def set_vm_args(args, java_path, at_end):
+    """Returns the launcher argument list with any -vm entry replaced by java_path, placed before
+    -vmargs (the launcher ignores -vm after -vmargs), or at the end/start when there's no -vmargs."""
     out, skip = [], False
-    for line in lines:
+    for arg in args:
         if skip:
             skip = False
             continue
-        if line.strip() == "-vm":
+        if arg.strip() == "-vm":
             skip = True
             continue
-        out.append(line)
+        out.append(arg)
     try:
-        i = [l.strip() for l in out].index("-vmargs")
+        i = [a.strip() for a in out].index("-vmargs")
     except ValueError:
-        i = len(out)
+        i = len(out) if at_end else 0
     out[i:i] = ["-vm", java_path]
-    return "\n".join(out) + "\n"
+    return out
+
+
+def set_vm(ini_text, java_path):
+    """Returns the Eclipse .ini text with -vm set to java_path."""
+    return "\n".join(set_vm_args(ini_text.splitlines(), java_path, at_end=True)) + "\n"
+
+
+def set_plist_vm(plist_path, java_path):
+    """Sets -vm java_path in the 'Eclipse' argument array of an app's Info.plist, which the Eclipse
+    launcher reads before the .ini. Keeps the plist's format (XML or binary)."""
+    with open(plist_path, "rb") as f:
+        data = f.read()
+    fmt = plistlib.FMT_BINARY if data.startswith(b"bplist") else plistlib.FMT_XML
+    info = plistlib.loads(data)
+    args = info.get("Eclipse", [])
+    if not isinstance(args, list):
+        raise ProcessorError(f"'Eclipse' in {plist_path} isn't an array.")
+    info["Eclipse"] = set_vm_args(args, java_path, at_end=False)
+    with open(plist_path, "wb") as f:
+        plistlib.dump(info, f, fmt=fmt)
+    return info["Eclipse"]
 
 
 class EclipseJDKBinder(Processor):
@@ -50,10 +71,11 @@ class EclipseJDKBinder(Processor):
     doesn't end in .jdk (eg /Library/Java/JavaVirtualMachines/zulu-25.jdk-intel) and
     /usr/libexec/java_home won't list it, so other apps and tools never pick it up.
 
-    The app's launcher .ini (Contents/Eclipse/<launcher>.ini) gets '-vm <jdk_install_path>/Contents/
-    Home/bin/java' before -vmargs, replacing any existing -vm. Both the JDK's java and the app's
+    The app's launcher .ini (Contents/Eclipse/<launcher>.ini) and the 'Eclipse' argument array in its
+    Contents/Info.plist both get '-vm <jdk_install_path>/Contents/Home/bin/java' before -vmargs,
+    replacing any existing -vm. Both the JDK's java and the app's
     launcher are checked for required_arch, since the Eclipse launcher loads the JVM in-process and
-    the two must match. Editing the .ini breaks the app's signature seal, so the app is re-signed
+    the two must match. Editing these breaks the app's signature seal, so the app is re-signed
     ad hoc (resign_app)."""
 
     description = __doc__
@@ -76,7 +98,7 @@ class EclipseJDKBinder(Processor):
         "resign_app": {
             "required": False,
             "default": True,
-            "description": "Re-sign the app ad hoc after editing its .ini. Defaults to True.",
+            "description": "Re-sign the app ad hoc after editing its .ini and Info.plist. Defaults to True.",
         },
     }
     output_variables = {
@@ -192,6 +214,9 @@ class EclipseJDKBinder(Processor):
         with open(ini, "w") as f:
             f.write(set_vm(text, java))
         self.output(f"Set -vm {java} in {ini}")
+        plist = os.path.join(app, "Contents/Info.plist")
+        eclipse_args = set_plist_vm(plist, java)
+        self.output(f"Set -vm {java} in {plist} (Eclipse: {' '.join(eclipse_args)})")
 
         if str(self.env.get("resign_app", True)).lower() not in ("false", "0", "no"):
             run(["/usr/bin/codesign", "--force", "--sign", "-", app])

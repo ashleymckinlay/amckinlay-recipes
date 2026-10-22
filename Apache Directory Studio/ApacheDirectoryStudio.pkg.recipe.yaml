@@ -4,8 +4,9 @@ Description: |
     - Installs ApacheDirectoryStudio.app (Intel build) to /Applications.
     - Installs the Intel Zulu JDK to JDK_INSTALL_PATH (/Library/Java/JavaVirtualMachines/zulu-25.jdk-intel). The
       folder doesn't end in .jdk, so /usr/libexec/java_home doesn't list it and no other app or tool will use it.
-    - Sets '-vm JDK_INSTALL_PATH/Contents/Home/bin/java' in the app's ApacheDirectoryStudio.ini, so the app ignores
-      JAVA_HOME and any Apple silicon JDKs, then re-signs the app ad hoc (editing the .ini breaks its seal).
+    - Sets '-vm JDK_INSTALL_PATH/Contents/Home/bin/java' in the app's ApacheDirectoryStudio.ini and in the Eclipse
+      argument array of its Info.plist, so the app ignores JAVA_HOME and any Apple silicon JDKs, then re-signs the
+      app ad hoc (editing these breaks its seal).
     - The preinstall removes the previous app and JDK so dropped files don't linger; the postinstall installs
       Rosetta 2 on Apple silicon Macs that don't have it.
   The package version is the Apache Directory Studio version; the file name also carries the JDK version, so a
