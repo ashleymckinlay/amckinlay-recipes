@@ -1,0 +1,52 @@
+Description: |
+  Downloads the latest arm64 (Apple silicon) release of GitHub Copilot CLI (https://github.com/github/copilot-cli),
+  the same tarball its native installer (curl -fsSL https://gh.io/copilot-install | bash) fetches.
+  The tarball is verified against the release's SHA256SUMS.txt, and the copilot binary inside it is verified
+  against GitHub's Developer ID (VEKTX9H2N7).
+Identifier: com.github.ashleymckinlay.download.GitHub_Copilot_CLI
+MinimumVersion: '2.3'
+
+Input:
+  NAME: GitHub Copilot CLI
+  SOFTWARE_TITLE: GitHub_Copilot_CLI
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      github_repo: github/copilot-cli
+      asset_regex: copilot-darwin-arm64\.tar\.gz
+
+  - Processor: URLDownloader
+    Arguments:
+      filename: '%SOFTWARE_TITLE%-arm64.tar.gz'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: '(?P<expected_sha256>[0-9a-f]{64})\s+copilot-darwin-arm64\.tar\.gz'
+      url: https://github.com/github/copilot-cli/releases/download/v%version%/SHA256SUMS.txt
+
+  - Processor: com.github.ashleymckinlay.SharedProcessors/HashVerifier
+    Arguments:
+      input_path: '%pathname%'
+      expected_hash: '%expected_sha256%'
+      algorithm: sha256
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%pathname%'
+      archive_format: tar_gzip
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
+      purge_destination: true
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%RECIPE_CACHE_DIR%/unpack/copilot'
+      requirement: identifier "copilot" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = VEKTX9H2N7
+      strict_verification: true
