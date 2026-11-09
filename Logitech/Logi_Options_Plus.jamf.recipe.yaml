@@ -15,7 +15,7 @@ Input:
   POLICY_RUN_COMMAND: ' '
   SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
   SELF_SERVICE_DESCRIPTION: 'Logi Options+ is extremely easy-to-use yet it provides amazing features.'
-  SELF_SERVICE_ICON: '%NAME%.png'
+  SELF_SERVICE_ICON: 'Logi_Options_Plus.png'
   SOFTWARE_TITLE: 'Logi_Options_Plus'
   INSTALL_BUTTON_TEXT: 'Install'
   REINSTALL_BUTTON_TEXT: 'Reinstall'

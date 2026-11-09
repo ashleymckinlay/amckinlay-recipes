@@ -20,7 +20,7 @@ Input:
   SELF_SERVICE_CATEGORY: Collaboration
   SELF_SERVICE_DESCRIPTION: PyCharm is an IDE for Python development, providing code analysis, a graphical debugger, an integrated unit tester, integration with version control systems, and supports web development with Django.
   SELF_SERVICE_DISPLAY_NAME: '%NAME%'
-  SELF_SERVICE_ICON: '%NAME%.png'
+  SELF_SERVICE_ICON: 'PyCharm.png'
   SOFTWARE_TITLE_TRIGGER: '%SOFTWARE_TITLE%'
   UPDATE_PREDICATE: pkg_uploaded == False
 

@@ -1,0 +1,44 @@
+Description: |
+  Downloads the latest version of Beyond Compare, makes a pkg and uploads it to the Jamf Pro
+  Server. Old packages matching PKG_NAME_MATCH are pruned to keep the most recent
+  PKG_TO_KEEP versions.
+
+  This recipe stops at "upload + cleanup" and creates no policy or smart group, so
+  overrides can own their own policy and scope. Set REMOVE_OLD_PACKAGES to 'false'
+  to skip the cleanup.
+Identifier: com.github.ashleymckinlay.jamf.upload.BeyondCompare
+ParentRecipe: com.github.ashleymckinlay.pkg.BeyondCompare
+MinimumVersion: '2.3'
+
+Input:
+  NAME: 'Beyond Compare'
+  CATEGORY: 'Applications'
+  PACKAGE_INFO: autopkg
+  PKG_NAME_MATCH: '%NAME%-'
+  PKG_TO_KEEP: '2'
+  REMOVE_OLD_PACKAGES: 'true'
+
+Process:
+  - Processor: FileMover
+    Arguments:
+      source: '%pkg_path%'
+      target: '%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
+    Arguments:
+      category_name: '%CATEGORY%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg'
+      pkg_category: '%CATEGORY%'
+      pkg_info: '%PACKAGE_INFO%'
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%REMOVE_OLD_PACKAGES% == false'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
+    Arguments:
+      pkg_name_match: '%PKG_NAME_MATCH%'
+      versions_to_keep: '%PKG_TO_KEEP%'
