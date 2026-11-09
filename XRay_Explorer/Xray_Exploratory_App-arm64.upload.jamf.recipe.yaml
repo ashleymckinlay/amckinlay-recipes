@@ -1,0 +1,48 @@
+Description: |
+  Downloads the latest version of Xray Exploratory App, makes a pkg and uploads it to the Jamf Pro
+  Server. Old packages matching PKG_NAME_MATCH are pruned to keep the most recent
+  PKG_TO_KEEP versions.
+
+  The pkg is renamed %SOFTWARE_TITLE%-arm64-<version>.pkg so PKG_NAME_MATCH only prunes
+  the arm64 line and never the other architecture's packages.
+
+  This recipe stops at "upload + cleanup" and creates no policy or smart group, so
+  overrides can own their own policy and scope. Set REMOVE_OLD_PACKAGES to 'false'
+  to skip the cleanup.
+Identifier: com.github.ashleymckinlay.jamf.upload.Xray_Exploratory_App.arm64
+ParentRecipe: com.github.ashleymckinlay.pkg.Xray_Exploratory_App.arm64
+MinimumVersion: '2.3'
+
+Input:
+  NAME: 'Xray Exploratory App'
+  SOFTWARE_TITLE: 'Xray_Exploratory_App'
+  CATEGORY: 'Utilities'
+  PACKAGE_INFO: autopkg
+  PKG_NAME_MATCH: '%SOFTWARE_TITLE%-arm64-'
+  PKG_TO_KEEP: '2'
+  REMOVE_OLD_PACKAGES: 'true'
+
+Process:
+  - Processor: FileMover
+    Arguments:
+      source: '%pkg_path%'
+      target: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-arm64-%version%.pkg'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
+    Arguments:
+      category_name: '%CATEGORY%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-arm64-%version%.pkg'
+      pkg_category: '%CATEGORY%'
+      pkg_info: '%PACKAGE_INFO%'
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%REMOVE_OLD_PACKAGES% == false'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
+    Arguments:
+      pkg_name_match: '%PKG_NAME_MATCH%'
+      versions_to_keep: '%PKG_TO_KEEP%'

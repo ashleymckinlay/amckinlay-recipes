@@ -17,4 +17,4 @@ Process:
     Arguments:
       fail_deleter_silently: True
       path_list:
-        - '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%-unsigned.pkg'
+        - '%RECIPE_CACHE_DIR%/Tableau Desktop-%version%-unsigned.pkg'
