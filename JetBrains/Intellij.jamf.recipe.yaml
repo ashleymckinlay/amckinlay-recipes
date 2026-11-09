@@ -21,7 +21,7 @@ Input:
   SELF_SERVICE_CATEGORY: Collaboration
   SELF_SERVICE_DESCRIPTION: 'IntelliJ IDEA is a Java IDE for professional developers. It provides a robust environment for coding, debugging, and testing Java applications.'
 
-  SELF_SERVICE_ICON: '%NAME%.png'
+  SELF_SERVICE_ICON: 'IDEA.png'
   SOFTWARE_TITLE_TRIGGER: '%SOFTWARE_TITLE%'
   UPDATE_PREDICATE: pkg_uploaded == False
 

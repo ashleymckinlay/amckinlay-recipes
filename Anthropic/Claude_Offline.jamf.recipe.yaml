@@ -21,7 +21,7 @@ Input:
   SELF_SERVICE_CATEGORY: Collaboration
   SELF_SERVICE_DESCRIPTION: Claude is Anthropic's AI, built for problem solvers. Tackle complex challenges, analyze data, write code, and think through your hardest work.
   SELF_SERVICE_DISPLAY_NAME: '%NAME%'
-  SELF_SERVICE_ICON: '%NAME%.png'
+  SELF_SERVICE_ICON: 'Claude_Offline.png'
   SOFTWARE_TITLE: '%NAME%'
   SOFTWARE_TITLE_TRIGGER: '%SOFTWARE_TITLE%'
   UPDATE_PREDICATE: pkg_uploaded == False

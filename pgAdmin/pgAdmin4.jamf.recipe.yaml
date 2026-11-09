@@ -14,7 +14,7 @@ Input:
   POLICY_RUN_COMMAND: " "
   SELF_SERVICE_DISPLAY_NAME: Install Latest %NAME%
   SELF_SERVICE_DESCRIPTION: pgAdmin 4 is the most popular and feature rich Open Source administration and development platform for PostgreSQL, the most advanced Open Source database in the world. It is designed to answer the needs of all users, from writing simple SQL queries to developing complex databases.
-  SELF_SERVICE_ICON: "%SOFTWARE_TITLE%.png"
+  SELF_SERVICE_ICON: 'pgAdmin4.png'
   INSTALL_BUTTON_TEXT: Install
   REINSTALL_BUTTON_TEXT: Install
   UPDATE_PREDICATE: pkg_uploaded == False
