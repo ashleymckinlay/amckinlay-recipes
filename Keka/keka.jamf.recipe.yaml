@@ -1,7 +1,8 @@
-Description: Downloads the latest version of the Keka Archive App, then uploads to your Jamf Pro instance.
+Description: Downloads the latest version of the Keka Archive App, makes a pkg, uploads it to the Jamf Pro
+  Server, and creates a Self Service Policy and Smart Group.
 Identifier: com.github.ashleymckinlay.jamf.Keka
-ParentRecipe: com.github.fishd72.pkg.Keka
-MinimumVersion: '1.2'
+ParentRecipe: com.github.ashleymckinlay.pkg.Keka
+MinimumVersion: '2.3'
 
 Input:
   NAME: Keka
@@ -14,17 +15,13 @@ Input:
   POLICY_NAME: 'Install Latest %NAME%'
   POLICY_RUN_COMMAND: ' '
   SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
-  SELF_SERVICE_DESCRIPTION:
+  SELF_SERVICE_DESCRIPTION: 'Keka is a file archiver for macOS. It creates and extracts 7z, Zip, RAR, tar and many other archive formats.'
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
   INSTALL_BUTTON_TEXT: 'Install'
   REINSTALL_BUTTON_TEXT: 'Install'
   UPDATE_PREDICATE: 'pkg_uploaded == False'
 
 Process:
-  - Processor: StopProcessingIf
-    Arguments:
-      predicate: '%UPDATE_PREDICATE%'
-
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
       category_name: '%CATEGORY%'
