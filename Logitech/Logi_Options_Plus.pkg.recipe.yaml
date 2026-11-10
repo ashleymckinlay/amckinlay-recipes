@@ -25,7 +25,7 @@ Process:
       source: "%found_filename%"
       target: "%RECIPE_CACHE_DIR%/pkg/root/private/tmp/logioptionsplus.app"
 
-  - Processor: com.github.dataJAR-recipes.Shared Processors/QuarantineRemover
+  - Processor: com.github.ashleymckinlay.SharedProcessors/QuarantineRemover
     Arguments:
       quarantined_files_path: "%RECIPE_CACHE_DIR%/pkg/root/private/tmp/logioptionsplus.app"
 
