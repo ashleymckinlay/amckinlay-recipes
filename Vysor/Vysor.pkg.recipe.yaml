@@ -7,7 +7,7 @@ Input:
   NAME: Vysor
 
 Process:
-  - Processor: com.github.homebysix.VersionSplitter/VersionSplitter
+  - Processor: com.github.ashleymckinlay.SharedProcessors/VersionSplitter
     Arguments:
       split_on: .v
       version: '%version%'

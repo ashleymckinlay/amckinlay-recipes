@@ -22,7 +22,7 @@ Input:
   JDK_INSTALL_PATH: /Library/Java/JavaVirtualMachines/zulu-25.jdk-intel
 
 Process:
-  - Processor: com.github.homebysix.VersionSplitter/VersionSplitter
+  - Processor: com.github.ashleymckinlay.SharedProcessors/VersionSplitter
     Arguments:
       split_on: .v
       version: '%version%'

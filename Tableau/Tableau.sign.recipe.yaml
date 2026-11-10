@@ -8,7 +8,7 @@ Input:
   SOFTWARE_TITLE: Tableau
 
 Process:
-  - Processor: com.github.rtrouton.SharedProcessors/PkgSigner
+  - Processor: com.github.ashleymckinlay.SharedProcessors/PkgSigner
     Arguments:
       pkg_path: '%pkg_path%'
       signing_cert: '%SIGNING_CERTIFICATE%'

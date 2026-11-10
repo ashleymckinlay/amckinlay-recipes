@@ -7,12 +7,12 @@ Input:
   NAME: PowerShell
 
 Process:
-  - Processor: com.github.mlbz521.SharedProcessors/XarExtractSingleFile
+  - Processor: com.github.ashleymckinlay.SharedProcessors/XarExtractSingleFile
     Arguments:
       archive_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-arm64.pkg'
       file_to_extract: Distribution
 
-  - Processor: com.github.mlbz521.SharedProcessors/XPathParser
+  - Processor: com.github.ashleymckinlay.SharedProcessors/XPathParser
     Arguments:
       attribute_one: id
       return_variable_attribute_one: bundleid
